@@ -1,7 +1,7 @@
 export default function ListingsPage() {
     return (
         <section>
-            Listings
+            <h1>Listings</h1>
         </section>
     )
 }

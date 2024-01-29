@@ -1,7 +1,10 @@
+// Core
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./style.css";
 import Head from 'next/head';
+
+// Style
+import "./style.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
