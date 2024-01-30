@@ -120,6 +120,7 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
                         }
                     ]}
                     label='Condition'
+                    required
                 />
                 <button
                     formAction={listing_id ? submitEdit : submitNew}
