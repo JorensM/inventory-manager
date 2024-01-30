@@ -18,9 +18,16 @@ export async function submitNew(formData: FormData) {
         throw new Error('Could not get user')
     }
 
+    const form_data: {[key: string]: any} = {}
+
+    for(const key of formData.keys()) {
+        form_data[key] = formData.get(key);
+    }
+
     const data = {
-        title: formData.get('title') as string,
-        user_id: user.id
+        ...form_data,
+        user_id: user.id,
+        team_id: 0 //#TODO: Replace with actual team id once teams are implemented
     }
     
 
