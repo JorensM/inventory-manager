@@ -97,7 +97,7 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
                             label: 'Left handed'
                         }
                     ]}
-                    default_value='right_handed'
+                    defaultValue='right_handed'
                     required
                 />
                 {Object.entries(text_fields_2).map(([name, field]) => (
