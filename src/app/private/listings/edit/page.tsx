@@ -56,7 +56,7 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
             label: "Fretboard material"
         },
         neck_material: {
-            label: "Fretboard material"
+            label: "Neck material"
         }
     }
 
