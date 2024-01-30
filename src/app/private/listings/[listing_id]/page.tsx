@@ -1,4 +1,5 @@
 import { Listing } from '@/types/Listing';
+import routes from '@/util/routes';
 import { createClient } from '@/util/supabase/server'
 import Link from 'next/link';
 
@@ -18,10 +19,11 @@ export default async function ListingPage( { params }: { params: { listing_id: n
 
     return (
         <section>
-            <Link href='/private/dashboard'>Back to listings</Link>
+            <Link href={routes.listings}>Back to listings</Link>
             {listing ? 
                 <>
                     <h1>{listing.title}</h1>
+                    <Link href={routes.edit_listing(listing.id)}>Edit</Link>
                 </>
             : "Could not find listing"}
             

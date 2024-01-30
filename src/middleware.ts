@@ -61,8 +61,6 @@ export async function middleware(request: NextRequest) {
 
 
   if(session && !request.nextUrl.pathname.includes('private')) {
-    console.log(request.nextUrl)
-    console.log('redirecting')
     return NextResponse.redirect(new URL('/private/dashboard', request.url))
   } else if (!session && request.nextUrl.pathname.includes('private')){
     //redirect('/login');

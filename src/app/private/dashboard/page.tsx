@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/util/supabase/server'
 import Link from 'next/link'
+import routes from '@/util/routes'
 
 export default async function PrivatePage() {
   const supabase = createClient()
@@ -18,10 +19,10 @@ export default async function PrivatePage() {
       <h1>Dashboard</h1>
       <ul>
         <li>
-          <Link href='/private/listings'>My listings</Link>
+          <Link href={routes.listings}>My listings</Link>
         </li>
         <li>
-          <Link href='/private/listings/edit'>New listing</Link>
+          <Link href={routes.new_listing}>New listing</Link>
         </li>
       </ul>
     </section>

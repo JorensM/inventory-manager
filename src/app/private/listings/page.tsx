@@ -1,4 +1,3 @@
-import BackButton from '@/components/buttons/BackButton';
 import ListingsList from '@/components/lists/ListingsList';
 import { createClient } from '@/util/supabase/server';
 import Link from 'next/link';

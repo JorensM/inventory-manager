@@ -13,6 +13,7 @@ type ListingSmallProps = ComponentProps<'div'> & {
 export default function ListingSmall( { data, ...props }: ListingSmallProps) {
     return (
         <div
+            className='card card-clickable'
             {...props}
         >
             {data.title}

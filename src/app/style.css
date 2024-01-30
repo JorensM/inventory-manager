@@ -50,7 +50,12 @@ form {
 input[type="text"], input[type="password"], input[type="email"] {
   padding-left: 8px;
   font-size: 1rem;
-  height: 32px;
+  padding-block: 8px;
+}
+
+select {
+  padding-left: 8px;
+  padding-block: 10px;
 }
 
 .input-container {
@@ -61,4 +66,26 @@ input[type="text"], input[type="password"], input[type="email"] {
 .link, a {
   text-decoration: none;
   color: #3072bd;
+}
+
+/* Layout */
+
+.card {
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.card-clickable {
+  transition: background-color 0.1s ease-in;
+}
+
+.card-clickable:active {
+  background-color: lightgray;
+}
+
+/* Typography */
+
+.required {
+  font-size: 12px;
 }

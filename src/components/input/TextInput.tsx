@@ -1,14 +1,17 @@
 import { ComponentProps } from 'react';
+import InputBase from './InputBase';
 
 type TextInputProps = {
     label: string
 } & ComponentProps<'input'>;
 
-export default function TextInput( { label, ...props }: TextInputProps) {
+export default function TextInput( { label, required, ...props }: TextInputProps) {
     return (
-        <div className='input-container'>
-            <label>{label}</label>
+        <InputBase
+            label={label}
+            required={required}
+        >
             <input type='text' {...props}></input>
-        </div>
+        </InputBase>
     )
 }
