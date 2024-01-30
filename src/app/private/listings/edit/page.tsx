@@ -73,6 +73,7 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
                 {Object.entries(text_fields_1).map(([name, field]) => (
                     <TextInput
                         key={name}
+                        name={name}
                         {...field}
                     />
                 ))}
@@ -85,6 +86,7 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
                 </datalist>
                 <SelectInput
                     label='Handedness'
+                    name='handedness'
                     options={[
                         {
                             value: 'right_handed',
@@ -96,14 +98,17 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
                         }
                     ]}
                     default_value='right_handed'
+                    required
                 />
                 {Object.entries(text_fields_2).map(([name, field]) => (
                     <TextInput
                         key={name}
+                        name={name}
                         {...field}
                     />
                 ))}
                 <SelectInput
+                    name='condition'
                     options={[
                         {
                             value: 'used',
