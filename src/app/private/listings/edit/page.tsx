@@ -3,7 +3,8 @@
 import { submitNew, submitEdit } from './actions'
 
 // Components
-import TextInput from '@/components/lists/input/TextInput'
+import BackButton from '@/components/buttons/BackButton'
+import TextInput from '@/components/input/TextInput'
 
 const text_create = {
     heading: 'New Listing',
@@ -23,6 +24,7 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
 
     return (
         <section>
+            <BackButton/>
             <h1>{text.heading}</h1>
             <form>
                 <TextInput
