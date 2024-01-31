@@ -1,13 +1,13 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { redirect } from 'next/navigation'
-import { NextResponse, type NextRequest } from 'next/server'
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { redirect } from 'next/navigation';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
-  })
+  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,57 +15,57 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         get(name: string) {
-          return request.cookies.get(name)?.value
+          return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
           request.cookies.set({
             name,
             value,
             ...options,
-          })
+          });
           response = NextResponse.next({
             request: {
               headers: request.headers,
             },
-          })
+          });
           response.cookies.set({
             name,
             value,
             ...options,
-          })
+          });
         },
         remove(name: string, options: CookieOptions) {
           request.cookies.set({
             name,
             value: '',
             ...options,
-          })
+          });
           response = NextResponse.next({
             request: {
               headers: request.headers,
             },
-          })
+          });
           response.cookies.set({
             name,
             value: '',
             ...options,
-          })
+          });
         },
       },
     }
-  )
+  );
 
-  await supabase.auth.getUser()
+  await supabase.auth.getUser();
 
   const { data: { session } } = await supabase.auth.getSession();
 
 
   if(session && !request.nextUrl.pathname.includes('private')) {
-    return NextResponse.redirect(new URL('/private/dashboard', request.url))
+    return NextResponse.redirect(new URL('/private/dashboard', request.url));
   } else if (!session && request.nextUrl.pathname.includes('private')){
-    //redirect('/login');
+    return NextResponse.redirect(new URL('/login', request.url));
   }
-  return response
+  return response;
 }
 
 export const config = {
@@ -79,4 +79,4 @@ export const config = {
      */
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
-}
+};

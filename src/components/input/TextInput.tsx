@@ -19,5 +19,5 @@ export default function TextInput( { label, required, ...props }: TextInputProps
 
             </input>
         </InputBase>
-    )
+    );
 }

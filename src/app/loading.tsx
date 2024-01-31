@@ -3,5 +3,5 @@ export default function Loading() {
         <section className='loading-section'>
             Loading...
         </section>
-    )
+    );
 }

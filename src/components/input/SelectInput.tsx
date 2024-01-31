@@ -15,6 +15,7 @@ export default function SelectInput( { label, options, ...props }: SelectInputPr
             >
                 {options.map((option) => (
                     <option
+                        key={option.value}
                         value={option.value}
                     >
                         {option.label}
@@ -22,5 +23,5 @@ export default function SelectInput( { label, options, ...props }: SelectInputPr
                 ))}
             </select>
         </InputBase>
-    )
+    );
 }

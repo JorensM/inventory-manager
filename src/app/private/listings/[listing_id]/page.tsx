@@ -1,6 +1,6 @@
 import { Listing } from '@/types/Listing';
 import routes from '@/util/routes';
-import { createClient } from '@/util/supabase/server'
+import { createClient } from '@/util/supabase/server';
 import Link from 'next/link';
 
 export default async function ListingPage( { params }: { params: { listing_id: number }}) {
@@ -13,7 +13,7 @@ export default async function ListingPage( { params }: { params: { listing_id: n
         .limit(1)
         .eq('id', params.listing_id);
 
-    if (error) throw error
+    if (error) throw error;
 
     const listing = data[0] as Listing;
 
@@ -28,5 +28,5 @@ export default async function ListingPage( { params }: { params: { listing_id: n
             : "Could not find listing"}
             
         </section>
-    )
+    );
 }

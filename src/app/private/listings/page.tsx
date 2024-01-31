@@ -8,7 +8,7 @@ export default async function ListingsPage() {
 
     const { data: listings, error } = await supabase
         .from('listings')
-        .select()
+        .select();
 
     if (error) {
         throw error;
@@ -24,11 +24,11 @@ export default async function ListingsPage() {
                 />
             :
                 <>
-                    <p>You don't have any listings</p>
+                    <p>You don&apos;t have any listings</p>
                     <Link href='/private/listings/edit'>Create listing</Link>
                 </>
             }
             
         </section>
-    )
+    );
 }

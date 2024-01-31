@@ -1,29 +1,76 @@
 
 // Actions
-import { submitNew, submitEdit } from './actions'
+import { submitNew, submitEdit } from './actions';
 
 // Components
-import BackButton from '@/components/buttons/BackButton'
-import SelectInput from '@/components/input/SelectInput'
-import TextInput from '@/components/input/TextInput'
+import BackButton from '@/components/buttons/BackButton';
+import SelectInput from '@/components/input/SelectInput';
+import TextInput from '@/components/input/TextInput';
+import { createClient } from '@/util/supabase/server';
 
 const text_create = {
     heading: 'New Listing',
     submit: 'Create listing'
-}
+};
 
 const text_edit = {
     heading: 'Edit listing',
     submit: 'Save'
+};
+
+type TextFieldsObj = {
+    [name: string]: {
+        label: string,
+        required?: boolean,
+        defaultValue?: string,
+        list?: string
+    }
 }
 
-export default function ListingEditPage({ searchParams: { id: listing_id }}: {
+export default async function ListingEditPage({ searchParams: { id: listing_id }}: {
     searchParams: { id: string }
 }) {
 
-    const text = listing_id ? text_edit : text_create
+    let initial_values = {};
 
-    const text_fields_1 = {
+    const supabase = createClient();
+
+    const text = listing_id ? text_edit : text_create;
+
+    let err_message = null;
+
+    if (listing_id) {
+        const { data: listings, error } = await supabase
+        .from('listings')
+        .select()
+        .limit(1)
+        .eq('id', listing_id);
+
+        if (error) throw error;
+        
+        const listing = listings[0];
+
+        if (!listing) {
+            err_message = "Could not find listing";
+        } else {
+            console.log(listing);
+            initial_values = {
+                ...listing
+            };
+        }
+    }
+
+    const setInitialValues = (fields_obj: TextFieldsObj, initial_values: { [name: string]: string}) => {
+        for(const key in fields_obj) {
+            const initial_value_key = Object.keys(initial_values).find(init_val_key => init_val_key == key);
+
+            if(initial_value_key) {
+                fields_obj[key].defaultValue = initial_values[initial_value_key];
+            }
+        }
+    };
+
+    const text_fields_1: TextFieldsObj = {
         title: {
             label: "Title",
             required: true
@@ -43,9 +90,9 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
             label: "Country of manufacture",
             list: 'country_of_manufacture'
         }
-    }
+    };
 
-    const text_fields_2 = {
+    const text_fields_2: TextFieldsObj = {
         body_type: {
             label: "Body type"
         },
@@ -58,7 +105,11 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
         neck_material: {
             label: "Neck material"
         }
-    }
+    };
+
+    setInitialValues(text_fields_1, initial_values);
+    setInitialValues(text_fields_2, initial_values);
+    
 
     /* 
         #TODO: Fields:
@@ -69,65 +120,69 @@ export default function ListingEditPage({ searchParams: { id: listing_id }}: {
         <section>
             <BackButton/>
             <h1>{text.heading}</h1>
-            <form>
-                {Object.entries(text_fields_1).map(([name, field]) => (
-                    <TextInput
-                        key={name}
-                        name={name}
-                        {...field}
+            {err_message || 
+                <form>
+                    {Object.entries(text_fields_1).map(([name, field]) => (
+                        <TextInput
+                            key={name}
+                            name={name}
+                            {...field}
+                        />
+                    ))}
+                    <datalist id='country_of_manufacture'>
+                        <option value='USA'/>
+                        <option value='Mexico'/>
+                        <option value='China'/>
+                        <option value='Korea'/>
+                        <option value='Japan'/>
+                    </datalist>
+                    <SelectInput
+                        label='Handedness'
+                        name='handedness'
+                        options={[
+                            {
+                                value: 'right_handed',
+                                label: 'Right handed'
+                            },
+                            {
+                                value: 'left_handed',
+                                label: 'Left handed'
+                            }
+                        ]}
+                        defaultValue='right_handed'
+                        required
                     />
-                ))}
-                <datalist id='country_of_manufacture'>
-                    <option value='USA'/>
-                    <option value='Mexico'/>
-                    <option value='China'/>
-                    <option value='Korea'/>
-                    <option value='Japan'/>
-                </datalist>
-                <SelectInput
-                    label='Handedness'
-                    name='handedness'
-                    options={[
-                        {
-                            value: 'right_handed',
-                            label: 'Right handed'
-                        },
-                        {
-                            value: 'left_handed',
-                            label: 'Left handed'
-                        }
-                    ]}
-                    defaultValue='right_handed'
-                    required
-                />
-                {Object.entries(text_fields_2).map(([name, field]) => (
-                    <TextInput
-                        key={name}
-                        name={name}
-                        {...field}
+                    {Object.entries(text_fields_2).map(([name, field]) => (
+                        <TextInput
+                            key={name}
+                            name={name}
+                            {...field}
+                        />
+                    ))}
+                    <SelectInput
+                        name='condition'
+                        options={[
+                            {
+                                value: 'used',
+                                label: 'Used'
+                            },
+                            {
+                                value: 'non_functioning',
+                                label: "Non-functioning"
+                            }
+                        ]}
+                        label='Condition'
+                        required
                     />
-                ))}
-                <SelectInput
-                    name='condition'
-                    options={[
-                        {
-                            value: 'used',
-                            label: 'Used'
-                        },
-                        {
-                            value: 'non_functioning',
-                            label: "Non-functioning"
-                        }
-                    ]}
-                    label='Condition'
-                    required
-                />
-                <button
-                    formAction={listing_id ? submitEdit : submitNew}
-                >
-                    {text.submit}
-                </button>
-            </form>
+                    <input type='hidden' name='id' value={listing_id}/>
+                    <button
+                        formAction={listing_id ? submitEdit : submitNew}
+                    >
+                        {text.submit}
+                    </button>
+                </form>
+            }
+            
         </section>
-    )
+    );
 }

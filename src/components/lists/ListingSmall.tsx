@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
 // Core
-import { ComponentProps } from 'react'
+import { ComponentProps } from 'react';
 
 // Types
-import { Listing } from '@/types/Listing'
+import { Listing } from '@/types/Listing';
 
 type ListingSmallProps = ComponentProps<'div'> & {
     data: Listing
@@ -18,5 +18,5 @@ export default function ListingSmall( { data, ...props }: ListingSmallProps) {
         >
             {data.title}
         </div>
-    )
+    );
 }

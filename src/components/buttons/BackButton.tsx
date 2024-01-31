@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
 // Core
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 export default function BackButton(){
 
@@ -14,5 +14,5 @@ export default function BackButton(){
         >
             Back
         </div>
-    )
+    );
 }

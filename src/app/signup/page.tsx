@@ -1,4 +1,5 @@
-import { login } from './actions';
+// Actions
+import { signup } from './actions';
 
 export default function LoginPage() {
   return (
@@ -9,8 +10,9 @@ export default function LoginPage() {
             <input id="email" name="email" type="email" required />
             <label htmlFor="password">Password:</label>
             <input id="password" name="password" type="password" required />
-            <button formAction={login}>Log in</button>
-            {/* <button formAction={signup}>Sign up</button> */}
+            <label htmlFor="password">Team Name:</label>
+            <input id="team_name" name="team_name" type="text" min={2} max={32} required />
+            <button formAction={signup}>Sign up</button>
         </form>
       </section>
     </main>
