@@ -3,6 +3,11 @@ body, html {
   font-size: 16px;
   margin: 0px;
   min-height: 100vh;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
 }
 
 button {
@@ -58,7 +63,20 @@ main > section {
   box-sizing: border-box;
 }
 
+section.auth {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: none;
+  width: 100%;
+  margin-top: 64px;
+  align-items: center;
+}
 
+section.auth > .form-container {
+  width: 100%;
+  max-width: 320px;
+}
 
 .card {
   border: 1px solid lightgray;
@@ -75,9 +93,13 @@ main > section {
   background-color: lightgray;
 }
 
-header.auth {
+
+
+
+
+/* header.auth {
   position: fixed;
-}
+} */
 
 /* Landing page */
 
@@ -92,9 +114,7 @@ main.auth {
   height: 100vh;
 }
 
-main.auth > section {
-  max-width: 320px;
-}
+
 
 main.auth > h2 {
   margin: 8px;
@@ -131,6 +151,10 @@ select {
   cursor: pointer;
   text-decoration: none;
   color: #3072bd;
+}
+
+.heading-link {
+  color: black;
 }
 
 .text-btn {

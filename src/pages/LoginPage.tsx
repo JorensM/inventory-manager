@@ -2,6 +2,7 @@ import { Field, Form, Formik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import supabase from '../util/supabase';
 import { useState } from 'react';
+import LandingPage from '@/components/layout/LandingPage';
 
 
 type FormValues = {
@@ -27,12 +28,9 @@ export default function LoginPage() {
     }
 
     return (
-      <>
-        <header className='auth'>
-          <h1><Link to='/'>Inventory Manager</Link></h1>
-        </header>
-        <main className='auth'>
-          <section>
+      <LandingPage>
+        <section className='auth'>
+          <div className='form-container'>
             <h2>Log in</h2>
             <Formik<FormValues>
                 initialValues={{
@@ -50,10 +48,9 @@ export default function LoginPage() {
                     <button>Log in</button>
                 </Form>
             </Formik>
-            
-          </section>
-        </main>
-      </>
+          </div>
+        </section>
+      </LandingPage>
       
     );
   }
