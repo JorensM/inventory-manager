@@ -31,7 +31,7 @@ const createOrUpdateListing = async (type: 'create' | 'update', formData: FormDa
 
     const data: Listing = {
         ...form_data,
-        id: parseInt(form_data.id),
+        id: type == 'create' ? undefined : parseInt(form_data.id),
         user_id: user.id,
         team_id: 0 //#TODO: Replace with actual team id once teams are implemented
     } as Listing;

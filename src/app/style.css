@@ -66,6 +66,7 @@ main > section {
 }
 
 .card-clickable {
+  cursor: pointer;
   transition: background-color 0.1s ease-in;
 }
 
