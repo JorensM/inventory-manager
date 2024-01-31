@@ -76,8 +76,6 @@ export default function ListingEditPage() {
 
     const text = listing_id ? text_edit : text_create;
 
-    let err_message = null;
-
     // if (listing_id) {
     //     const { data: listings, error } = await supabase
     //     .from('listings')
@@ -205,75 +203,70 @@ export default function ListingEditPage() {
             <section>
                 <BackButton/>
                 <h1>{text.heading}</h1>
-                
-                {err_message || 
-                    <Formik
-                        initialValues={initialValues}
-                        enableReinitialize={true}
-                        onSubmit={handleSubmit}
-                    >
-                        <Form>
-                            {Object.entries(text_fields_1).map(([name, field]) => (
-                                <TextInput
-                                    key={name}
-                                    name={name}
-                                    {...field}
-                                />
-                            ))}
-                            <datalist id='country_of_manufacture'>
-                                <option value='USA'/>
-                                <option value='Mexico'/>
-                                <option value='China'/>
-                                <option value='Korea'/>
-                                <option value='Japan'/>
-                            </datalist>
-                            <SelectInput
-                                label='Handedness'
-                                name='handedness'
-                                options={[
-                                    {
-                                        value: 'right_handed',
-                                        label: 'Right handed'
-                                    },
-                                    {
-                                        value: 'left_handed',
-                                        label: 'Left handed'
-                                    }
-                                ]}
-                                defaultValue='right_handed'
-                                required
+                <Formik
+                    initialValues={initialValues}
+                    enableReinitialize={true}
+                    onSubmit={handleSubmit}
+                >
+                    <Form>
+                        {Object.entries(text_fields_1).map(([name, field]) => (
+                            <TextInput
+                                key={name}
+                                name={name}
+                                {...field}
                             />
-                            {Object.entries(text_fields_2).map(([name, field]) => (
-                                <TextInput
-                                    key={name}
-                                    name={name}
-                                    {...field}
-                                />
-                            ))}
-                            <SelectInput
-                                name='condition'
-                                options={[
-                                    {
-                                        value: 'used',
-                                        label: 'Used'
-                                    },
-                                    {
-                                        value: 'non_functioning',
-                                        label: "Non-functioning"
-                                    }
-                                ]}
-                                label='Condition'
-                                required
+                        ))}
+                        <datalist id='country_of_manufacture'>
+                            <option value='USA'/>
+                            <option value='Mexico'/>
+                            <option value='China'/>
+                            <option value='Korea'/>
+                            <option value='Japan'/>
+                        </datalist>
+                        <SelectInput
+                            label='Handedness'
+                            name='handedness'
+                            options={[
+                                {
+                                    value: 'right_handed',
+                                    label: 'Right handed'
+                                },
+                                {
+                                    value: 'left_handed',
+                                    label: 'Left handed'
+                                }
+                            ]}
+                            defaultValue='right_handed'
+                            required
+                        />
+                        {Object.entries(text_fields_2).map(([name, field]) => (
+                            <TextInput
+                                key={name}
+                                name={name}
+                                {...field}
                             />
-                            {/* <input type='hidden' name='id' value={listing_id}/> */}
-                            <button>
-                                {text.submit}
-                            </button>
-                        </Form>
-                    </Formik>
-                    
-                }
-                
+                        ))}
+                        <SelectInput
+                            name='condition'
+                            options={[
+                                {
+                                    value: 'used',
+                                    label: 'Used'
+                                },
+                                {
+                                    value: 'non_functioning',
+                                    label: "Non-functioning"
+                                }
+                            ]}
+                            label='Condition'
+                            required
+                        />
+                        {/* <input type='hidden' name='id' value={listing_id}/> */}
+                        <button>
+                            {text.submit}
+                        </button>
+                    </Form>
+                </Formik>
             </section>
         </SessionPage>
         
