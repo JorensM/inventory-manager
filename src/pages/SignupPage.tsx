@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import supabase from '../util/supabase';
 import { useState } from 'react';
 
@@ -10,8 +10,6 @@ type FormValues = {
 }
 
 export default function SignupPage() {
-
-    const navigate = useNavigate();
     
     const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
 
