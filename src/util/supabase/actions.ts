@@ -5,6 +5,9 @@ import { cookies } from 'next/headers';
 import { SUPABASE_ANON_KEY, SUPABASE_ADMIN_KEY, SUPABASE_URL } from '@/constants/env';
 
 export function createClient(admin: boolean = false) {
+  console.log(process.env.SUPABASE_ADMIN_KEY);
+  console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   const cookieStore = cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
