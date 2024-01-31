@@ -31,7 +31,7 @@ export default function SignupPage() {
      * On form submit. Creates new user, sends confirmation email and shows a success message
      * @param values form values
      */
-    const handleSubmit = async ({ email, password}: FormValues) => {
+    const handleSubmit = async ({ email, password }: FormValues) => {
         setErrorMessage(null)
         const { error } = await supabase.auth.signUp({email, password});
         if(error){
@@ -61,10 +61,10 @@ export default function SignupPage() {
                         onSubmit={handleSubmit}
                     >
                         <Form>
-                            <label htmlFor="email">Email:</label>
-                            <Field type="email" name="email" required/>
-                            <label htmlFor="password">Password:</label>
-                            <Field type="password" name="password" required/>
+                            <label htmlFor="email">Email</label>
+                            <Field type="email" name="email" required />
+                            <label htmlFor="password">Password</label>
+                            <Field type="password" name="password" required />
                             {errorMessage ? <span className='warn'>{errorMessage}</span> : null }
                             <button>Sign up</button>
                         </Form>

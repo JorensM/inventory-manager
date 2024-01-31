@@ -1,16 +1,23 @@
+// Core
 import { useState } from 'react';
-
-import './style.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+
+// Styles
+import './style.css';
+
+// Types
+import { User } from './types/User';
+
+// Pages
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/app/DashboardPage';
 import ListingsPage from './pages/app/ListingsPage';
+import TeamEditPage from './pages/app/TeamEditPage';
+import SignupPage from './pages/SignupPage';
 import AuthContext from './state/AuthContext';
-import { User } from './types/User';
 import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
-import SignupPage from './pages/SignupPage';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: '/app/listings/edit/:listing_id',
     element: <ListingEditPage />
+  },
+  {
+    path: '/app/teams/edit',
+    element: <TeamEditPage />
   }
 ]);
 

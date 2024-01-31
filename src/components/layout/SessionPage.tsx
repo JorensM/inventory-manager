@@ -17,6 +17,18 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
     const location = useLocation();
     const navigate = useNavigate();
 
+    /**
+     * Check if user has a team created and if not redirect them to team creation page
+     */
+    const validateTeam = async () => {
+        const team = await auth.fetchTeam();
+
+        console.log(team);
+
+        if (!team) {
+            navigate(routes.new_team)
+        }
+    }
 
     const validateSession = async () => {
         
@@ -29,8 +41,12 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
     }
 
     useEffect(() => {
+        validateTeam();
+    }, [auth.user])
+
+    useEffect(() => {
         validateSession();
-    }, [ location ])
+    }, [ location.pathname ])
 
     return (
         auth.user ?
