@@ -6,6 +6,10 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/app/DashboardPage';
 import ListingsPage from './pages/app/ListingsPage';
+import AuthContext from './state/AuthContext';
+import { User } from './types/User';
+import ListingEditPage from './pages/app/ListingEditPage';
+import ListingPage from './pages/app/ListingPage';
 
 const router = createBrowserRouter([
   {
@@ -23,14 +27,29 @@ const router = createBrowserRouter([
   {
     path: '/app/listings',
     element: <ListingsPage />
+  },
+  {
+    path: '/app/listings/:listing_id',
+    element: <ListingPage />
+  },
+  {
+    path: '/app/listings/edit',
+    element: <ListingEditPage />
+  },
+  {
+    path: '/app/listings/edit/:listing_id',
+    element: <ListingEditPage />
   }
 ]);
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [ user, setUser] = useState<User | null>(null);
 
   return (
-    <RouterProvider router={router} />
+    <AuthContext.Provider value={{user, setUser}}>
+      <RouterProvider router={router} />
+    </AuthContext.Provider>
+    
   )
 }
 

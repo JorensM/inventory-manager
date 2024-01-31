@@ -1,19 +1,16 @@
-'use client';
+import useAuth from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
-// Util
-import { supabase } from '@/util/supabase/client';
-import { useRouter } from 'next/navigation';
 
 export default function SignOutButton() {
 
-    const router = useRouter();
+    // Hooks
+    const auth = useAuth();
+    const navigate = useNavigate();
 
     const handleClick = async () => {
-        // fetch(routes.api.signout, {method: "POST"});
-        await supabase.auth.signOut();
-        console.log('aaa');
-        //router.refresh();
-        router.push('/');
+        await auth.logout();
+        navigate('/')
     };
 
     return (

@@ -1,7 +1,9 @@
 const routes = {
     listings: '/app/listings',
     new_listing: '/app/listings/edit',
-    listing: (listing_id: number) => '/app/listings/' + listing_id
+    edit_listing: (listing_id: number) => '/app/listings/edit/' + listing_id,
+    listing: (listing_id: number) => '/app/listings/' + listing_id,
+    login: '/login'
 }
 
 export default routes;

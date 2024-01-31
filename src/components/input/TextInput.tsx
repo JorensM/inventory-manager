@@ -1,11 +1,16 @@
 import { ComponentProps } from 'react';
 import InputBase from './InputBase';
+import { useField } from 'formik';
 
 type TextInputProps = {
     label: string
+    name: string
 } & ComponentProps<'input'>;
 
 export default function TextInput( { label, required, ...props }: TextInputProps) {
+
+    const [ field ] = useField(props.name);
+
     return (
         <InputBase
             label={label}
@@ -15,6 +20,8 @@ export default function TextInput( { label, required, ...props }: TextInputProps
                 type='text' 
                 {...props}
                 required={required}
+                value={field.value}
+                onChange={field.onChange(props.name)}
             >
 
             </input>

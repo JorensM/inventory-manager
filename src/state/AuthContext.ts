@@ -4,8 +4,10 @@ import { createContext } from 'react';
 
 const AuthContext = createContext<{
     user: User | null,
-    setUser: (user: User) => void
+    setUser: (user: User | null) => void
 }>({
     user: null,
     setUser: () => {}
 })
+
+export default AuthContext;

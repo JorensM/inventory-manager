@@ -1,3 +1,4 @@
+import SessionPage from '@/components/layout/SessionPage';
 import ListingsList from '@/components/lists/ListingsList';
 import { Listing } from '@/types/Listing';
 import supabase from '@/util/supabase';
@@ -31,20 +32,22 @@ export default function ListingsPage() {
     
 
     return (
-        <section>
-            <Link to='/app/dashboard'>Back to dashboard</Link>
-            <h1>Listings</h1>
-            {listings.length ? 
-                <ListingsList
-                    listings={listings}
-                />
-            :
-                <>
-                    <p>You don&apos;t have any listings</p>
-                    <Link to='/app/listings/edit'>Create listing</Link>
-                </>
-            }
-            
-        </section>
+        <SessionPage>
+            <section>
+                <Link to='/app/dashboard'>Back to dashboard</Link>
+                <h1>Listings</h1>
+                {listings.length ? 
+                    <ListingsList
+                        listings={listings}
+                    />
+                :
+                    <>
+                        <p>You don&apos;t have any listings</p>
+                        <Link to='/app/listings/edit'>Create listing</Link>
+                    </>
+                }
+                
+            </section>
+        </SessionPage>
     );
 }

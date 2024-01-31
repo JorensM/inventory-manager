@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-type PageProps ={
+type PageProps = {
 
 }
 

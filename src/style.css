@@ -102,8 +102,6 @@ main.auth > h2 {
 
 /* Input */
 
-
-
 form {
   border: 1px solid lightgray;
   border-radius: 2px;
@@ -136,6 +134,7 @@ select {
 }
 
 .text-btn {
+  cursor: pointer;
   border: none;
   background-color: transparent;
   padding: 8px;

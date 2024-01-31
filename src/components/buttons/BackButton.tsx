@@ -1,16 +1,13 @@
-'use client';
-
-// Core
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 
 export default function BackButton(){
 
-    const router = useRouter();
+    const navigate = useNavigate();
 
     return (
         <div
             className='link'
-            onClick={router.back}
+            onClick={() => navigate(-1)}
         >
             Back
         </div>

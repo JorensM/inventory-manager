@@ -16,14 +16,13 @@ export default function LoginPage() {
     const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
 
     const handleSubmit = async ({ email, password}: FormValues) => {
-        try {
-            const { error } = await supabase.auth.signInWithPassword({email, password});
-            navigate('/app/dashboard');
-        } catch (err) {
-            setErrorMessage('Error');
-            throw err;
+        setErrorMessage(null)
+        const { error } = await supabase.auth.signInWithPassword({email, password});
+        if(error){
+            setErrorMessage('Error')
+            throw error
         }
-
+        navigate('/app/dashboard');
         
     }
 
@@ -47,7 +46,7 @@ export default function LoginPage() {
                     <Field type="email" name="email" required/>
                     <label htmlFor="password">Password:</label>
                     <Field type="password" name="password" required/>
-                    {errorMessage ? <span className='warn'></span> : null }
+                    {errorMessage ? <span className='warn'>{errorMessage}</span> : null }
                     <button>Log in</button>
                 </Form>
             </Formik>
