@@ -10,6 +10,7 @@ import AuthContext from './state/AuthContext';
 import { User } from './types/User';
 import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
+import SignupPage from './pages/SignupPage';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />
+  },
+  {
+    path: '/signup',
+    element: <SignupPage />
   },
   {
     path: '/app/dashboard',
