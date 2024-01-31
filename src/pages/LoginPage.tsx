@@ -10,12 +10,25 @@ type FormValues = {
     password: string
 }
 
+/**
+ * Login page
+ */
 export default function LoginPage() {
 
-    const navigate = useNavigate();
-    
+    // State
+    /** Error message to display if an auth error has occured */
     const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
 
+    // Hooks
+    const navigate = useNavigate();
+
+    // Handlers
+
+    /**
+     * On form submit. Logs user in and redirects to dashboard or shows error 
+     * if login unsuccessful
+     * @param values Formik form values
+     */
     const handleSubmit = async ({ email, password}: FormValues) => {
         setErrorMessage(null)
         const { error } = await supabase.auth.signInWithPassword({email, password});
@@ -32,6 +45,7 @@ export default function LoginPage() {
         <section className='auth'>
           <div className='form-container'>
             <h2>Log in</h2>
+            {/* Login form */}
             <Formik<FormValues>
                 initialValues={{
                     email: "",
@@ -40,6 +54,7 @@ export default function LoginPage() {
                 onSubmit={handleSubmit}
             >
                 <Form>
+                  {/* #TODO: Replace Field/label elements with our custom TextInput component */}
                     <label htmlFor="email">Email:</label>
                     <Field type="email" name="email" required/>
                     <label htmlFor="password">Password:</label>
