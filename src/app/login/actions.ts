@@ -24,6 +24,8 @@ export async function login(formData: FormData) {
     if (error.message.includes('Email not confirmed')) {
       const msg = encodeURIComponent("Please confirm your email");
       redirect('/error?message=' + msg);
+    } else {
+      throw error;
     }
   }
 
