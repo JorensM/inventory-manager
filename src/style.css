@@ -54,13 +54,21 @@ main {
   box-sizing: border-box;
 }
 
+main.app {
+  padding: 8px;
+}
+
 main > section {
-  padding: 16px;
-  border-radius: 4px;
+  padding: 8px;
+  /* border-radius: 4px; */
   /* border: 1px solid lightgray; */
   width: 100%;
   max-width: 640px;
   box-sizing: border-box;
+}
+
+main.app > section {
+  padding: 0px;
 }
 
 section.auth {
@@ -82,6 +90,10 @@ section.auth > .form-container {
   border: 1px solid lightgray;
   border-radius: 4px;
   padding: 16px;
+}
+
+main.app > section.card {
+  padding: 8px;
 }
 
 .card-clickable {

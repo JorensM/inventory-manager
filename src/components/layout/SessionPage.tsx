@@ -39,7 +39,7 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
                     <p>Hello {auth.user!.email}</p>
                     <SignOutButton/>
                 </header>
-                <main className='private'>
+                <main className='app'>
                     { children }
                 </main>
             </>
