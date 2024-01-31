@@ -1,15 +1,8 @@
 body, html {
   font-size: 16px;
   margin: 0px;
+  min-height: 100vh;
 }
-
-
-
-main {
-  padding: 16px;
-}
-
-
 
 button {
   /* margin: 8px; */
@@ -48,23 +41,71 @@ header {
   justify-content: space-between;
 }
 
-main.private {
+main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
 }
 
-main.private > section {
-  padding: 32px;
+main > section {
+  padding: 16px;
   border-radius: 4px;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
   width: 100%;
   max-width: 640px;
+  box-sizing: border-box;
+}
+
+
+
+.card {
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.card-clickable {
+  transition: background-color 0.1s ease-in;
+}
+
+.card-clickable:active {
+  background-color: lightgray;
+}
+
+header.auth {
+  position: fixed;
+}
+
+/* Landing page */
+
+main.landing {
+  align-items: flex-start;
+}
+
+/* Sign up/login */
+
+main.auth {
+  justify-content: center;
+  height: 100vh;
+}
+
+main.auth > section {
+  max-width: 320px;
+}
+
+main.auth > h2 {
+  margin: 8px;
 }
 
 /* Input */
 
+
+
 form {
+  border: 1px solid lightgray;
+  border-radius: 2px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px !important;
@@ -96,22 +137,6 @@ select {
   border: none;
   background-color: transparent;
   padding: 8px;
-}
-
-/* Layout */
-
-.card {
-  border: 1px solid lightgray;
-  border-radius: 4px;
-  padding: 16px;
-}
-
-.card-clickable {
-  transition: background-color 0.1s ease-in;
-}
-
-.card-clickable:active {
-  background-color: lightgray;
 }
 
 /* Typography */

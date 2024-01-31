@@ -10,7 +10,7 @@ export default async function PrivatePage() {
   
 
   return (
-    <section>
+    <section className='card'>
       
       <h1>Dashboard</h1>
       <ul>

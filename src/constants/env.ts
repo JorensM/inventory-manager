@@ -1,7 +1,8 @@
 
 const ENV_VAR_NAMES = [
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    "NEXT_PUBLIC_SUPABASE_URL"
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "SUPABASE_ADMIN_KEY"
 ];
 
 const validateEnvVars = () => {
@@ -21,5 +22,6 @@ const validateEnvVars = () => {
 
 validateEnvVars();
 
-export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+export const SUPABASE_ADMIN_KEY = process.env.SUPABASE_ADMIN_KEY!;

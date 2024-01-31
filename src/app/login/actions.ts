@@ -20,8 +20,15 @@ export async function login(formData: FormData) {
 
   const { data: { user }, error } = await supabase.auth.signInWithPassword(data);
 
+  if (error) {
+    if (error.message.includes('Email not confirmed')) {
+      const msg = encodeURIComponent("Please confirm your email");
+      redirect('/error?message=' + msg);
+    }
+  }
+
   if (!user) {
-    redirect('/error');
+    throw new Error('Could not find user');
   }
 
   const { data: teams_data, error: teams_error } = await supabase.from('teams')
@@ -31,14 +38,13 @@ export async function login(formData: FormData) {
 
   if (teams_error) throw teams_error;
 
+  const supabase_admin = createClient(true);
+
   if(teams_data.length == 0) {
-    console.log('creating team');
-    createTeamForUser(supabase, user, 'My team');
+    createTeamForUser(supabase_admin, user, 'My team');
   }
 
-  if (error) {
-    redirect('/error');
-  }
+  if (error) throw error;
 
   revalidatePath('/', 'layout');
   redirect('/');

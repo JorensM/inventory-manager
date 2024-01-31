@@ -36,8 +36,10 @@ export async function signup(formData: FormData) {
         throw new Error('Could not create new user');
     }
 
-    createTeamForUser(supabase, user, data.team_name);
+    const supabase_admin = createClient(true);
+    
+    createTeamForUser(supabase_admin, user, data.team_name);
   
     revalidatePath('/', 'layout');
-    redirect('/');
+    redirect('/signup/success');
   }
