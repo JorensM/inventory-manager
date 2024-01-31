@@ -7,8 +7,8 @@ import { SUPABASE_ANON_KEY, SUPABASE_ADMIN_KEY, SUPABASE_URL } from '@/constants
 export function createClient(admin: boolean = false) {
   const cookieStore = cookies();
   return createServerClient(
-    SUPABASE_URL,
-    admin ? SUPABASE_ADMIN_KEY : SUPABASE_ANON_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    admin ? process.env.SUPABASE_ADMIN_KEY! : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         get(name: string) {
