@@ -1,8 +1,5 @@
 // Core
-import { useContext, useEffect } from 'react';
-
-// State
-import { User } from '@/types/User';
+import { useContext } from 'react';
 
 // Types
 import AuthContext from '@/state/AuthContext';

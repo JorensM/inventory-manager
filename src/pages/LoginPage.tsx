@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import supabase from '../util/supabase';
 import { useState } from 'react';
 import LandingPage from '@/components/layout/LandingPage';

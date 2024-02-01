@@ -1,17 +1,11 @@
-import { PropsWithChildren, useMemo } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { PropsWithChildren } from 'react'
+import { Link } from 'react-router-dom'
 
 type LandingPageProps = {
 
 }
 
 export default function LandingPage( { children }: PropsWithChildren<LandingPageProps>) {
-
-    const location = useLocation();
-
-    const isHomePage = useMemo(() => {
-        return location.pathname == '/'
-    }, [location])
 
     return (
         <>
