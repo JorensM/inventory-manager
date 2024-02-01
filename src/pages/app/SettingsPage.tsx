@@ -1,6 +1,7 @@
 // Components
 import SessionPage from '@/components/layout/SessionPage';
 import APIKeyField from '@/components/input/APIKeyField';
+import { Form, Formik } from 'formik';
 
 
 
@@ -8,18 +9,33 @@ import APIKeyField from '@/components/input/APIKeyField';
  * The settings page
  */
 export default function SettingsPage() {
+
+    // Functions
+    
+    /**
+     * On form submit.
+     */
+    const handleSubmit = () => {
+
+    }
+
     return (
         <SessionPage>
-            <h1>Settings</h1>
-            <ul>
-                <li>
-                    <APIKeyField
-                        status='success'
-                        label='Reverb API key'
-                        name='reverb_key'
-                    />
-                </li>
-            </ul>
+            <section>
+                <h1>Settings</h1>
+                <Formik
+                    initialValues={{}}
+                    onSubmit={handleSubmit}
+                >
+                    <Form>
+                        <APIKeyField
+                            status='success'
+                            label='Reverb API key'
+                            name='reverb_key'
+                        />
+                    </Form>
+                </Formik>
+            </section>
         </SessionPage>
     )
 }
