@@ -1,5 +1,5 @@
 // Core
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 // Styles
@@ -10,6 +10,10 @@ import { User } from './types/User';
 // Classes
 import PlatformManager from './classes/PlatformManager/PlatformManager';
 
+// State
+import PlatformsContext from './state/PlatformsContext';
+import AuthContext from './state/AuthContext';
+
 // Pages
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -17,9 +21,9 @@ import DashboardPage from './pages/app/DashboardPage';
 import ListingsPage from './pages/app/ListingsPage';
 import TeamEditPage from './pages/app/TeamEditPage';
 import SignupPage from './pages/SignupPage';
-import AuthContext from './state/AuthContext';
 import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
+import SettingsPage from './pages/app/SettingsPage';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +61,10 @@ const router = createBrowserRouter([
   {
     path: '/app/teams/edit',
     element: <TeamEditPage />
+  },
+  {
+    path: '/app/settings',
+    element: <SettingsPage />
   }
 ]);
 
