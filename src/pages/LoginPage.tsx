@@ -55,12 +55,12 @@ export default function LoginPage() {
             >
                 <Form>
                   {/* #TODO: Replace Field/label elements with our custom TextInput component */}
-                    <label htmlFor="email">Email:</label>
-                    <Field type="email" name="email" required/>
-                    <label htmlFor="password">Password:</label>
-                    <Field type="password" name="password" required/>
+                    <label htmlFor="email">Email</label>
+                    <Field type="email" name="email" id='email' required/>
+                    <label htmlFor="password">Password</label>
+                    <Field type="password" name="password" id='password' required/>
                     {errorMessage ? <span className='warn'>{errorMessage}</span> : null }
-                    <button>Log in</button>
+                    <button type='submit'>Log in</button>
                 </Form>
             </Formik>
           </div>
