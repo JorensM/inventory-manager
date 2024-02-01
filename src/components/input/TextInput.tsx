@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import InputBase from './InputBase';
 import { useField } from 'formik';
 
-type TextInputProps = {
+export type TextInputProps = {
     label: string
     name: string
 } & ComponentProps<'input'>;
