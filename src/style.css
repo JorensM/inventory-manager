@@ -43,7 +43,7 @@ ul {
 header {
   display: flex;
   padding-block: 8px;
-  padding-inline: 16px;
+  padding-inline: 8px;
   justify-content: space-between;
 }
 
@@ -56,6 +56,15 @@ main {
 
 main.app {
   padding: 8px;
+}
+
+main.landing {
+  align-items: flex-start;
+  padding: 8px;
+}
+
+main.landing > section {
+  padding: 0px;
 }
 
 main > section {
@@ -117,9 +126,7 @@ header > nav > ul {
 
 /* Landing page */
 
-main.landing {
-  align-items: flex-start;
-}
+
 
 /* Sign up/login */
 
