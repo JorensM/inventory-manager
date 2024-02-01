@@ -185,3 +185,11 @@ select {
 .warn {
   color: firebrick;
 }
+
+/* Misc */
+
+.status {
+  width: 24px;
+  height: 24px;
+  border-radius: 100px;;
+}
