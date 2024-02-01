@@ -105,8 +105,10 @@ main.app > section.card {
   background-color: lightgray;
 }
 
-
-
+header > nav > ul {
+  flex-direction: row;
+  align-items: center;
+}
 
 
 /* header.auth {
@@ -149,6 +151,10 @@ input[type="text"], input[type="password"], input[type="email"] {
   padding-block: 8px;
 }
 
+input {
+  flex-grow: 1;
+}
+
 select {
   padding-left: 8px;
   padding-block: 10px;
@@ -157,6 +163,12 @@ select {
 .input-container {
   display: flex;
   flex-direction: column;
+}
+
+.input-container > .contents {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .link, a {
@@ -174,6 +186,17 @@ select {
   border: none;
   background-color: transparent;
   padding: 8px;
+  font-size: 1rem;
+}
+
+.api-key-field {
+  display: flex;
+  gap: 4px;
+}
+
+.api-key-field > .status {
+  margin-top: auto;
+  margin-bottom: 9px;
 }
 
 /* Typography */
