@@ -7,6 +7,8 @@ import './style.css';
 
 // Types
 import { User } from './types/User';
+// Classes
+import PlatformManager from './classes/PlatformManager/PlatformManager';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -61,9 +63,13 @@ const router = createBrowserRouter([
 function App() {
   const [ user, setUser] = useState<User | null>(null);
 
+  const platformsRef = useRef<PlatformManager[]>([]);
+
   return (
     <AuthContext.Provider value={{user, setUser}}>
-      <RouterProvider router={router} />
+      <PlatformsContext.Provider value={{platforms: platformsRef.current}}>
+        <RouterProvider router={router} />
+      </PlatformsContext.Provider>
     </AuthContext.Provider>
     
   )
