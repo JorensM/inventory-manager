@@ -19,7 +19,7 @@ import usePlatforms from '@/hooks/usePlatforms';
 
 type PlatformStatuses = Record<PlatformID, Status>
 
-// Reverb token: 014b298091d99bafebe8658625b33183d03e943605a8207264dca52fa6c09fd2
+
 
 /**
  * The settings page
