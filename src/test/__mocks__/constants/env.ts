@@ -1,3 +1,4 @@
+// Env vars need to be mocked because Jest doesn't support import.meta
 jest.mock('@/constants/env', () => {
     return {
         __esModule: true,
