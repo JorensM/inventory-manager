@@ -41,7 +41,9 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
     }
 
     useEffect(() => {
-        validateTeam();
+        if(auth.user) {
+            validateTeam();
+        }
     }, [auth.user])
 
     useEffect(() => {
