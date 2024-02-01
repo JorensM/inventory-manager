@@ -6,10 +6,9 @@ type APIKeyFieldProps = TextInputProps & {
 };
 export default function APIKeyField({ status, ...props }: APIKeyFieldProps) {
     return (
-        <div>
-            <TextInput
-                {...props} />
-            <StatusIndicator status={status} />
-        </div>
+        <TextInput
+            {...props} 
+            right={<StatusIndicator status={status} />}
+        />
     );
 }
