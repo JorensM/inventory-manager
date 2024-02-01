@@ -11,7 +11,7 @@ export type TextInputProps = {
     right?: ReactNode
 } & ComponentProps<'input'>;
 
-export default function TextInput( { label, required, right, ...props }: TextInputProps) {
+export default function TextInput( { label, required, right, onChange, ...props }: TextInputProps) {
 
     const [ field ] = useField(props.name);
 
@@ -25,7 +25,12 @@ export default function TextInput( { label, required, right, ...props }: TextInp
                 {...props}
                 required={required}
                 value={field.value}
-                onChange={field.onChange(props.name)}
+                onChange={(e) => {
+                    field.onChange(props.name)(e);
+                    if(onChange) {
+                        onChange(e);
+                    }
+                }}
             >
 
             </input>

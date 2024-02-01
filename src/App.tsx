@@ -24,6 +24,9 @@ import SignupPage from './pages/SignupPage';
 import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
 import SettingsPage from './pages/app/SettingsPage';
+import { Platforms } from './types/Platform';
+import ReverbManager from './classes/PlatformManager/ReverbManager';
+import storage from './util/storage';
 
 const router = createBrowserRouter([
   {
@@ -71,7 +74,10 @@ const router = createBrowserRouter([
 function App() {
   const [ user, setUser] = useState<User | null>(null);
 
-  const platformsRef = useRef<PlatformManager[]>([]);
+  const platformsRef = useRef<Platforms>({
+    reverb: new ReverbManager(storage.get('settings').reverb_key, true),
+    ebay: new ReverbManager(storage.get('settings').reverb_key, true)
+  });
 
   return (
     <AuthContext.Provider value={{user, setUser}}>

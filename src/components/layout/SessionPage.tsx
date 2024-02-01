@@ -30,8 +30,6 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
     const validateTeam = async () => {
         const team = await auth.fetchTeam();
 
-        console.log(team);
-
         if (!team) {
             navigate(routes.new_team)
         }
@@ -60,8 +58,8 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
     return (
         auth.user ?
             <>
-                <header>
-                    <p>Hello {auth.user!.email}</p>
+                <header className='app'>
+                    <p className='greeting'>Hello {auth.user!.email}</p>
                     <nav>
                         <ul>
                             <li>

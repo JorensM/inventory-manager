@@ -1,10 +1,24 @@
-import PlatformManager from '@/classes/PlatformManager/PlatformManager';
+// Core
 import { createContext } from 'react';
 
+// Types
+import ReverbManager from '@/classes/PlatformManager/ReverbManager';
+
+// Platforms
+import { Platforms } from '@/types/Platform';
+
+// Util
+import storage from '@/util/storage';
+
+
+
 const PlatformsContext = createContext<{
-    platforms: PlatformManager[]
+    platforms: Platforms
 }>({
-    platforms: []
+    platforms: {
+        reverb: new ReverbManager(storage.get('settings').reverb_key, true),
+        ebay: new ReverbManager(storage.get('settings').reverb_key, true)
+    }
 })
 
 export default PlatformsContext;
