@@ -1,8 +1,15 @@
-import routes from '@/constants/routes';
-import useAuth from '@/hooks/useAuth';
+// Core
 import { PropsWithChildren, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import SignOutButton from '../buttons/SignOutButton';
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+
+// Constants
+import routes from '@/constants/routes';
+
+// Hooks
+import useAuth from '@/hooks/useAuth';
+
+// Components
+import SignOutButton from '@/components/buttons/SignOutButton';
 
 
 
@@ -55,7 +62,17 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
             <>
                 <header>
                     <p>Hello {auth.user!.email}</p>
-                    <SignOutButton/>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to={routes.settings}>Settings</Link>
+                            </li>
+                            <li>
+                                <SignOutButton/>
+                            </li>
+                        </ul>
+                    </nav>
+                    
                 </header>
                 <main className='app'>
                     { children }
