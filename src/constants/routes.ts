@@ -5,7 +5,8 @@ const routes = {
     listing: (listing_id: number) => '/app/listings/' + listing_id,
     login: '/login',
     dashboard: '/app/dashboard',
-    new_team: '/app/teams/edit'
+    new_team: '/app/teams/edit',
+    settings: '/app/settings'
 }
 
 export default routes;
