@@ -33,6 +33,8 @@ export default function ListingPage() {
     // Hooks
     // const { listing_id } = useParams();
     const listing: Listing = useLoaderData() as Listing
+
+    console.log(listing);
     //const listings = useListings();
     const { revalidate } = useRevalidator();
     const platforms = usePlatforms();
@@ -77,9 +79,7 @@ export default function ListingPage() {
         if(!listing) {
             throw new Error("Can't get platform status because listing state is not set")
         }
-        const reverb_status = await platforms.getListingStatus(listing, 'reverb')
-
-        setPlatformsStatus('reverb', reverb_status)
+        getPlatformStatus('reverb');
     }
 
     /**
@@ -103,6 +103,11 @@ export default function ListingPage() {
             throw new Error('Listing state not set')
         }
         const platform_listing_id = await platforms.platforms[platform_id].uploadListing(listing); //#TODO: add ID to listing
+
+        await ListingManager.updateListing({
+            id: listing.id,
+            [platform_id + '_id']: platform_listing_id
+        })
 
         revalidate();
 

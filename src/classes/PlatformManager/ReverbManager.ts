@@ -87,7 +87,7 @@ export default class ReverbManager extends PlatformManager {
         }
     }
 
-    async uploadListing(listing: Listing): Promise<string> {
+    async uploadListing(listing: Listing): Promise<number> {
 
         const data_to_send = this.listingToRequestData(listing);
 
@@ -95,6 +95,6 @@ export default class ReverbManager extends PlatformManager {
 
         console.log(data);
 
-        return 5;
+        return data.listing.id;
     }
 }

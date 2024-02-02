@@ -27,7 +27,7 @@ export default abstract class PlatformManager {
      * 
      * @returns Promise resolving to the created listing's ID
      */
-    abstract uploadListing(listing: Listing): Promise<string>;
+    abstract uploadListing(listing: Listing): Promise<string | number>;
     
     setApiKey(api_key: string | null) {
         this.api_key = api_key

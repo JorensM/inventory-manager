@@ -1,4 +1,5 @@
 // Util
+import { ListingUpdate } from '@/types/Listing';
 import supabase from '@/util/supabase';
 
 export default class ListingManager {
@@ -15,5 +16,13 @@ export default class ListingManager {
         }
 
         return listings[0]
+    }
+
+    static async updateListing (listing: ListingUpdate) {
+        const { error } = await supabase.from('listings')
+            .update(listing)
+            .eq('id', listing.id)
+
+        if(error) throw error;
     }
 }

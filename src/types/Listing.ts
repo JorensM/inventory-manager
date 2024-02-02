@@ -8,7 +8,7 @@ export type Listing = {
     team_id: number
     make: string,
     model: string,
-    reverb_id: string,
+    reverb_id: number,
     ebay_id: string
 }
 
