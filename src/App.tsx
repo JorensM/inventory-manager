@@ -7,13 +7,17 @@ import './style.css';
 
 // Types
 import { User } from './types/User';
+import { Platforms } from './types/Platform';
 
 // Classes
-import PlatformManager from './classes/PlatformManager/PlatformManager';
+import ReverbManager from './classes/PlatformManager/ReverbManager';
 
 // State
 import PlatformsContext from './state/PlatformsContext';
 import AuthContext from './state/AuthContext';
+
+// Util
+import storage from './util/storage';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -25,9 +29,6 @@ import SignupPage from './pages/SignupPage';
 import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
 import SettingsPage from './pages/app/SettingsPage';
-import { Platforms } from './types/Platform';
-import ReverbManager from './classes/PlatformManager/ReverbManager';
-import storage from './util/storage';
 
 const router = createBrowserRouter([
   {
