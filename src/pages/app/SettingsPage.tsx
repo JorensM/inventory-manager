@@ -1,5 +1,5 @@
 // Core
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // Components
@@ -13,13 +13,17 @@ import { Status } from '@/types/Status';
 // Util
 import debounce from '@/util/debounce';
 
+// Constants
+import { platform_name } from '@/constants/localization';
+
 // Hooks
 import usePlatforms from '@/hooks/usePlatforms';
+import useSettings from '@/hooks/useSettings';
 
 
-type PlatformStatuses = Record<PlatformID, Status>
+type PlatformStatuses = Record<PlatformID, Status | null>
 
-
+const disabled_platforms = [ 'ebay' ];
 
 /**
  * The settings page
@@ -28,12 +32,26 @@ export default function SettingsPage() {
     
     // State
     const [ platformStatuses, setPlatformStatuses ] = useState<PlatformStatuses>({
-        reverb: 'loading',
-        ebay: 'loading'
+        reverb: null,
+        ebay: null
     })
 
     // Hooks
     const platforms = usePlatforms();
+    const settings = useSettings();
+
+    // Memo
+    const api_key_fields: {
+        platform_id: PlatformID,
+        initial_value: string,
+        label: string
+    }[] = useMemo(() => {
+        return Object.keys(platforms.platforms).filter(platform_id => !disabled_platforms.includes(platform_id)).map((platform_id) => ({
+            platform_id: platform_id as PlatformID,
+            initial_value: settings.getAPIKey(platform_id as PlatformID) || "",
+            label: platform_name[platform_id as PlatformID]
+        }))
+    }, [])
 
     // Functions
 
@@ -42,7 +60,7 @@ export default function SettingsPage() {
      * @param platform_id ID of platform
      * @param status new status
      */
-    const setPlatformStatus = (platform_id: PlatformID, status: Status) => {
+    const setPlatformStatus = (platform_id: PlatformID, status: Status | null) => {
         setPlatformStatuses((old_state) => {
             const new_state = {...old_state};
             new_state[platform_id] = status;
@@ -64,7 +82,12 @@ export default function SettingsPage() {
         setPlatformStatus(platform_id, success ? 'success' : 'fail')
     }
 
-    const debouncedReverbPing = debounce((api_key: string) => {pingPlatform('reverb', api_key)}, 1000);
+    const debouncedPing: Record<PlatformID, any> = useMemo(() => ({
+        reverb: debounce((api_key: string) => {pingPlatform('reverb', api_key)}, 1000),
+        ebay: () => {}
+    }), [])
+
+    // const debouncedReverbPing = debounce((api_key: string) => {pingPlatform('reverb', api_key)}, 1000);
 
     // Handlers
     
@@ -75,13 +98,15 @@ export default function SettingsPage() {
      * @param value new value (API key) of the input
      */
     const handleAPIKeyChange = (platform_id: PlatformID, api_key: string) => {
-        switch (platform_id){
-            case 'reverb':
-                debouncedReverbPing(api_key)
-                break;
-            case 'ebay':
-                break;
+        if(api_key == '') {
+            setPlatformStatus(platform_id, null);
+            debouncedPing[platform_id].cancel();
+            return;
+        } else if (platformStatuses[platform_id] == null) {
+            setPlatformStatus(platform_id, 'loading');
         }
+        console.log('debouncing')
+        debouncedPing[platform_id](api_key);
     }
 
     /**
@@ -102,12 +127,20 @@ export default function SettingsPage() {
                     onSubmit={handleSubmit}
                 >
                     <Form>
-                        <APIKeyField
-                            status={platformStatuses.reverb}
-                            label='Reverb API key'
-                            name='reverb_key'
-                            onChange={(e) => handleAPIKeyChange('reverb', e.currentTarget.value)}
-                        />
+                        {api_key_fields.map(field => (
+                            <APIKeyField
+                                status={platformStatuses[field.platform_id]}
+                                label={field.label}
+                                name={field.platform_id + '_key'}
+                                onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
+                            />
+                        ))}
+                        {/* <APIKeyField */}
+                            {/* status={platformStatuses.reverb} */}
+                            {/* label='Reverb API key' */}
+                            {/* name='reverb_key' */}
+                            {/* onChange={(e) => handleAPIKeyChange('reverb', e.currentTarget.value)} */}
+                        {/* /> */}
                     </Form>
                 </Formik>
             </section>
