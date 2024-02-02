@@ -11,6 +11,7 @@ import { Platforms } from './types/Platform';
 
 // Classes
 import ReverbManager from './classes/PlatformManager/ReverbManager';
+import ListingManager from './classes/ListingManager';
 
 // State
 import PlatformsContext from './state/PlatformsContext';
@@ -53,7 +54,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/app/listings/:listing_id',
-    element: <ListingPage />
+    element: <ListingPage />,
+    loader: async ( { params } ) => {
+      const listing = await ListingManager.fetchListing(parseInt(params.listing_id!));
+      return listing;
+    }
   },
   {
     path: '/app/listings/edit',
