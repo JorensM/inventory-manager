@@ -7,6 +7,7 @@ import './style.css';
 
 // Types
 import { User } from './types/User';
+
 // Classes
 import PlatformManager from './classes/PlatformManager/PlatformManager';
 
