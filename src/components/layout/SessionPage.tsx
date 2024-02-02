@@ -1,6 +1,6 @@
 // Core
 import { PropsWithChildren, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 // Constants
 import routes from '@/constants/routes';
@@ -10,6 +10,7 @@ import useAuth from '@/hooks/useAuth';
 
 // Components
 import SignOutButton from '@/components/buttons/SignOutButton';
+import Page from './Page';
 
 
 
@@ -17,11 +18,13 @@ type SessionPageProps = {
 
 }
 
+/**
+ * Page wrapper for user pages
+ */
 export default function SessionPage( { children }: PropsWithChildren<SessionPageProps>) {
 
     // Hooks
     const auth = useAuth();
-    const location = useLocation();
     const navigate = useNavigate();
 
     /**
@@ -35,48 +38,40 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
         }
     }
 
-    const validateSession = async () => {
-        
-        const session = await auth.getSession();
-        if(!session) {
-            navigate(routes.login)
-        } else {
-            await auth.fetchUser();
-        }
-    }
-
     useEffect(() => {
         if(auth.user) {
             validateTeam();
         }
     }, [auth.user])
 
-    useEffect(() => {
-        validateSession();
-    }, [ location.pathname ])
+    
 
     return (
-        auth.user ?
-            <>
-                <header className='app'>
-                    <p className='greeting'>Hello {auth.user!.email}</p>
-                    <nav>
-                        <ul>
-                            <li>
-                                <Link to={routes.settings}>Settings</Link>
-                            </li>
-                            <li>
-                                <SignOutButton/>
-                            </li>
-                        </ul>
-                    </nav>
-                    
-                </header>
-                <main className='app'>
-                    { children }
-                </main>
-            </>
-        : 'Loading'
+        <Page>
+            {auth.user ?
+                <>
+                    <header className='app'>
+                        <p className='greeting'>Hello {auth.user!.email}</p>
+                        <nav>
+                            <ul>
+                                <li>
+                                    <Link to={routes.settings}>Settings</Link>
+                                </li>
+                                <li>
+                                    <SignOutButton/>
+                                </li>
+                            </ul>
+                        </nav>
+                        
+                    </header>
+                    <main className='app'>
+                        { children }
+                    </main>
+                </>
+            // Display loading message if user is being fetched
+            : 'Loading'}
+        </Page>
+        
         
     )
 }

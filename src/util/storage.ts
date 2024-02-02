@@ -5,7 +5,7 @@ const storage = {
         return JSON.parse(localStorage.getItem(prefix + key) || "{}");
     },
     set: (key: string, value: any) => {
-        localStorage.setItem(key, JSON.stringify(value));
+        localStorage.setItem(prefix + key, JSON.stringify(value));
     }
 }
 
