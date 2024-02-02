@@ -10,6 +10,7 @@ import BackButton from '@/components/buttons/BackButton';
 // Types
 import { PlatformID } from '@/types/Platform';
 import { Status } from '@/types/Status';
+import { APIKeyName } from '@/types/Listing';
 
 // Util
 import debounce from '@/util/debounce';
@@ -31,7 +32,7 @@ type PlatformStatuses = Record<PlatformID, Status | null>
  */
 const disabled_platforms = [ 'ebay' ];
 
-type APIKeyFieldName = `${PlatformID}_key`
+
 
 type APIKeyField = {
     platform_id: PlatformID,
@@ -39,7 +40,7 @@ type APIKeyField = {
     label: string
 }
 
-type APIKeysFormValues = Record<APIKeyFieldName, string>
+type APIKeysFormValues = Record<APIKeyName, string>
 
 /**
  * The settings page
@@ -165,7 +166,7 @@ export default function SettingsPage() {
         const settings = storage.get(storage_keys.settings);
 
         for(const key in values) {
-            settings[key] = values[key as APIKeyFieldName]
+            settings[key] = values[key as APIKeyName]
         }
 
         storage.set(storage_keys.settings, settings);
@@ -188,8 +189,10 @@ export default function SettingsPage() {
 
     return (
         <SessionPage>
-            <BackButton />
-            <h1>Settings</h1>
+            <section>
+                <BackButton />
+                <h1>Settings</h1>
+            </section>
             <section>
                 {/* API Keys form */}
                 <h2>API Keys</h2>

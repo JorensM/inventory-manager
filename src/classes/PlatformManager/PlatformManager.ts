@@ -1,3 +1,5 @@
+import { Listing } from '@/types/Listing';
+
 export default abstract class PlatformManager {
 
     /**
@@ -17,6 +19,15 @@ export default abstract class PlatformManager {
      * @returns Promise that resolves to true if ping was successful, or false if not
      */
     abstract ping(api_key: string): Promise<boolean>;
+
+    /**
+     * Upload listing to platform
+     * 
+     * @param listing Listing to upload.
+     * 
+     * @returns Promise resolving to the created listing's ID
+     */
+    abstract uploadListing(listing: Listing): Promise<string>;
     
     setApiKey(api_key: string | null) {
         this.api_key = api_key
