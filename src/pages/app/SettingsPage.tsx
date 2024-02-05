@@ -23,6 +23,7 @@ import storage_keys from '@/constants/storage_keys';
 // Hooks
 import usePlatforms from '@/hooks/usePlatforms';
 import useSettings from '@/hooks/useSettings';
+import SelectInput from '@/components/input/SelectInput';
 
 
 type PlatformStatuses = Record<PlatformID, Status | null>
@@ -212,13 +213,33 @@ export default function SettingsPage() {
                         return (
                             <Form>
                                 {api_key_fields.map(field => (
-                                    <APIKeyField
-                                        key={field.platform_id}
-                                        status={platformStatuses[field.platform_id]}
-                                        label={field.label}
-                                        name={field.platform_id + '_key'}
-                                        onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
-                                    />
+                                    <>
+                                        <APIKeyField
+                                            key={field.platform_id}
+                                            status={platformStatuses[field.platform_id]}
+                                            label={field.label}
+                                            name={field.platform_id + '_key'}
+                                            onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
+                                        />
+                                        {field.platform_id == 'reverb' ?
+                                            <SelectInput
+                                                label='Reverb mode'
+                                                name=''
+                                                options={[
+                                                    {
+                                                        label: 'Sandbox',
+                                                        value: 'sandbox'
+                                                    },
+                                                    {
+                                                        label: 'Live',
+                                                        value: 'live'
+                                                    }
+                                                ]}
+                                            />
+                                        : null}
+                                        
+                                    </>
+                                    
                                 ))}
                                 <button type='submit' disabled={APIKeysSubmitDisabled}>Save API Keys</button>
                             </Form>
