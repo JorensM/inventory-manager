@@ -82,6 +82,7 @@ export default class ReverbManager extends PlatformManager {
 
     private listingToRequestData(listing: Listing) {
         return {
+            title: listing.title,
             make: listing.make,
             model: listing.model
         }
