@@ -183,6 +183,18 @@ export default function SettingsPage() {
         formikHelpers.resetForm({ values });
     }
 
+    /**
+     * Handle modes form submit. Updates new values in settings
+     * 
+     * @param values Formik values
+     * @param formikHelpers Formik helpers
+     */
+    const handleModesSubmit = (values: ModesFormValues, formikHelpers: FormikHelpers<ModesFormValues>) => {
+        settings.updateSettings(values);
+
+        formikHelpers.resetForm({ values });
+    }
+
     //-- Effects --//
     
     /**
