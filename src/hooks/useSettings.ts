@@ -5,7 +5,9 @@ import { PlatformID } from '@/types/Platform';
 import storage from '@/util/storage';
 
 // Constants
-import storage_keys from '@/constants/storage_keys'
+import storage_keys from '@/constants/storage_keys';
+
+// Types
 import { Settings } from '@/types/Settings';
 
 export default function useSettings() {
