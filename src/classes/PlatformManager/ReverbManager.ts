@@ -54,7 +54,7 @@ export default class ReverbManager extends PlatformManager {
         return new URL(`https://${this.is_sandbox ? 'sandbox' : 'api'}.reverb.com/api/` + endpoint);
     }
 
-    private async request(url: URL, type: 'get' | 'post', api_key: string, data?: object){
+    private async request(url: URL, type: 'get' | 'post' | 'put', api_key: string, data?: object){
         if(!api_key) {
             throw new Error('Cannot make Reverb request because API key is not set');
         }
@@ -88,6 +88,23 @@ export default class ReverbManager extends PlatformManager {
         const data = await this.request(url, 'get', api_key!);
 
         return data;
+    }
+
+    /**
+     * Make PUT request to a Reverb endpoint
+     * @param endpoint Endpoint to send request to. Shouldn't start with slash and hostname, only the path
+     * @param api_key (Optional) API key to use to overwrite the set api_key
+     * 
+     * @return Request response as an object
+     */
+    private async PUT(endpoint: string, data: object, api_key = this.api_key) {
+
+        const url = this.createAPIURL(endpoint);
+
+        const res_data = await this.request(url, 'post', api_key!, data);
+
+        return res_data;
+        
     }
 
     async POST(endpoint: string, data: object, api_key = this.api_key) {
