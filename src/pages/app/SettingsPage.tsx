@@ -43,6 +43,10 @@ type APIKeyField = {
 
 type APIKeysFormValues = Record<APIKeyName, string>
 
+type ModesFormValues = {
+    reverb_mode: 'sandbox' | 'live'
+}
+
 /**
  * The settings page
  */
