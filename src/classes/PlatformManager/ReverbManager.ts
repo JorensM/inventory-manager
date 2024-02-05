@@ -18,9 +18,38 @@ export default class ReverbManager extends PlatformManager {
         this.is_sandbox = is_sandbox;
     }
 
+    //-- Extended Methods --//
+
+    async ping(api_key: string) {
+        try {
+            const data = await this.GET('my/account', api_key);
+
+            if(data) {
+                return true;
+            }
+            return false;
+        } catch {
+            return false;
+        }
+    }
+
+    async uploadListing(listing: Listing): Promise<number> {
+
+        const data_to_send = this.listingToRequestData(listing);
+
+        const data = await this.POST('listings', data_to_send);
+
+        console.log(data);
+
+        return data.listing.id;
+    }
+
+    //-- Added Methods --//
+
     setIsSandbox(is_sandbox: boolean) {
         this.is_sandbox = is_sandbox;
     }
+
     private createAPIURL(endpoint: string) {
         return new URL(`https://${this.is_sandbox ? 'sandbox' : 'api'}.reverb.com/api/` + endpoint);
     }
@@ -70,19 +99,6 @@ export default class ReverbManager extends PlatformManager {
         return res_data;
     }
 
-    async ping(api_key: string) {
-        try {
-            const data = await this.GET('my/account', api_key);
-
-            if(data) {
-                return true;
-            }
-            return false;
-        } catch {
-            return false;
-        }
-    }
-
     private listingToRequestData(listing: Listing) {
         return {
             title: listing.title,
@@ -91,14 +107,5 @@ export default class ReverbManager extends PlatformManager {
         }
     }
 
-    async uploadListing(listing: Listing): Promise<number> {
-
-        const data_to_send = this.listingToRequestData(listing);
-
-        const data = await this.POST('listings', data_to_send);
-
-        console.log(data);
-
-        return data.listing.id;
-    }
+    
 }
