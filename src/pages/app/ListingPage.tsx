@@ -20,12 +20,6 @@ import { Listing, ListingPlatformStatus } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
 import useSettings from '@/hooks/useSettings';
 
-
-export async function listingPageLoader( { params }: LoaderFunctionArgs) {
-    const listing = await ListingManager.fetchListing(parseInt(params.listing_id!));
-    return listing;
-}
-
 /**
  * Listing page where user can view a listing
  */
