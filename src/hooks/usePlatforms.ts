@@ -19,7 +19,7 @@ export default function usePlatforms() {
          * @returns ListingPlatformStatus
          */
         getListingStatus(listing: Listing, platform_id: PlatformID): ListingPlatformStatus {
-            const key = platform_id + '_key' as keyof Listing;
+            const key = platform_id + '_id' as keyof Listing;
             if(!listing[key]) {
                 return 'not-uploaded'
             } else {
