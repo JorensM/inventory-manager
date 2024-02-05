@@ -6,6 +6,7 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import SessionPage from '@/components/layout/SessionPage';
 import APIKeyField from '@/components/input/APIKeyField';
 import BackButton from '@/components/buttons/BackButton';
+import SelectInput from '@/components/input/SelectInput';
 
 // Types
 import { PlatformID } from '@/types/Platform';
@@ -23,7 +24,8 @@ import storage_keys from '@/constants/storage_keys';
 // Hooks
 import usePlatforms from '@/hooks/usePlatforms';
 import useSettings from '@/hooks/useSettings';
-import SelectInput from '@/components/input/SelectInput';
+
+// Classes
 import ReverbManager from '@/classes/PlatformManager/ReverbManager';
 
 
