@@ -1,6 +1,6 @@
 // Core
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useLoaderData, useRevalidator } from 'react-router-dom';
+import { Link, useLoaderData, useNavigate, useRevalidator } from 'react-router-dom';
 
 // Classes
 import ListingManager from '@/classes/ListingManager';
@@ -31,6 +31,7 @@ export default function ListingPage() {
     // const { listing_id } = useParams();
     const listing: Listing = useLoaderData() as Listing
     const settings = useSettings();
+    const navigate = useNavigate();
 
     //const listings = useListings();
     const { revalidate } = useRevalidator();
@@ -173,6 +174,19 @@ export default function ListingPage() {
         // })
     }
 
+    const handleDeleteClick = async () => {
+        const confirm_deletion = confirm('Are you sure you want to delete the listing? It will be deleted on Reverb as well');
+        if(confirm_deletion) {
+            await ListingManager.deleteListing(listing);
+
+            for(const platform_id in platforms.platforms) {
+                platforms.platforms[platform_id as PlatformID].deleteListing(listing)
+            }
+            navigate(routes.listings)
+        }
+        
+    }
+
     // Effects
 
     /**
@@ -199,7 +213,13 @@ export default function ListingPage() {
                 <>
                     <section>
                             <h1>{listing.title}</h1>
-                            <Link to={routes.edit_listing(listing.id)}>Edit listing</Link>
+                            <Link className='text-btn' to={routes.edit_listing(listing.id)}>Edit listing</Link>
+                            <button 
+                                className='text-btn warn block'
+                                onClick={handleDeleteClick}
+                            >
+                                Delete listing
+                            </button>
                     </section>
                     <section>
                         <h2>Platforms</h2>

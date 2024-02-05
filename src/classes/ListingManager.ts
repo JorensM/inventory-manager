@@ -33,11 +33,11 @@ export default class ListingManager {
      * @param listing Listing object to delete
      * @param delete_on_platforms Whether to delete listing on platforms as well
      */
-    static async deleteListing (listing: Listing, delete_on_platforms: boolean) {
+    static async deleteListing (listing: Listing) {
         const { error } = await supabase.from('listings')
             .delete()
             .eq('id', listing.id)
 
-        if (error) throw error
+        if (error) throw error;
     }
 }

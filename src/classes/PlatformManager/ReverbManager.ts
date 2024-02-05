@@ -60,6 +60,16 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         return converted_data;
     }
 
+    async deleteListing(listing: Listing): Promise<void> {
+        const data = await this.DELETE('listings/' + listing.reverb_id);
+
+        // console.log(data);
+        
+        // if(data.error) {
+        //     throw new Error('Could not delete listing: ' + JSON.stringify(data.error))
+        // }
+    }
+
     async isSynced(listing: Listing): Promise<boolean> {
         
         const reverb_listing = await this.getListing(listing);
@@ -100,7 +110,7 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      * 
      * @returns API request's response as an object
      */
-    private async request(url: URL, type: 'get' | 'post' | 'put', api_key: string, data?: object){
+    private async request(url: URL, type: 'get' | 'post' | 'put' | 'delete', api_key: string, data?: object){
         if(!api_key) {
             throw new Error('Cannot make Reverb request because API key is not set');
         }
@@ -177,6 +187,22 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         const url = this.createAPIURL(endpoint);
 
         const res_data = await this.request(url, 'post', api_key!, data);
+
+        return res_data;
+    }
+
+    /**
+     * Make DELETE request to API
+     * @param endpoint Endpoint to call
+     * @param api_key (Optional) API key to overwrite the currently set API Key
+     * 
+     * @returns API request response as object
+     */
+    async DELETE(endpoint: string, api_key = this.api_key) {
+
+        const url = this.createAPIURL(endpoint);
+
+        const res_data = await this.request(url, 'delete', api_key!);
 
         return res_data;
     }

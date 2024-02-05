@@ -45,6 +45,12 @@ export default abstract class PlatformManager<ListingT> {
     abstract getListing(listing: Listing): Promise<ListingT>;
     
     /**
+     * Delete listing from platform
+     * @param listing Listing to delete
+     */
+    abstract deleteListing(listing: Listing): Promise<void>;
+
+    /**
      * Check whether provided listing is synced with its respective platform listing
      * @param listing listing to check
      * 
