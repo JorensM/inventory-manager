@@ -1,4 +1,4 @@
-import { Listing } from '@/types/Listing';
+import { Listing, ListingUpdate } from '@/types/Listing';
 
 export default abstract class PlatformManager {
 
@@ -28,6 +28,13 @@ export default abstract class PlatformManager {
      * @returns Promise resolving to the created listing's ID
      */
     abstract uploadListing(listing: Listing): Promise<string | number>;
+
+    /**
+     * Update listing on platform
+     * @param listing Listing data to update. Unspecified properties will be left
+     * unchanged
+     */
+    abstract updateListing(listing: ListingUpdate): Promise<void>;
     
     setApiKey(api_key: string | null) {
         this.api_key = api_key
