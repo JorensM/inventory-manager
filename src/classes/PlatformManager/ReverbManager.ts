@@ -74,14 +74,32 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
     
     //-- Added Methods --//
 
+    /**
+     * Set whether to make calls to Sandbox Reverb or Live reverb
+     * @param is_sandbox whether to make sandbox API calls
+     */
     setIsSandbox(is_sandbox: boolean) {
         this.is_sandbox = is_sandbox;
     }
 
+    /**
+     * Create an API url based on endpint.
+     * @param endpoint portion of the API url after `.../api/`, for example `listings`
+     * @returns returns full URL
+     */
     private createAPIURL(endpoint: string) {
         return new URL(`https://${this.is_sandbox ? 'sandbox' : 'api'}.reverb.com/api/` + endpoint);
     }
 
+    /**
+     * Make request to Reverb's API
+     * @param url Full URL to the endpoint
+     * @param type request type, can be 'get', 'post', 'put, 'delete'
+     * @param api_key API key to use in the request
+     * @param data Optional data to add to the body of the request
+     * 
+     * @returns API request's response as an object
+     */
     private async request(url: URL, type: 'get' | 'post' | 'put', api_key: string, data?: object){
         if(!api_key) {
             throw new Error('Cannot make Reverb request because API key is not set');
@@ -113,6 +131,13 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         return res_data;
     }
 
+    /**
+     * Make GET request to API
+     * @param endpoint Endpoint to call
+     * @param api_key (Optional) API key to overwrite the currently set API Key
+     * 
+     * @returns API request response as object
+     */
     async GET(endpoint: string, api_key = this.api_key) {
 
         const url = this.createAPIURL(endpoint);
@@ -139,6 +164,14 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
 
     }
 
+    /**
+     * Make POST request to API
+     * @param endpoint Endpoint to call
+     * @param data Data to send as object
+     * @param api_key (Optional) API key to overwrite the currently set API Key
+     * 
+     * @returns API request response as object
+     */
     async POST(endpoint: string, data: object, api_key = this.api_key) {
 
         const url = this.createAPIURL(endpoint);
@@ -148,6 +181,12 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         return res_data;
     }
 
+    /**
+     * Convert a Listing object to Reverb's listing schema suitable for making API calls
+     * @param listing Listing object to convert
+     * 
+     * @returns listing object matching Reverb API's listing schema
+     */
     private listingToRequestData(listing: Listing | ListingUpdate) {
         return {
             title: listing.title,
