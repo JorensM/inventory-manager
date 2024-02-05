@@ -1,6 +1,8 @@
 // Util
-import { ListingUpdate } from '@/types/Listing';
 import supabase from '@/util/supabase';
+
+// Types
+import { Listing, ListingUpdate } from '@/types/Listing';
 
 export default class ListingManager {
     static async fetchListing (listing_id: number) {
@@ -23,6 +25,19 @@ export default class ListingManager {
             .update(listing)
             .eq('id', listing.id)
 
-        if(error) throw error;
+        if (error) throw error;
+    }
+
+    /**
+     * Delete a listing from DB, and optionally from the platforms as well
+     * @param listing Listing object to delete
+     * @param delete_on_platforms Whether to delete listing on platforms as well
+     */
+    static async deleteListing (listing: Listing, delete_on_platforms: boolean) {
+        const { error } = await supabase.from('listings')
+            .delete()
+            .eq('id', listing.id)
+
+        if (error) throw error
     }
 }
