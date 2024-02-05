@@ -20,6 +20,9 @@ import AuthContext from './state/AuthContext';
 // Util
 import storage from './util/storage';
 
+// Constants
+import { IS_DEV } from './constants/env';
+
 // Pages
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -31,7 +34,7 @@ import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
 import SettingsPage from './pages/app/SettingsPage';
 
-document.title = import.meta.env.DEV ? 'DEV: Inventory Manager' : 'Inventory Manager'
+document.title = IS_DEV ? 'DEV: Inventory Manager' : 'Inventory Manager'
 
 const router = createBrowserRouter([
   {
