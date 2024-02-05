@@ -1,5 +1,5 @@
 // Core
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLoaderData, useRevalidator } from 'react-router-dom';
 
 // Classes
@@ -7,6 +7,7 @@ import ListingManager from '@/classes/ListingManager';
 
 // Components
 import SessionPage from '@/components/layout/SessionPage';
+import StatusIndicator from '@/components/misc/StatusIndicator';
 
 // Constants
 import { listing_platform_status } from '@/constants/localization';
@@ -19,6 +20,7 @@ import useSettings from '@/hooks/useSettings';
 // Types
 import { Listing, ListingPlatformStatus } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
+import { Status } from '@/types/Status';
 
 /**
  * Listing page where user can view a listing
@@ -30,7 +32,6 @@ export default function ListingPage() {
     const listing: Listing = useLoaderData() as Listing
     const settings = useSettings();
 
-    console.log(listing);
     //const listings = useListings();
     const { revalidate } = useRevalidator();
     const platforms = usePlatforms();
@@ -41,6 +42,21 @@ export default function ListingPage() {
         reverb: 'loading',
         ebay: 'loading'
     })
+    const [ platformSyncStatuses, setPlatformSyncStatuses ] = useState<Record<PlatformID, Status | null>>({
+        reverb: null,
+        ebay: null
+    })
+    
+    //-- Memo --//
+
+    /**
+     * Wheter update button for corresponding platform should be disabled. It will
+     * be only be enabled if sync status is null or fail.
+     */
+    const isPlatformUpdateDisabled: Record<PlatformID, boolean> = useMemo(() => ({
+        reverb: !['fail', null].includes(platformSyncStatuses.reverb),
+        ebay: !['fail', null].includes(platformSyncStatuses.ebay)
+    }), [ platformSyncStatuses ])
     
     // Functions
 
@@ -60,7 +76,7 @@ export default function ListingPage() {
      * @param platform_id Id of platform
      * @param status new status
      */
-    const setPlatformsStatus = (platform_id: PlatformID, status: ListingPlatformStatus | 'loading') => {
+    const setPlatformStatus = (platform_id: PlatformID, status: ListingPlatformStatus | 'loading') => {
         setPlatformsStatuses((old_state) => {
             const new_state = {...old_state};
             new_state[platform_id] = status;
@@ -71,21 +87,54 @@ export default function ListingPage() {
     /**
      * Get statuses of all platforms and set their respective state
      */
-    const getPlatformStatuses = async () => {
+    const updatePlatformStatuses = async () => {
         if(!listing) {
             throw new Error("Can't get platform status because listing state is not set")
         }
-        getPlatformStatus('reverb');
+        updatePlatformStatus('reverb');
     }
 
     /**
      * Get status of particular platform and set its respective state
      */
-    const getPlatformStatus = async (platform_id: PlatformID) => {
+    const updatePlatformStatus = async (platform_id: PlatformID) => {
         
         const status = await platforms.getListingStatus(listing, platform_id)
 
-        setPlatformsStatus(platform_id, status)
+        setPlatformStatus(platform_id, status)
+    }
+
+    /**
+     * Set platform sync status for specific platform
+     * @param platform_id Id of platform
+     * @param status new status
+     */
+    const setPlatformSyncStatus = (platform_id: PlatformID, status: Status | null) => {
+        setPlatformSyncStatuses((old_state) => {
+            const new_state = {...old_state};
+            new_state[platform_id] = status;
+            return new_state;
+        })
+    }
+
+    /**
+     * Get sync statuses of all platforms
+     */
+    const updatePlatformSyncStatuses = async () => {
+        if(!listing) {
+            throw new Error("Can't get platform sync statuses because listing state is not set")
+        }
+
+        updatePlatformSyncStatus('reverb');
+    }
+
+    const updatePlatformSyncStatus = async (platform_id: PlatformID) => {
+        setPlatformSyncStatus(platform_id, 'loading');
+        const synced = await platforms.platforms[platform_id].isSynced(listing);
+
+        const status: Status = synced ? 'success' : 'fail'
+
+        setPlatformSyncStatus(platform_id, status);
     }
 
     //-- Handlers --//
@@ -98,12 +147,18 @@ export default function ListingPage() {
         if(!listing) {
             throw new Error('Listing state not set')
         }
-        const platform_listing_id = await platforms.platforms[platform_id].uploadListing(listing); //#TODO: add ID to listing
 
-        await ListingManager.updateListing({
-            id: listing.id,
-            [platform_id + '_id']: platform_listing_id
-        })
+        if(listing[platform_id + '_id' as keyof Listing]) {
+            console.log('updating')
+            await platforms.platforms[platform_id].updateListing(listing);
+        } else {
+            const platform_listing_id = await platforms.platforms[platform_id].uploadListing(listing);
+
+            await ListingManager.updateListing({
+                id: listing.id,
+                [platform_id + '_id']: platform_listing_id
+            })
+        }
 
         revalidate();
 
@@ -128,7 +183,8 @@ export default function ListingPage() {
 
     useEffect(() => {
         if (listing) {
-            getPlatformStatuses();
+            updatePlatformStatuses();
+            updatePlatformSyncStatuses();
         }
         
     }, [listing])
@@ -149,18 +205,32 @@ export default function ListingPage() {
                         {settings.getAPIKey('reverb') ? 
                             <> 
                                 <h3>Reverb</h3>
-                                <p>
-                                    Status: 
-                                    {platformsStatuses.reverb == 'loading' ? 
-                                        'loading...' 
-                                    : 
-                                        listing_platform_status[platformsStatuses.reverb]
-                                    }
-                                </p>
+                                <ul>
+                                    <li>
+                                        Status: 
+                                        {platformsStatuses.reverb == 'loading' ? 
+                                            'loading...' 
+                                        : 
+                                            listing_platform_status[platformsStatuses.reverb]
+                                        }
+                                    </li>
+                                    {platformSyncStatuses.reverb != null ?
+                                        <li>
+                                            <div className='key-value-container'>
+                                                Sync status:                                    
+                                                <StatusIndicator
+                                                    status={platformSyncStatuses.reverb}
+                                                />
+                                            </div>
+                                        </li>
+                                    : null}
+                                </ul>
+                                
+                                
                                 {platformsStatuses.reverb != 'loading' ?
                                     <button
                                         onClick={() => handlePlatformUpdateClick('reverb')}
-                                        disabled={platformsStatuses.reverb !== 'not-uploaded'}
+                                        disabled={isPlatformUpdateDisabled.reverb}
                                     >
                                         {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Update'}
                                     </button>

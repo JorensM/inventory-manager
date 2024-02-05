@@ -1,6 +1,6 @@
 import { Listing, ListingUpdate } from '@/types/Listing';
 
-export default abstract class PlatformManager {
+export default abstract class PlatformManager<ListingT> {
 
     /**
      * Platform manager base class. 
@@ -35,7 +35,23 @@ export default abstract class PlatformManager {
      * unchanged
      */
     abstract updateListing(listing: ListingUpdate): Promise<void>;
+
+    /**
+     * Get listing from platform
+     * @param listing Listing object for which to get the respective platform listing
+     * 
+     * @return Promise resolving to a Listing object
+     */
+    abstract getListing(listing: Listing): Promise<ListingT>;
     
+    /**
+     * Check whether provided listing is synced with its respective platform listing
+     * @param listing listing to check
+     * 
+     * @return true if synced, false if not
+     */
+    abstract isSynced(listing: Listing): Promise<boolean>;
+
     setApiKey(api_key: string | null) {
         this.api_key = api_key
     }

@@ -41,7 +41,6 @@ ul {
 /*--- Layout ---*/
 
 
-
 /* Main */
 
 main {
@@ -137,6 +136,13 @@ header > nav {
 header > .greeting {
   display: flex;
   align-items: center;
+}
+
+.key-value-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
 }
 
 /* header.auth {
