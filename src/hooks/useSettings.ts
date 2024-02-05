@@ -21,6 +21,19 @@ export default function useSettings() {
         },
         getSettings(): Settings {
             return storage.get(storage_keys.settings);
+        },
+        /**
+         * Update settings.
+         * @param updated_settings Settings to update. Settings that are not specified
+         * will be left unchanged
+         */
+        async updateSettings(updated_settings: Partial<Settings>) {
+            const new_settings = { 
+                ...storage.get(storage_keys.settings),
+                ...updated_settings
+            };
+
+            storage.set(storage_keys.settings, new_settings);
         }
     }
 }
