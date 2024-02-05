@@ -34,6 +34,8 @@ import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
 import SettingsPage from './pages/app/SettingsPage';
 
+// Loaders
+import listingPageLoader from './pages/app/listingPageLoader';
 document.title = IS_DEV ? 'DEV: Inventory Manager' : 'Inventory Manager'
 
 const router = createBrowserRouter([
@@ -60,10 +62,7 @@ const router = createBrowserRouter([
   {
     path: '/app/listings/:listing_id',
     element: <ListingPage />,
-    loader: async ( { params } ) => {
-      const listing = await ListingManager.fetchListing(parseInt(params.listing_id!));
-      return listing;
-    }
+    loader: listingPageLoader
   },
   {
     path: '/app/listings/edit',
