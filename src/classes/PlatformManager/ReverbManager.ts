@@ -100,8 +100,12 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         if(!res.ok) {
             if(res.status == 401) {
                 throw new Error('Reverb: Unauthorized')
+            } else if(res.status == 404) {
+                return null;
+            } else {
+                throw new Error('Network error')
             }
-            throw new Error('Network error')
+            
         }
 
         const res_data = await res.json();
