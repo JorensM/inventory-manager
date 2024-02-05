@@ -1,6 +1,6 @@
 // Core
 import { useEffect, useState } from 'react';
-import { Link, LoaderFunctionArgs, useLoaderData, useRevalidator } from 'react-router-dom';
+import { Link, useLoaderData, useRevalidator } from 'react-router-dom';
 
 // Classes
 import ListingManager from '@/classes/ListingManager';
@@ -14,11 +14,11 @@ import routes from '@/constants/routes';
 
 // Hooks
 import usePlatforms from '@/hooks/usePlatforms';
+import useSettings from '@/hooks/useSettings';
 
 // Types
 import { Listing, ListingPlatformStatus } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
-import useSettings from '@/hooks/useSettings';
 
 /**
  * Listing page where user can view a listing
