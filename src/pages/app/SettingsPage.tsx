@@ -24,6 +24,7 @@ import storage_keys from '@/constants/storage_keys';
 import usePlatforms from '@/hooks/usePlatforms';
 import useSettings from '@/hooks/useSettings';
 import SelectInput from '@/components/input/SelectInput';
+import ReverbManager from '@/classes/PlatformManager/ReverbManager';
 
 
 type PlatformStatuses = Record<PlatformID, Status | null>
@@ -189,8 +190,10 @@ export default function SettingsPage() {
      * @param values Formik values
      * @param formikHelpers Formik helpers
      */
-    const handleModesSubmit = (values: ModesFormValues, formikHelpers: FormikHelpers<ModesFormValues>) => {
-        settings.updateSettings(values);
+    const handleModesSubmit = async (values: ModesFormValues, formikHelpers: FormikHelpers<ModesFormValues>) => {
+        await settings.updateSettings(values);
+
+        (platforms.platforms.reverb as ReverbManager).setIsSandbox(values.reverb_mode == 'sandbox');
 
         formikHelpers.resetForm({ values });
     }
