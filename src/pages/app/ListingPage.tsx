@@ -162,6 +162,7 @@ export default function ListingPage() {
                         {platformsStatuses.reverb != 'loading' ?
                             <button
                                 onClick={() => handlePlatformUpdateClick('reverb')}
+                                disabled={platformsStatuses.reverb !== 'not-uploaded'}
                             >
                                 {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Update'}
                             </button>
