@@ -28,7 +28,10 @@ export default function InputBase( { label, required = false, children }: PropsW
             // ref={containerRef}
         >
             <label>{label}{required ? <span className='required'>(Required)</span> : null}</label>
-            {children}
+            <div className='contents'>
+                {children}
+            </div>
+            
         </div>
     );
 }

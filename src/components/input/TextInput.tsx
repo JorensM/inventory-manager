@@ -1,13 +1,17 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import InputBase from './InputBase';
 import { useField } from 'formik';
 
-type TextInputProps = {
+export type TextInputProps = {
     label: string
     name: string
+    /**
+     * Component to render on the right side of the input
+     */
+    right?: ReactNode
 } & ComponentProps<'input'>;
 
-export default function TextInput( { label, required, ...props }: TextInputProps) {
+export default function TextInput( { label, required, right, onChange, ...props }: TextInputProps) {
 
     const [ field ] = useField(props.name);
 
@@ -21,10 +25,16 @@ export default function TextInput( { label, required, ...props }: TextInputProps
                 {...props}
                 required={required}
                 value={field.value}
-                onChange={field.onChange(props.name)}
+                onChange={(e) => {
+                    field.onChange(props.name)(e);
+                    if(onChange) {
+                        onChange(e);
+                    }
+                }}
             >
 
             </input>
+            {right ? right : null}
         </InputBase>
     );
 }

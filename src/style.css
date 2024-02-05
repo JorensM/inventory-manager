@@ -3,6 +3,11 @@ body, html {
   font-size: 16px;
   margin: 0px;
   min-height: 100vh;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
 }
 
 button {
@@ -33,14 +38,11 @@ ul {
   justify-content: center;
 }
 
-/* Layout */
+/*--- Layout ---*/
 
-header {
-  display: flex;
-  padding-block: 8px;
-  padding-inline: 16px;
-  justify-content: space-between;
-}
+
+
+/* Main */
 
 main {
   display: flex;
@@ -49,21 +51,55 @@ main {
   box-sizing: border-box;
 }
 
+main.app {
+  padding: 8px;
+}
+
+main.landing {
+  align-items: flex-start;
+  padding: 8px;
+}
+
+main.landing > section {
+  padding: 0px;
+}
+
 main > section {
-  padding: 16px;
-  border-radius: 4px;
+  padding: 8px;
+  /* border-radius: 4px; */
   /* border: 1px solid lightgray; */
   width: 100%;
   max-width: 640px;
   box-sizing: border-box;
 }
 
+main.app > section {
+  padding: 0px;
+}
 
+section.auth {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: none;
+  width: 100%;
+  margin-top: 64px;
+  align-items: center;
+}
+
+section.auth > .form-container {
+  width: 100%;
+  max-width: 320px;
+}
 
 .card {
   border: 1px solid lightgray;
   border-radius: 4px;
   padding: 16px;
+}
+
+main.app > section.card {
+  padding: 8px;
 }
 
 .card-clickable {
@@ -75,15 +111,41 @@ main > section {
   background-color: lightgray;
 }
 
-header.auth {
-  position: fixed;
+/* Header */
+
+header {
+  display: flex;
+  padding-block: 8px;
+  padding-inline: 8px;
+  justify-content: space-between;
 }
+
+header.app {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+header > nav > ul {
+  flex-direction: row;
+  align-items: center;
+}
+
+header > nav {
+  margin-left: auto;
+}
+
+header > .greeting {
+  display: flex;
+  align-items: center;
+}
+
+/* header.auth {
+  position: fixed;
+} */
 
 /* Landing page */
 
-main.landing {
-  align-items: flex-start;
-}
+
 
 /* Sign up/login */
 
@@ -92,9 +154,7 @@ main.auth {
   height: 100vh;
 }
 
-main.auth > section {
-  max-width: 320px;
-}
+
 
 main.auth > h2 {
   margin: 8px;
@@ -117,6 +177,10 @@ input[type="text"], input[type="password"], input[type="email"] {
   padding-block: 8px;
 }
 
+input {
+  flex-grow: 1;
+}
+
 select {
   padding-left: 8px;
   padding-block: 10px;
@@ -127,10 +191,20 @@ select {
   flex-direction: column;
 }
 
+.input-container > .contents {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .link, a {
   cursor: pointer;
   text-decoration: none;
   color: #3072bd;
+}
+
+.heading-link {
+  color: black;
 }
 
 .text-btn {
@@ -138,6 +212,17 @@ select {
   border: none;
   background-color: transparent;
   padding: 8px;
+  font-size: 1rem;
+}
+
+.api-key-field {
+  display: flex;
+  gap: 4px;
+}
+
+.api-key-field > .status {
+  margin-top: auto;
+  margin-bottom: 9px;
 }
 
 /* Typography */
@@ -148,4 +233,12 @@ select {
 
 .warn {
   color: firebrick;
+}
+
+/* Misc */
+
+.status {
+  width: 16px;
+  height: 16px;
+  border-radius: 100px;;
 }

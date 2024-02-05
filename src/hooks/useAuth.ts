@@ -1,11 +1,15 @@
-import AuthContext from '@/state/AuthContext';
-import supabase from '@/util/supabase';
+// Core
 import { useContext } from 'react';
+
+// Types
+import AuthContext from '@/state/AuthContext';
+
+// Utils
+import supabase from '@/util/supabase';
 
 export default function useAuth() {
 
     const context = useContext(AuthContext);
-
     
     return {
         user: context.user,
@@ -24,6 +28,35 @@ export default function useAuth() {
                 context.setUser(null);
             }
             
+        },
+        fetchTeam: async () => {
+            if (!context.user) {
+                throw new Error('User not logged in')
+            }
+
+            const { data: teams, error } = await supabase.from('teams')
+                .select()
+                .contains('users', [context.user.id]);
+
+            if(error) throw error;
+
+            if(teams.length == 0) {
+                return null;
+            }
+
+            return teams[0];
+        },
+        createTeam: async (name: string) => {
+            if (!context.user) {
+                throw new Error('Cannot create team: user not found')
+            }
+            const { error } = await supabase.from('teams')
+                .insert({
+                    name,
+                    users: [context.user.id]
+                })
+
+            if(error) throw error
         },
         getSession: async () => {
             const {data: { session }, error } = await supabase.auth.getSession();

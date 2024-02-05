@@ -1,21 +1,21 @@
+import LandingPage from '@/components/layout/LandingPage';
 import { Link } from 'react-router-dom';
 
+/**
+ * Home/Landing page
+ */
 export default function HomePage() {
     return (
-      <>
-        <header>
-          <h1>Inventory Manager</h1>
-        </header>
-        <main className='landing'>
-          <section>
-            <Link to='/login'>Sign in</Link>
-            <br/>
-            <br/>
-            <Link to='/signup'>Sign up</Link>
-          </section>
-          
-        </main>
-      </>
+      <LandingPage>
+        <section>
+          {/* Sign in button */}
+          <Link to='/login'>Sign in</Link>
+          <br/>
+          <br/>
+          {/* Sign up button */}
+          <Link to='/signup'>Sign up</Link>
+        </section>
+      </LandingPage>
       
     );
   }

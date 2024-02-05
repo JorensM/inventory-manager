@@ -3,7 +3,10 @@ const routes = {
     new_listing: '/app/listings/edit',
     edit_listing: (listing_id: number) => '/app/listings/edit/' + listing_id,
     listing: (listing_id: number) => '/app/listings/' + listing_id,
-    login: '/login'
+    login: '/login',
+    dashboard: '/app/dashboard',
+    new_team: '/app/teams/edit',
+    settings: '/app/settings'
 }
 
 export default routes;
