@@ -71,7 +71,7 @@ export default function SettingsPage() {
     /**
      * Whether the API keys form is dirty (fields have been edited)
      */
-    const [ APIKeysFormDirty, setAPIKeysFormDirty ] = useState<boolean>(true);
+    const [ APIKeysFormDirty, setAPIKeysFormDirty ] = useState<boolean>(false);
 
     //-- Memo --//
 
