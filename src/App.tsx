@@ -31,6 +31,8 @@ import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
 import SettingsPage from './pages/app/SettingsPage';
 
+document.title = import.meta.env.DEV ? 'DEV: Inventory Manager' : 'Inventory Manager'
+
 const router = createBrowserRouter([
   {
     path: '/',
