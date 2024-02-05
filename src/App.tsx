@@ -89,7 +89,7 @@ function App() {
   const [ user, setUser] = useState<User | null>(null);
 
   const platformsRef = useRef<Platforms>({
-    reverb: new ReverbManager(storage.get('settings').reverb_key, true),
+    reverb: new ReverbManager(storage.get('settings').reverb_key, storage.get('settings').reverb_mode == 'sandbox'),
     ebay: new ReverbManager(storage.get('settings').reverb_key, true)
   });
 
