@@ -167,9 +167,13 @@ export default function SettingsPage() {
 
         for(const key in values) {
             settings[key] = values[key as APIKeyName]
+            const platform_id = key.slice(0, -4); // Get Platform ID from APIKeyName
+            platforms.platforms[platform_id as PlatformID].setApiKey(values[key as APIKeyName]);
         }
 
         storage.set(storage_keys.settings, settings);
+
+        
 
         formikHelpers.resetForm({ values });
     }
