@@ -219,8 +219,8 @@ export default function SettingsPage() {
                 <h2>API Keys</h2>
                 <Formik<APIKeysFormValues>
                     initialValues={{
-                        reverb_key: getAPIKeyField('reverb').initial_value,
-                        ebay_key: ""
+                        reverb_key: getAPIKeyField('reverb').initial_value, // This should be fetched from a loader
+                        ebay_key: ''
                     }}
                     onSubmit={handleAPIKeysSubmit}
                 >
