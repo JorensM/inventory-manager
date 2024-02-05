@@ -18,6 +18,7 @@ export default function SelectInput( { label, options, ...props }: SelectInputPr
             <select
                 onChange={field.onChange(props.name)}
                 {...props}
+                defaultValue={field.value}
             >
                 {options.map((option) => (
                     <option

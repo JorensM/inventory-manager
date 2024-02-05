@@ -153,7 +153,6 @@ export default function ListingEditPage() {
         if(listing_id) {
             const _listing = await listings.fetchListing(parseInt(listing_id));
 
-            console.log(_listing);
             setInitialValues({
                 ..._listing
             });

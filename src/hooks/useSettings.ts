@@ -5,7 +5,9 @@ import { PlatformID } from '@/types/Platform';
 import storage from '@/util/storage';
 
 // Constants
-import storage_keys from '@/constants/storage_keys'
+import storage_keys from '@/constants/storage_keys';
+
+// Types
 import { Settings } from '@/types/Settings';
 
 export default function useSettings() {
@@ -21,6 +23,19 @@ export default function useSettings() {
         },
         getSettings(): Settings {
             return storage.get(storage_keys.settings);
+        },
+        /**
+         * Update settings.
+         * @param updated_settings Settings to update. Settings that are not specified
+         * will be left unchanged
+         */
+        async updateSettings(updated_settings: Partial<Settings>) {
+            const new_settings = { 
+                ...storage.get(storage_keys.settings),
+                ...updated_settings
+            };
+
+            storage.set(storage_keys.settings, new_settings);
         }
     }
 }

@@ -1,7 +1,7 @@
-import { Listing } from '@/types/Listing';
+import { Listing, ListingUpdate, ReverbListing } from '@/types/Listing';
 import PlatformManager from './PlatformManager';
 
-export default class ReverbManager extends PlatformManager {
+export default class ReverbManager extends PlatformManager<ReverbListing> {
 
     /**
      * Reverb integration
@@ -18,11 +18,71 @@ export default class ReverbManager extends PlatformManager {
         this.is_sandbox = is_sandbox;
     }
 
+    //-- Extended Methods --//
+
+    async ping(api_key: string) {
+        try {
+            const data = await this.GET('my/account', api_key);
+
+            if(data) {
+                return true;
+            }
+            return false;
+        } catch {
+            return false;
+        }
+    }
+
+    async uploadListing(listing: Listing): Promise<number> {
+
+        const data_to_send = this.listingToRequestData(listing);
+
+        const data = await this.POST('listings', data_to_send);
+
+        return data.listing.id;
+    }
+    
+    async updateListing(listing: ListingUpdate): Promise<void> {
+        
+        const data_to_send = this.listingToRequestData(listing);
+
+        const data = await this.PUT('listings/' + listing.reverb_id, data_to_send);
+
+        return data;
+
+    }
+
+    async getListing(listing: Listing): Promise<ReverbListing> {
+        const data = await this.GET('listings/' + listing.reverb_id);
+
+        const converted_data = this.responseDataToListing(data);
+
+        return converted_data;
+    }
+
+    async isSynced(listing: Listing): Promise<boolean> {
+        
+        const reverb_listing = await this.getListing(listing);
+
+        return (
+            listing.brand == reverb_listing.make &&
+            listing.model == reverb_listing.model &&
+            listing.title == reverb_listing.title
+        )
+
+    }
+    
+    //-- Added Methods --//
+
+    setIsSandbox(is_sandbox: boolean) {
+        this.is_sandbox = is_sandbox;
+    }
+
     private createAPIURL(endpoint: string) {
         return new URL(`https://${this.is_sandbox ? 'sandbox' : 'api'}.reverb.com/api/` + endpoint);
     }
 
-    private async request(url: URL, type: 'get' | 'post', api_key: string, data?: object){
+    private async request(url: URL, type: 'get' | 'post' | 'put', api_key: string, data?: object){
         if(!api_key) {
             throw new Error('Cannot make Reverb request because API key is not set');
         }
@@ -40,8 +100,12 @@ export default class ReverbManager extends PlatformManager {
         if(!res.ok) {
             if(res.status == 401) {
                 throw new Error('Reverb: Unauthorized')
+            } else if(res.status == 404) {
+                return null;
+            } else {
+                throw new Error('Network error')
             }
-            return null;
+            
         }
 
         const res_data = await res.json();
@@ -58,6 +122,23 @@ export default class ReverbManager extends PlatformManager {
         return data;
     }
 
+    /**
+     * Make PUT request to a Reverb endpoint
+     * @param endpoint Endpoint to send request to. Shouldn't start with slash and hostname, only the path
+     * @param api_key (Optional) API key to use to overwrite the set api_key
+     * 
+     * @return Request response as an object
+     */
+    private async PUT(endpoint: string, data: object, api_key = this.api_key) {
+
+        const url = this.createAPIURL(endpoint);
+
+        const res_data = await this.request(url, 'put', api_key!, data);
+
+        return res_data;
+
+    }
+
     async POST(endpoint: string, data: object, api_key = this.api_key) {
 
         const url = this.createAPIURL(endpoint);
@@ -67,35 +148,25 @@ export default class ReverbManager extends PlatformManager {
         return res_data;
     }
 
-    async ping(api_key: string) {
-        try {
-            const data = await this.GET('my/account', api_key);
-
-            if(data) {
-                return true;
-            }
-            return false;
-        } catch {
-            return false;
-        }
-    }
-
-    private listingToRequestData(listing: Listing) {
+    private listingToRequestData(listing: Listing | ListingUpdate) {
         return {
             title: listing.title,
-            make: listing.make,
+            make: listing.brand,
             model: listing.model
         }
     }
 
-    async uploadListing(listing: Listing): Promise<number> {
+    /**
+     * Convert API response listing data to a ReverbListing object
+     * @param data Full data from response
+     * @returns ReverbListing object
+     */
+    private responseDataToListing(data: ReverbListing): ReverbListing {
 
-        const data_to_send = this.listingToRequestData(listing);
-
-        const data = await this.POST('listings', data_to_send);
-
-        console.log(data);
-
-        return data.listing.id;
+        return {
+            ...data
+        }
     }
+
+    
 }

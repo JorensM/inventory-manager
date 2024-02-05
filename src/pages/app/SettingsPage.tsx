@@ -6,6 +6,7 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import SessionPage from '@/components/layout/SessionPage';
 import APIKeyField from '@/components/input/APIKeyField';
 import BackButton from '@/components/buttons/BackButton';
+import SelectInput from '@/components/input/SelectInput';
 
 // Types
 import { PlatformID } from '@/types/Platform';
@@ -24,6 +25,9 @@ import storage_keys from '@/constants/storage_keys';
 import usePlatforms from '@/hooks/usePlatforms';
 import useSettings from '@/hooks/useSettings';
 
+// Classes
+import ReverbManager from '@/classes/PlatformManager/ReverbManager';
+
 
 type PlatformStatuses = Record<PlatformID, Status | null>
 
@@ -41,6 +45,10 @@ type APIKeyField = {
 }
 
 type APIKeysFormValues = Record<APIKeyName, string>
+
+type ModesFormValues = {
+    reverb_mode: 'sandbox' | 'live'
+}
 
 /**
  * The settings page
@@ -66,7 +74,7 @@ export default function SettingsPage() {
     /**
      * Whether the API keys form is dirty (fields have been edited)
      */
-    const [ APIKeysFormDirty, setAPIKeysFormDirty ] = useState<boolean>(true);
+    const [ APIKeysFormDirty, setAPIKeysFormDirty ] = useState<boolean>(false);
 
     //-- Memo --//
 
@@ -178,6 +186,20 @@ export default function SettingsPage() {
         formikHelpers.resetForm({ values });
     }
 
+    /**
+     * Handle modes form submit. Updates new values in settings
+     * 
+     * @param values Formik values
+     * @param formikHelpers Formik helpers
+     */
+    const handleModesSubmit = async (values: ModesFormValues, formikHelpers: FormikHelpers<ModesFormValues>) => {
+        await settings.updateSettings(values);
+
+        (platforms.platforms.reverb as ReverbManager).setIsSandbox(values.reverb_mode == 'sandbox');
+
+        formikHelpers.resetForm({ values });
+    }
+
     //-- Effects --//
     
     /**
@@ -202,8 +224,8 @@ export default function SettingsPage() {
                 <h2>API Keys</h2>
                 <Formik<APIKeysFormValues>
                     initialValues={{
-                        reverb_key: getAPIKeyField('reverb').initial_value,
-                        ebay_key: ""
+                        reverb_key: getAPIKeyField('reverb').initial_value, // This should be fetched from a loader
+                        ebay_key: ''
                     }}
                     onSubmit={handleAPIKeysSubmit}
                 >
@@ -212,15 +234,48 @@ export default function SettingsPage() {
                         return (
                             <Form>
                                 {api_key_fields.map(field => (
-                                    <APIKeyField
-                                        key={field.platform_id}
-                                        status={platformStatuses[field.platform_id]}
-                                        label={field.label}
-                                        name={field.platform_id + '_key'}
-                                        onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
-                                    />
+                                    <>
+                                        <APIKeyField
+                                            key={field.platform_id}
+                                            status={platformStatuses[field.platform_id]}
+                                            label={field.label}
+                                            name={field.platform_id + '_key'}
+                                            onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
+                                        />
+                                    </>
+                                    
                                 ))}
                                 <button type='submit' disabled={APIKeysSubmitDisabled}>Save API Keys</button>
+                            </Form>
+                        )
+                    }}                    
+                </Formik>
+                <h2>Modes</h2>
+                {  }
+                <Formik<ModesFormValues>
+                    initialValues={{
+                        reverb_mode: settings.getSettings().reverb_mode
+                    }}
+                    onSubmit={handleModesSubmit}
+                >
+                    {formik => {
+                        return (
+                            <Form>
+                                <SelectInput
+                                    label='Reverb mode'
+                                    name='reverb_mode'
+                                    options={[
+                                        {
+                                            label: 'Sandbox',
+                                            value: 'sandbox'
+                                        },
+                                        {
+                                            label: 'Live',
+                                            value: 'live'
+                                        }
+                                    ]}
+                                />
+                                <button type='submit' disabled={!formik.dirty}>Save Modes</button>
                             </Form>
                         )
                     }}                    

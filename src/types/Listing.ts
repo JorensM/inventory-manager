@@ -6,7 +6,7 @@ export type Listing = {
     title: string
     user_id: string
     team_id: number
-    make: string,
+    brand: string,
     model: string,
     reverb_id: number,
     ebay_id: string
@@ -14,6 +14,13 @@ export type Listing = {
 
 export type ListingUpdate = Omit<Partial<Listing>, 'id'> & {
     id: number
+}
+
+export type ReverbListing = {
+    id: number,
+    make: string,
+    model: string,
+    title: string
 }
 
 export type APIKeyName = `${PlatformID}_key` //#TODO: This should be moved, probably to Platform.ts

@@ -41,7 +41,6 @@ ul {
 /*--- Layout ---*/
 
 
-
 /* Main */
 
 main {
@@ -139,6 +138,13 @@ header > .greeting {
   align-items: center;
 }
 
+.key-value-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
 /* header.auth {
   position: fixed;
 } */
@@ -182,7 +188,7 @@ input {
 }
 
 select {
-  padding-left: 8px;
+  padding-inline: 8px;
   padding-block: 10px;
 }
 
