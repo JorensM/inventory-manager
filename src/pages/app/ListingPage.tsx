@@ -42,9 +42,9 @@ export default function ListingPage() {
         reverb: 'loading',
         ebay: 'loading'
     })
-    const [ platformSyncStatuses, setPlatformSyncStatuses ] = useState<Record<PlatformID, Status | null>>({
-        reverb: null,
-        ebay: null
+    const [ platformSyncStatuses, setPlatformSyncStatuses ] = useState<Record<PlatformID, Status>>({
+        reverb: 'loading',
+        ebay: 'loading'
     })
     
     //-- Memo --//
@@ -109,7 +109,7 @@ export default function ListingPage() {
      * @param platform_id Id of platform
      * @param status new status
      */
-    const setPlatformSyncStatus = (platform_id: PlatformID, status: Status | null) => {
+    const setPlatformSyncStatus = (platform_id: PlatformID, status: Status) => {
         setPlatformSyncStatuses((old_state) => {
             const new_state = {...old_state};
             new_state[platform_id] = status;
@@ -130,6 +130,7 @@ export default function ListingPage() {
 
     const updatePlatformSyncStatus = async (platform_id: PlatformID) => {
         setPlatformSyncStatus(platform_id, 'loading');
+
         const synced = await platforms.platforms[platform_id].isSynced(listing);
 
         const status: Status = synced ? 'success' : 'fail'
@@ -214,7 +215,7 @@ export default function ListingPage() {
                                             listing_platform_status[platformsStatuses.reverb]
                                         }
                                     </li>
-                                    {platformSyncStatuses.reverb != null ?
+                                    {['draft', 'published'].includes(platformsStatuses.reverb) ?
                                         <li>
                                             <div className='key-value-container'>
                                                 Sync status:                                    
