@@ -18,6 +18,7 @@ import usePlatforms from '@/hooks/usePlatforms';
 // Types
 import { Listing, ListingPlatformStatus } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
+import useSettings from '@/hooks/useSettings';
 
 
 export async function listingPageLoader( { params }: LoaderFunctionArgs) {
@@ -33,6 +34,7 @@ export default function ListingPage() {
     // Hooks
     // const { listing_id } = useParams();
     const listing: Listing = useLoaderData() as Listing
+    const settings = useSettings();
 
     console.log(listing);
     //const listings = useListings();
@@ -150,23 +152,29 @@ export default function ListingPage() {
                     </section>
                     <section>
                         <h2>Platforms</h2>
-                        <h3>Reverb</h3>
-                        <p>
-                            Status: 
-                            {platformsStatuses.reverb == 'loading' ? 
-                                'loading...' 
-                            : 
-                                listing_platform_status[platformsStatuses.reverb]
-                            }
-                        </p>
-                        {platformsStatuses.reverb != 'loading' ?
-                            <button
-                                onClick={() => handlePlatformUpdateClick('reverb')}
-                                disabled={platformsStatuses.reverb !== 'not-uploaded'}
-                            >
-                                {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Update'}
-                            </button>
+                        {settings.getAPIKey('reverb') ? 
+                            <> 
+                                <h3>Reverb</h3>
+                                <p>
+                                    Status: 
+                                    {platformsStatuses.reverb == 'loading' ? 
+                                        'loading...' 
+                                    : 
+                                        listing_platform_status[platformsStatuses.reverb]
+                                    }
+                                </p>
+                                {platformsStatuses.reverb != 'loading' ?
+                                    <button
+                                        onClick={() => handlePlatformUpdateClick('reverb')}
+                                        disabled={platformsStatuses.reverb !== 'not-uploaded'}
+                                    >
+                                        {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Update'}
+                                    </button>
+                                : null}
+                            </>
+                            
                         : null}
+                        
                     </section>
                 </>
             : "Could not find listing"}
