@@ -36,6 +36,8 @@ import SettingsPage from './pages/app/SettingsPage';
 
 // Loaders
 import listingPageLoader from './pages/app/listingPageLoader';
+import settingsPageLoader from './pages/app/settingsPageLoader';
+
 document.title = IS_DEV ? 'DEV: Inventory Manager' : 'Inventory Manager'
 
 const router = createBrowserRouter([
@@ -78,7 +80,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/app/settings',
-    element: <SettingsPage />
+    element: <SettingsPage />,
+    loader: settingsPageLoader
   }
 ]);
 
