@@ -237,27 +237,40 @@ export default function SettingsPage() {
                                             name={field.platform_id + '_key'}
                                             onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
                                         />
-                                        {field.platform_id == 'reverb' ?
-                                            <SelectInput
-                                                label='Reverb mode'
-                                                name=''
-                                                options={[
-                                                    {
-                                                        label: 'Sandbox',
-                                                        value: 'sandbox'
-                                                    },
-                                                    {
-                                                        label: 'Live',
-                                                        value: 'live'
-                                                    }
-                                                ]}
-                                            />
-                                        : null}
-                                        
                                     </>
                                     
                                 ))}
                                 <button type='submit' disabled={APIKeysSubmitDisabled}>Save API Keys</button>
+                            </Form>
+                        )
+                    }}                    
+                </Formik>
+                <h2>Modes</h2>
+                {  }
+                <Formik<ModesFormValues>
+                    initialValues={{
+                        reverb_mode: settings.getSettings().reverb_mode
+                    }}
+                    onSubmit={handleModesSubmit}
+                >
+                    {formik => {
+                        return (
+                            <Form>
+                                <SelectInput
+                                    label='Reverb mode'
+                                    name='reverb_mode'
+                                    options={[
+                                        {
+                                            label: 'Sandbox',
+                                            value: 'sandbox'
+                                        },
+                                        {
+                                            label: 'Live',
+                                            value: 'live'
+                                        }
+                                    ]}
+                                />
+                                <button type='submit' disabled={!formik.dirty}>Save Modes</button>
                             </Form>
                         )
                     }}                    
