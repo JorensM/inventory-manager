@@ -18,6 +18,9 @@ export default class ReverbManager extends PlatformManager {
         this.is_sandbox = is_sandbox;
     }
 
+    setIsSandbox(is_sandbox: boolean) {
+        this.is_sandbox = is_sandbox;
+    }
     private createAPIURL(endpoint: string) {
         return new URL(`https://${this.is_sandbox ? 'sandbox' : 'api'}.reverb.com/api/` + endpoint);
     }
