@@ -182,7 +182,7 @@ input {
 }
 
 select {
-  padding-left: 8px;
+  padding-inline: 8px;
   padding-block: 10px;
 }
 
