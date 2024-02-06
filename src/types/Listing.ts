@@ -20,8 +20,13 @@ export type ReverbListing = {
     id: number,
     make: string,
     model: string,
-    title: string
+    title: string,
+    link: string
 }
+
+export type PlatformListing = ReverbListing;
+
+export type PlatformListings = Partial<Record<PlatformID, PlatformListing | null>>
 
 export type APIKeyName = `${PlatformID}_key` //#TODO: This should be moved, probably to Platform.ts
 
