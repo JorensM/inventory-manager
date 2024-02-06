@@ -1,3 +1,5 @@
+import '@/misc/initDefaults'
+
 // Core
 import { useRef, useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -22,6 +24,8 @@ import storage from './util/storage';
 
 // Constants
 import { IS_DEV } from './constants/env';
+import storage_keys from './constants/storage_keys';
+import { DEFAULT_SETTINGS } from './constants/defaults';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -38,6 +42,8 @@ import SettingsPage from './pages/app/SettingsPage';
 import listingPageLoader from './pages/app/listingPageLoader';
 import settingsPageLoader from './pages/app/settingsPageLoader';
 
+// Add custom page title to dev environment to easily differentiate between prod and dev
+// tabs in browser
 document.title = IS_DEV ? 'DEV: Inventory Manager' : 'Inventory Manager'
 
 const router = createBrowserRouter([
@@ -89,8 +95,8 @@ function App() {
   const [ user, setUser] = useState<User | null>(null);
 
   const platformsRef = useRef<Platforms>({
-    reverb: new ReverbManager(storage.get('settings').reverb_key, storage.get('settings').reverb_mode == 'sandbox'),
-    ebay: new ReverbManager(storage.get('settings').reverb_key, true)
+    reverb: new ReverbManager(storage.get('settings')?.reverb_key, storage.get('settings')?.reverb_mode == 'sandbox'),
+    ebay: new ReverbManager(storage.get('settings')?.reverb_key, true)
   });
 
   return (

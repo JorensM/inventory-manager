@@ -30,6 +30,7 @@ import useSettings from '@/hooks/useSettings';
 // Classes
 import ReverbManager from '@/classes/PlatformManager/ReverbManager';
 import SettingsManager from '@/classes/SettingsManager';
+import platforms from '@/classes/PlatformManager/AllPlatforms';
 
 
 type PlatformStatuses = Record<PlatformID, Status | null>
@@ -59,7 +60,7 @@ type ModesFormValues = {
 export default function SettingsPage() {
 
     //-- Hooks --//
-    const platforms = usePlatforms();
+    // const platforms = usePlatforms();
     const { revalidate } = useRevalidator();
     const { settings } = useLoaderData() as { settings: Settings };
     // const settings = useSettings();
