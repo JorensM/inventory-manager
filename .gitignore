@@ -24,5 +24,4 @@ dist-ssr
 *.sw?
 
 .env
-secret.ts
 secret.txt
