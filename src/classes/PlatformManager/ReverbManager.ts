@@ -43,7 +43,6 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
     }
     
     async updateListing(listing: ListingUpdate): Promise<void> {
-        
         const data_to_send = this.listingToRequestData(listing);
 
         const data = await this.PUT('listings/' + listing.reverb_id, data_to_send);
@@ -80,7 +79,8 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         return (
             listing.brand == reverb_listing.make &&
             listing.model == reverb_listing.model &&
-            listing.title == reverb_listing.title
+            listing.title == reverb_listing.title &&
+            listing.reverb_status == reverb_listing.status
         )
 
     }
@@ -93,6 +93,10 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      */
     setIsSandbox(is_sandbox: boolean) {
         this.is_sandbox = is_sandbox;
+    }
+
+    getRequiredFields() {
+        return ['s']
     }
 
     /**
@@ -217,10 +221,12 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      * @returns listing object matching Reverb API's listing schema
      */
     private listingToRequestData(listing: Listing | ListingUpdate) {
+        // console.log(listing.reverb_status == 'published' ? 'true' : 'false')
         return {
             title: listing.title,
             make: listing.brand,
-            model: listing.model
+            model: listing.model,
+            publish: listing.reverb_status == 'published' ? 'true' : 'false'
         }
     }
 
@@ -230,12 +236,14 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      * @returns ReverbListing object
      */
     private responseDataToListing(data: any): ReverbListing {
+        // console.log(data);
         return {
             id: data.id,
             title: data.title,
             make: data.make,
             model: data.model,
-            link: data._links.web.href
+            link: data._links.web.href,
+            status: data.draft ? 'draft' : 'published'
         }
     }
 
