@@ -40,9 +40,9 @@ export default abstract class PlatformManager<ListingT> {
      * Get listing from platform
      * @param listing Listing object for which to get the respective platform listing
      * 
-     * @return Promise resolving to a Listing object
+     * @return Promise resolving to a Listing object or null if listing not found
      */
-    abstract getListing(listing: Listing): Promise<ListingT>;
+    abstract getListing(listing: Listing): Promise<ListingT | null>;
     
     /**
      * Delete listing from platform

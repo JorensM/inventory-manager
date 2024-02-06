@@ -52,8 +52,11 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
 
     }
 
-    async getListing(listing: Listing): Promise<ReverbListing> {
+    async getListing(listing: Listing): Promise<ReverbListing | null> {
         const data = await this.GET('listings/' + listing.reverb_id);
+        if(!data) {
+            return null;
+        }
 
         const converted_data = this.responseDataToListing(data);
 
