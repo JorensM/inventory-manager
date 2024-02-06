@@ -231,7 +231,6 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      */
     private responseDataToListing(data: any): ReverbListing {
         return {
-            ...data
             id: data.id,
             title: data.title,
             make: data.make,
