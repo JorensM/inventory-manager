@@ -1,7 +1,7 @@
 import '@/misc/initDefaults'
 
 // Core
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 // Styles
@@ -41,6 +41,8 @@ import SettingsPage from './pages/app/SettingsPage';
 // Loaders
 import listingPageLoader from './pages/app/listingPageLoader';
 import settingsPageLoader from './pages/app/settingsPageLoader';
+import platforms from './classes/PlatformManager/AllPlatforms';
+import SettingsManager from './classes/SettingsManager';
 
 // Add custom page title to dev environment to easily differentiate between prod and dev
 // tabs in browser
@@ -92,12 +94,31 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+
+  //-- State --//
   const [ user, setUser] = useState<User | null>(null);
 
+  //-- Refs --//
   const platformsRef = useRef<Platforms>({
     reverb: new ReverbManager(storage.get('settings')?.reverb_key, storage.get('settings')?.reverb_mode == 'sandbox'),
     ebay: new ReverbManager(storage.get('settings')?.reverb_key, true)
   });
+
+  //-- Functions --//
+
+  const initPlatforms = async () => {
+    const settings = await SettingsManager.getSettings();
+
+    platforms.get('reverb').setApiKey(settings.reverb_key);
+  }
+
+  //-- Effects --//
+
+  useEffect(() => {
+
+    initPlatforms();
+    
+  }, [])
 
   return (
     <AuthContext.Provider value={{user, setUser}}>

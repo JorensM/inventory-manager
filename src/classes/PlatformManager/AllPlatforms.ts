@@ -13,12 +13,12 @@ import storage from '@/util/storage';
 import { Settings } from '@/types/Settings';
 import { PlatformListing } from '@/types/Listing';
 
-const settings = storage.get(storage_keys.settings) as Settings
+//const settings = storage.get(storage_keys.settings) as Settings
 
 class Platforms {
 
     platforms: Record<PlatformID, PlatformManager<PlatformListing>> = {
-        reverb: new ReverbManager(settings.reverb_key, settings.reverb_mode == 'sandbox'),
+        reverb: new ReverbManager(null, true),
         ebay: new ReverbManager(null, true)
     }
 

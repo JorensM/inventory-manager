@@ -133,6 +133,7 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
             body: data ? JSON.stringify(data) : undefined
         });
         if(!res.ok) {
+            console.log(res);
             if(res.status == 401) {
                 throw new Error('Reverb: Unauthorized')
             } else if(res.status == 404) {

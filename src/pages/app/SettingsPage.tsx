@@ -176,20 +176,21 @@ export default function SettingsPage() {
      * 
      * @param values form values
      */
-    const handleAPIKeysSubmit = (values: APIKeysFormValues, formikHelpers: FormikHelpers<APIKeysFormValues>) => {
-        const settings = storage.get(storage_keys.settings);
+    const handleAPIKeysSubmit = async (values: APIKeysFormValues, formikHelpers: FormikHelpers<APIKeysFormValues>) => {
+        const new_settings = { ...settings }
 
         for(const key in values) {
-            settings[key] = values[key as APIKeyName]
+            new_settings[key as APIKeyName] = values[key as APIKeyName]
             const platform_id = key.slice(0, -4); // Get Platform ID from APIKeyName
             platforms.platforms[platform_id as PlatformID].setApiKey(values[key as APIKeyName]);
         }
 
-        storage.set(storage_keys.settings, settings);
+        await SettingsManager.updateSettings(new_settings)
 
-        
+        // storage.set(storage_keys.settings, settings);
 
         formikHelpers.resetForm({ values });
+        revalidate();
     }
 
     /**

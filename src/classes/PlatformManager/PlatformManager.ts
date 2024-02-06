@@ -6,10 +6,14 @@ export default abstract class PlatformManager<ListingT> {
      * Platform manager base class. 
      */
 
-    api_key: string | null
+    api_key: string | null = null
+
+    api_key_valid: boolean = false;
+
+    is_enabled: boolean = false
 
     constructor(api_key: string | null) {
-        this.api_key = api_key;
+        this.setApiKey(api_key);
     }
     
     /**
@@ -19,6 +23,15 @@ export default abstract class PlatformManager<ListingT> {
      * @returns Promise that resolves to true if ping was successful, or false if not
      */
     abstract ping(api_key: string): Promise<boolean>;
+
+    /**
+     * Whether the manager is enabled. Will return false if API key is invalid
+     * @returns boolean indicating whether the manager is enabled. If manager is
+     * disabled, CRUD methods like uploadListing() etc. will throw an error
+     */
+    isEnabled(): boolean {
+        return this.api_key_valid && this.is_enabled;
+    }
 
     /**
      * Upload listing to platform
@@ -59,8 +72,10 @@ export default abstract class PlatformManager<ListingT> {
      */
     abstract isSynced(listing: Listing, platform_listing: ListingT): Promise<boolean>;
 
-    setApiKey(api_key: string | null) {
-        this.api_key = api_key
+    async setApiKey(api_key: string | null) {
+        this.api_key = api_key;
+
+        this.api_key_valid = api_key ? await this.ping(api_key) : false;
     }
     
 }

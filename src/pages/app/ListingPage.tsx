@@ -1,28 +1,29 @@
 // Core
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLoaderData, useNavigate, useRevalidator } from 'react-router-dom';
+import { Formik } from 'formik';
 
 // Classes
 import ListingManager from '@/classes/ListingManager';
+import platforms from '@/classes/PlatformManager/AllPlatforms';
 
 // Components
 import SessionPage from '@/components/layout/SessionPage';
 import StatusIndicator from '@/components/misc/StatusIndicator';
+import SelectInput from '@/components/input/SelectInput';
 
 // Constants
 import { listing_platform_status } from '@/constants/localization';
 import routes from '@/constants/routes';
 
 // Hooks
-import usePlatforms from '@/hooks/usePlatforms';
 import useSettings from '@/hooks/useSettings';
 
 // Types
 import { Listing, ListingPlatformStatus, ListingStatus, PlatformListings } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
 import { Status } from '@/types/Status';
-import SelectInput from '@/components/input/SelectInput';
-import { Formik } from 'formik';
+import { getListingStatus } from '@/util/listings';
 
 type FormValues = {
     reverb_status: 'published' | 'draft'
@@ -41,7 +42,6 @@ export default function ListingPage() {
 
     //const listings = useListings();
     const { revalidate } = useRevalidator();
-    const platforms = usePlatforms();
     
     // State
     // const [ listing, setListing ] = useState<Listing | null>(null);
@@ -106,7 +106,7 @@ export default function ListingPage() {
      */
     const updatePlatformStatus = async (platform_id: PlatformID) => {
         
-        const status = await platforms.getListingStatus(listing, platform_id)
+        const status = await getListingStatus(listing, platform_id);
 
         setPlatformStatus(platform_id, status)
     }
@@ -166,7 +166,7 @@ export default function ListingPage() {
         }
 
         if(listing[platform_id + '_id' as keyof Listing]) {
-            console.log('updating')
+            //console.log('updating')
             await platforms.platforms[platform_id].updateListing(listing);
         } else {
             const platform_listing_id = await platforms.platforms[platform_id].uploadListing(listing);
@@ -257,7 +257,7 @@ export default function ListingPage() {
                             </section>
                             <section>
                                 <h2>Platforms</h2>
-                                {settings.getAPIKey('reverb') ? 
+                                {platforms.get('reverb').isEnabled() ? 
                                     <> 
                                         <h3>Reverb</h3>
                                         <ul>

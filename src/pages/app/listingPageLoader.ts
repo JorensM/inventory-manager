@@ -21,10 +21,13 @@ export default async function ( { params }: LoaderFunctionArgs ) {
     for(const platform_id in platforms.all()) {
         const typed_platform_id = platform_id as PlatformID
         const platform_listing_id: string = listing[platform_id + '_id'];
-        if(platform_listing_id && SettingsManager.getAPIKey(typed_platform_id)) {
+        const api_key = await SettingsManager.getAPIKey(typed_platform_id)
+        if(platform_listing_id && api_key) {
             console.log('getting listing')
             platform_listings[typed_platform_id] = await platforms.get(typed_platform_id).getListing(listing);
         }
     }
+
+    console.log(platform_listings)
     return { listing, platform_listings };
 }
