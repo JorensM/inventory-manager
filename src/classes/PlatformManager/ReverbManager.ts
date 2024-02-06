@@ -226,10 +226,14 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      * @param data Full data from response
      * @returns ReverbListing object
      */
-    private responseDataToListing(data: ReverbListing): ReverbListing {
-
+    private responseDataToListing(data: any): ReverbListing {
         return {
             ...data
+            id: data.id,
+            title: data.title,
+            make: data.make,
+            model: data.model,
+            link: data._links.web.href
         }
     }
 
