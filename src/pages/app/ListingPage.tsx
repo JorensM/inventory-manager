@@ -242,76 +242,80 @@ export default function ListingPage() {
                     }}
                     onSubmit={() => {}}
                 >
-                    <>
-                        <section>
-                                <h1>{listing.title}</h1>
-                                <Link className='text-btn' to={routes.edit_listing(listing.id)}>Edit listing</Link>
-                                <button 
-                                    className='text-btn warn block'
-                                    onClick={handleDeleteClick}
-                                >
-                                    Delete listing
-                                </button>
-                        </section>
-                        <section>
-                            <h2>Platforms</h2>
-                            {settings.getAPIKey('reverb') ? 
-                                <> 
-                                    <h3>Reverb</h3>
-                                    <ul>
-                                        {['draft', 'published'].includes(platformsStatuses.reverb) ?
+                    {formik => (
+                        <>
+                            <section>
+                                    <h1>{listing.title}</h1>
+                                    <Link className='text-btn' to={routes.edit_listing(listing.id)}>Edit listing</Link>
+                                    <button
+                                        type='button'
+                                        className='text-btn warn block'
+                                        onClick={handleDeleteClick}
+                                    >
+                                        Delete listing
+                                    </button>
+                            </section>
+                            <section>
+                                <h2>Platforms</h2>
+                                {settings.getAPIKey('reverb') ? 
+                                    <> 
+                                        <h3>Reverb</h3>
+                                        <ul>
+                                            {['draft', 'published'].includes(platformsStatuses.reverb) ?
+                                                <li>
+                                                    <Link to={platform_listings.reverb!.link}>Link</Link>
+                                                </li>
+                                            : null}
                                             <li>
-                                                <Link to={platform_listings.reverb!.link}>Link</Link>
-                                            </li>
-                                        : null}
-                                        <li>
-                                            {platformsStatuses.reverb == 'loading' ? 
-                                                'loading...' 
-                                            : 
-                                                <SelectInput
-                                                    label='Status'
-                                                    name='reverb_status'
-                                                    options={[
-                                                        {
-                                                            label: listing_platform_status.draft,
-                                                            value: 'draft'
-                                                        },
-                                                        {
-                                                            label: listing_platform_status.published,
-                                                            value: 'published'
-                                                        }
-                                                    ]}
-                                                    onChange={(e) => handleStatusInputChange(e.currentTarget.value as ListingStatus, 'reverb')}
-                                                />
-                                            }
-                                            
-                                        </li>
-                                        {['draft', 'published'].includes(platformsStatuses.reverb) ?
-                                            <li>
-                                                <div className='key-value-container'>
-                                                    Sync status:                                    
-                                                    <StatusIndicator
-                                                        status={platformSyncStatuses.reverb}
+                                                {platformsStatuses.reverb == 'loading' ? 
+                                                    'loading...' 
+                                                : 
+                                                    <SelectInput
+                                                        label='Status'
+                                                        name='reverb_status'
+                                                        options={[
+                                                            {
+                                                                label: listing_platform_status.draft,
+                                                                value: 'draft'
+                                                            },
+                                                            {
+                                                                label: listing_platform_status.published,
+                                                                value: 'published'
+                                                            }
+                                                        ]}
+                                                        onChange={(e) => handleStatusInputChange(e.currentTarget.value as ListingStatus, 'reverb')}
                                                     />
-                                                </div>
+                                                }
+                                                
                                             </li>
+                                            {['draft', 'published'].includes(platformsStatuses.reverb) ?
+                                                <li>
+                                                    <div className='key-value-container'>
+                                                        Sync status:                                    
+                                                        <StatusIndicator
+                                                            status={platformSyncStatuses.reverb}
+                                                        />
+                                                    </div>
+                                                </li>
+                                            : null}
+                                        </ul>
+                                        
+                                        
+                                        {platformsStatuses.reverb != 'loading' ?
+                                            <button
+                                                type='button'
+                                                onClick={() => handlePlatformUpdateClick('reverb')}
+                                                disabled={isPlatformUpdateDisabled.reverb || formik.values.reverb_status == 'published'}
+                                            >
+                                                {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Sync'}
+                                            </button>
                                         : null}
-                                    </ul>
-                                    
-                                    
-                                    {platformsStatuses.reverb != 'loading' ?
-                                        <button
-                                            type='button'
-                                            onClick={() => handlePlatformUpdateClick('reverb')}
-                                            disabled={isPlatformUpdateDisabled.reverb}
-                                        >
-                                            {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Sync'}
-                                        </button>
-                                    : null}
-                                </>
-                            : null}
-                        </section>
-                    </>
+                                    </>
+                                : null}
+                            </section>
+                        </>
+                    )}
+                    
                 </Formik>
             : "Could not find listing"}
         </SessionPage>
