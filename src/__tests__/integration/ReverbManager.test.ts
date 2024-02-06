@@ -1,12 +1,9 @@
 import ReverbManager from '@/classes/PlatformManager/ReverbManager';
-import { REVERB_API_KEY } from '../secret';
 import { Listing } from '@/types/Listing';
-
-console.log(process.env);
 
 describe('ReverbManager', () => {
 
-    const reverb = new ReverbManager(REVERB_API_KEY, true);
+    const reverb = new ReverbManager(process.env.REVERB_TEST_KEY!, true);
 
     describe('uploadListing()', () => {
         it('Should throw error if incorrect listing data is passed', async () => {
