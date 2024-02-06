@@ -73,9 +73,9 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         // }
     }
 
-    async isSynced(listing: Listing): Promise<boolean> {
+    async isSynced(listing: Listing, reverb_listing: ReverbListing): Promise<boolean> {
         
-        const reverb_listing = await this.getListing(listing);
+        // const reverb_listing = await this.getListing(listing);
 
         return (
             listing.brand == reverb_listing.make &&

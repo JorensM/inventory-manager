@@ -53,10 +53,11 @@ export default abstract class PlatformManager<ListingT> {
     /**
      * Check whether provided listing is synced with its respective platform listing
      * @param listing listing to check
+     * @param platform_listing listing from the platform to check against
      * 
      * @return true if synced, false if not
      */
-    abstract isSynced(listing: Listing): Promise<boolean>;
+    abstract isSynced(listing: Listing, platform_listing: ListingT): Promise<boolean>;
 
     setApiKey(api_key: string | null) {
         this.api_key = api_key
