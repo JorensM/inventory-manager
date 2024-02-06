@@ -118,7 +118,7 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      * @returns API request's response as an object
      */
     private async request(url: URL, type: 'get' | 'post' | 'put' | 'delete', api_key: string, data?: object){
-        if(!api_key) {
+        if(!api_key || api_key == '') {
             throw new Error('Cannot make Reverb request because API key is not set');
         }
 

@@ -132,7 +132,10 @@ export default function ListingPage() {
             throw new Error("Can't get platform sync statuses because listing state is not set")
         }
 
-        updatePlatformSyncStatus('reverb');
+        if(settings.getAPIKey('reverb') != '' && settings.getAPIKey('reverb') != null) {
+            updatePlatformSyncStatus('reverb');
+        }
+        
     }
 
     const updatePlatformSyncStatus = async (platform_id: PlatformID) => {
