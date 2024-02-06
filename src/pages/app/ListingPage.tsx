@@ -18,7 +18,7 @@ import usePlatforms from '@/hooks/usePlatforms';
 import useSettings from '@/hooks/useSettings';
 
 // Types
-import { Listing, ListingPlatformStatus } from '@/types/Listing';
+import { Listing, ListingPlatformStatus, PlatformListings } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
 import { Status } from '@/types/Status';
 
@@ -29,7 +29,7 @@ export default function ListingPage() {
 
     // Hooks
     // const { listing_id } = useParams();
-    const listing: Listing = useLoaderData() as Listing
+    const { listing, platform_listings } = useLoaderData() as { listing: Listing, platform_listings: PlatformListings }
     const settings = useSettings();
     const navigate = useNavigate();
 
@@ -132,7 +132,13 @@ export default function ListingPage() {
     const updatePlatformSyncStatus = async (platform_id: PlatformID) => {
         setPlatformSyncStatus(platform_id, 'loading');
 
-        const synced = await platforms.platforms[platform_id].isSynced(listing);
+        //const platform_listing = await platforms.platforms[platform_id].getListing(listing);
+
+        if(!platform_listings[platform_id]) {
+             throw new Error('Could not find platform listing for platform ' + platform_id);
+        }
+
+        const synced = await platforms.platforms[platform_id].isSynced(listing, platform_listings[platform_id]!);
 
         const status: Status = synced ? 'success' : 'fail'
 
@@ -227,6 +233,11 @@ export default function ListingPage() {
                             <> 
                                 <h3>Reverb</h3>
                                 <ul>
+                                    {['draft', 'published'].includes(platformsStatuses.reverb) ?
+                                        <li>
+                                            <Link to={platform_listings.reverb!.link}>Link</Link>
+                                        </li>
+                                    : null}
                                     <li>
                                         Status: 
                                         {platformsStatuses.reverb == 'loading' ? 
