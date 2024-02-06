@@ -40,17 +40,24 @@ export default abstract class PlatformManager<ListingT> {
      * Get listing from platform
      * @param listing Listing object for which to get the respective platform listing
      * 
-     * @return Promise resolving to a Listing object
+     * @return Promise resolving to a Listing object or null if listing not found
      */
-    abstract getListing(listing: Listing): Promise<ListingT>;
+    abstract getListing(listing: Listing): Promise<ListingT | null>;
     
+    /**
+     * Delete listing from platform
+     * @param listing Listing to delete
+     */
+    abstract deleteListing(listing: Listing): Promise<void>;
+
     /**
      * Check whether provided listing is synced with its respective platform listing
      * @param listing listing to check
+     * @param platform_listing listing from the platform to check against
      * 
      * @return true if synced, false if not
      */
-    abstract isSynced(listing: Listing): Promise<boolean>;
+    abstract isSynced(listing: Listing, platform_listing: ListingT): Promise<boolean>;
 
     setApiKey(api_key: string | null) {
         this.api_key = api_key

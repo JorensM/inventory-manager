@@ -99,7 +99,7 @@ describe('Login flow', () => {
 
         await signInWithCredentials('fake@mail.com', 'password');
 
-        const errorMessage = screen.findByText('Error');
+        const errorMessage = await screen.findByText('Error');
 
         expect(errorMessage).toBeDefined();
     })

@@ -1,3 +1,5 @@
+import '@/misc/initDefaults'
+
 // Core
 import { useRef, useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -22,6 +24,8 @@ import storage from './util/storage';
 
 // Constants
 import { IS_DEV } from './constants/env';
+import storage_keys from './constants/storage_keys';
+import { DEFAULT_SETTINGS } from './constants/defaults';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -34,6 +38,12 @@ import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
 import SettingsPage from './pages/app/SettingsPage';
 
+// Loaders
+import listingPageLoader from './pages/app/listingPageLoader';
+import settingsPageLoader from './pages/app/settingsPageLoader';
+
+// Add custom page title to dev environment to easily differentiate between prod and dev
+// tabs in browser
 document.title = IS_DEV ? 'DEV: Inventory Manager' : 'Inventory Manager'
 
 const router = createBrowserRouter([
@@ -60,10 +70,7 @@ const router = createBrowserRouter([
   {
     path: '/app/listings/:listing_id',
     element: <ListingPage />,
-    loader: async ( { params } ) => {
-      const listing = await ListingManager.fetchListing(parseInt(params.listing_id!));
-      return listing;
-    }
+    loader: listingPageLoader
   },
   {
     path: '/app/listings/edit',
@@ -79,7 +86,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/app/settings',
-    element: <SettingsPage />
+    element: <SettingsPage />,
+    loader: settingsPageLoader
   }
 ]);
 
@@ -87,8 +95,8 @@ function App() {
   const [ user, setUser] = useState<User | null>(null);
 
   const platformsRef = useRef<Platforms>({
-    reverb: new ReverbManager(storage.get('settings').reverb_key, true),
-    ebay: new ReverbManager(storage.get('settings').reverb_key, true)
+    reverb: new ReverbManager(storage.get('settings')?.reverb_key, storage.get('settings')?.reverb_mode == 'sandbox'),
+    ebay: new ReverbManager(storage.get('settings')?.reverb_key, true)
   });
 
   return (

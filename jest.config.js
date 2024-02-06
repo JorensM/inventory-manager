@@ -10,5 +10,6 @@ export default {
       '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/test/__ mocks __/fileMock.js',
       '^@/(.*)$': '<rootDir>/$1',
       "\\.(css)$": "identity-obj-proxy",
-    }
+    },
+    setupFilesAfterEnv: ['../jest.setup.ts']
 };

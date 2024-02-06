@@ -1,5 +1,6 @@
 // Core
 import { useEffect, useMemo, useState } from 'react';
+import { useLoaderData, useRevalidator } from 'react-router-dom';
 import { Form, Formik, FormikHelpers } from 'formik';
 
 // Components
@@ -12,6 +13,7 @@ import SelectInput from '@/components/input/SelectInput';
 import { PlatformID } from '@/types/Platform';
 import { Status } from '@/types/Status';
 import { APIKeyName } from '@/types/Listing';
+import { Settings } from '@/types/Settings';
 
 // Util
 import debounce from '@/util/debounce';
@@ -27,6 +29,8 @@ import useSettings from '@/hooks/useSettings';
 
 // Classes
 import ReverbManager from '@/classes/PlatformManager/ReverbManager';
+import SettingsManager from '@/classes/SettingsManager';
+import platforms from '@/classes/PlatformManager/AllPlatforms';
 
 
 type PlatformStatuses = Record<PlatformID, Status | null>
@@ -56,12 +60,14 @@ type ModesFormValues = {
 export default function SettingsPage() {
 
     //-- Hooks --//
-    const platforms = usePlatforms();
-    const settings = useSettings();
+    // const platforms = usePlatforms();
+    const { revalidate } = useRevalidator();
+    const { settings } = useLoaderData() as { settings: Settings };
+    // const settings = useSettings();
 
     //-- State --//
     const initialStatues: PlatformStatuses = useMemo(() => {
-        const _settings = settings.getSettings();
+        const _settings = settings;
         return {
             reverb: _settings.reverb_key ? 'loading' : null,
             ebay: _settings.ebay_key ? 'loading' : null
@@ -84,7 +90,7 @@ export default function SettingsPage() {
     const api_key_fields: APIKeyField[] = useMemo(() => {
         return Object.keys(platforms.platforms).filter(platform_id => !disabled_platforms.includes(platform_id)).map((platform_id) => ({
             platform_id: platform_id as PlatformID,
-            initial_value: settings.getAPIKey(platform_id as PlatformID) || "",
+            initial_value: settings[platform_id + '_key' as keyof Settings],//.getAPIKey(platform_id as PlatformID) || "",
             label: platform_name[platform_id as PlatformID]
         }))
     }, [])
@@ -193,11 +199,13 @@ export default function SettingsPage() {
      * @param formikHelpers Formik helpers
      */
     const handleModesSubmit = async (values: ModesFormValues, formikHelpers: FormikHelpers<ModesFormValues>) => {
-        await settings.updateSettings(values);
+        await SettingsManager.updateSettings(values);
 
         (platforms.platforms.reverb as ReverbManager).setIsSandbox(values.reverb_mode == 'sandbox');
 
         formikHelpers.resetForm({ values });
+
+        revalidate();
     }
 
     //-- Effects --//
@@ -208,7 +216,7 @@ export default function SettingsPage() {
     useEffect(() => {
         Object.entries(platformStatuses).map(([platform_id, status]) => {
             if(status) {
-                pingPlatform(platform_id as PlatformID, settings.getAPIKey(platform_id as PlatformID));
+                pingPlatform(platform_id as PlatformID, settings[platform_id + '_key' as keyof Settings]);
             }
         })
     }, [])
@@ -230,7 +238,8 @@ export default function SettingsPage() {
                     onSubmit={handleAPIKeysSubmit}
                 >
                     {formik => {
-                        setAPIKeysFormDirty(formik.dirty)
+                        const APIKeysSubmitDisabled = Object.values(platformStatuses)
+                            .some(platformStatus => platformStatus != 'success' && platformStatus != null) || !formik.dirty;
                         return (
                             <Form>
                                 {api_key_fields.map(field => (
@@ -254,7 +263,7 @@ export default function SettingsPage() {
                 {  }
                 <Formik<ModesFormValues>
                     initialValues={{
-                        reverb_mode: settings.getSettings().reverb_mode
+                        reverb_mode: settings.reverb_mode
                     }}
                     onSubmit={handleModesSubmit}
                 >

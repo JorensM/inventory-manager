@@ -16,8 +16,8 @@ const PlatformsContext = createContext<{
     platforms: Platforms
 }>({
     platforms: {
-        reverb: new ReverbManager(storage.get('settings').reverb_key, true),
-        ebay: new ReverbManager(storage.get('settings').reverb_key, true)
+        reverb: new ReverbManager(null, true),
+        ebay: new ReverbManager(null, true)
     }
 })
 

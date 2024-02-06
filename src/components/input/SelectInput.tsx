@@ -1,26 +1,60 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, useMemo, ChangeEvent } from 'react';
 import InputBase, { InputBaseProps } from './InputBase';
 import { useField } from 'formik';
 
 type SelectInputProps = InputBaseProps & ComponentProps<'select'> & {
+    /**
+     * Name of the input to be used in Formik
+     */
     name: string,
+    /**
+     * Array of options with object with properties `label` and `value`
+     */
     options: { label: string, value: string }[],
+    /**
+     * Array of strings of options to omit or a single string. Must be passed
+     * value of option 
+     */
+    omitOptions?: string[] | string
 }
 
-export default function SelectInput( { label, options, ...props }: SelectInputProps) {
+/**
+ * A select(dropdown) input
+ */
+export default function SelectInput( { label, options, omitOptions, onChange,  ...props }: SelectInputProps) {
 
+    //-- Hooks --//
     const [ field ] = useField(props.name)
+
+    //-- Memo --//
+
+    /**
+     * Convert omitOptions prop to an array if the prop is string or undefined
+     */
+    const _omitOptions: string[] = useMemo(() => {
+        return typeof omitOptions == 'string' ? [ omitOptions ] : Array.isArray(omitOptions) ? omitOptions : []
+    }, [omitOptions])
+
+    //-- Handlers --//
+
+    const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        field.onChange(props.name)(e);
+
+        if(onChange) {
+            onChange(e);
+        }
+    }
 
     return (
         <InputBase
             label={label}
         >
             <select
-                onChange={field.onChange(props.name)}
+                onChange={handleChange}
                 {...props}
                 defaultValue={field.value}
             >
-                {options.map((option) => (
+                {options.filter(option => !_omitOptions.includes(option.value)).map((option) => (
                     <option
                         key={option.value}
                         value={option.value}

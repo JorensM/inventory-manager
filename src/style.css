@@ -221,6 +221,10 @@ select {
   font-size: 1rem;
 }
 
+.block {
+  display: block;
+}
+
 .api-key-field {
   display: flex;
   gap: 4px;
