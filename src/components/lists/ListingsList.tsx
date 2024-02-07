@@ -1,5 +1,3 @@
-'use client';
-
 // Types
 import { Listing } from '@/types/Listing';
 

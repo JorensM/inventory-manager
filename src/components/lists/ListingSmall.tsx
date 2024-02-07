@@ -1,5 +1,3 @@
-'use client';
-
 // Core
 import { ComponentProps } from 'react';
 

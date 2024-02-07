@@ -43,6 +43,9 @@ import listingPageLoader from './pages/app/listingPageLoader';
 import settingsPageLoader from './pages/app/settingsPageLoader';
 import platforms from './classes/PlatformManager/AllPlatforms';
 import SettingsManager from './classes/SettingsManager';
+import routes from './constants/routes';
+import CategoriesPage from './pages/app/CategoriesPage';
+import supabase from './util/supabase';
 
 // Add custom page title to dev environment to easily differentiate between prod and dev
 // tabs in browser
@@ -81,6 +84,29 @@ const router = createBrowserRouter([
   {
     path: '/app/listings/edit/:listing_id',
     element: <ListingEditPage />
+  },
+  {
+    path: routes.categories,
+    element: <CategoriesPage />,
+    loader: async () => {
+
+      const { data: { user }, error: user_error } = await supabase.auth.getUser();
+
+      if (user_error) throw user_error;
+
+      if(!user) {
+         throw new Error('User not found')
+      }
+
+      const { data: teams, error: teams_error} = await supabase.from('teams')
+        .select()
+        .contains('users', user.id);
+
+      if (teams_error) throw teams_error
+      // const { data: categories, error } = await supabase.from('categories')
+      //   .select()
+      //   .in
+    }
   },
   {
     path: '/app/teams/edit',

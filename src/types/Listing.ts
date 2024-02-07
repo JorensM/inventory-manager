@@ -1,11 +1,10 @@
 // Types
 import { PlatformID } from './Platform'
 
-type Category = {
+export type Category = {
     id: number,
     name: string,
-    platform: Record<PlatformID, string | number>
-}
+} & Partial<Record<PlatformID, string>>
 
 export type Listing = {
     id: number
