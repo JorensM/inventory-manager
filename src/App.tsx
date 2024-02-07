@@ -46,6 +46,7 @@ import SettingsManager from './classes/SettingsManager';
 import routes from './constants/routes';
 import CategoriesPage from './pages/app/CategoriesPage';
 import supabase from './util/supabase';
+import user from './classes/UserManager';
 
 // Add custom page title to dev environment to easily differentiate between prod and dev
 // tabs in browser
@@ -90,22 +91,18 @@ const router = createBrowserRouter([
     element: <CategoriesPage />,
     loader: async () => {
 
-      const { data: { user }, error: user_error } = await supabase.auth.getUser();
+      await user.revalidate();
+      const user_team = user.getTeam();
 
-      if (user_error) throw user_error;
-
-      if(!user) {
-         throw new Error('User not found')
-      }
-
-      const { data: teams, error: teams_error} = await supabase.from('teams')
+      if (!user_team) throw new Error("User doesn't have a team")
+      
+      const { data: categories, error } = await supabase.from('categories')
         .select()
-        .contains('users', user.id);
+        .in('team_id', [ user_team.id ])
 
-      if (teams_error) throw teams_error
-      // const { data: categories, error } = await supabase.from('categories')
-      //   .select()
-      //   .in
+      if (error) throw error;
+
+      return { categories }
     }
   },
   {

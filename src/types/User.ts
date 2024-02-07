@@ -3,3 +3,9 @@ export type User = {
     email: string
     team: number
 }
+
+export type Team = {
+    id: number,
+    users: string[],
+    name: string
+}
