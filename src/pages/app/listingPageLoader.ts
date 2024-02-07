@@ -9,12 +9,15 @@ import platforms from '@/classes/PlatformManager/AllPlatforms';
 import { PlatformListings } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
 import SettingsManager from '@/classes/SettingsManager';
+import loaderInit from '@/util/loaderInit';
 
 /**
  * Listing Page loader
  * @returns Requested Listing object
  */
 export default async function ( { params }: LoaderFunctionArgs ) {
+
+    loaderInit();
 
     const platform_listings: PlatformListings = {};
     const listing = await ListingManager.fetchListing(parseInt(params.listing_id!));
@@ -23,11 +26,9 @@ export default async function ( { params }: LoaderFunctionArgs ) {
         const platform_listing_id: string = listing[platform_id + '_id'];
         const api_key = await SettingsManager.getAPIKey(typed_platform_id)
         if(platform_listing_id && api_key) {
-            console.log('getting listing')
             platform_listings[typed_platform_id] = await platforms.get(typed_platform_id).getListing(listing);
         }
     }
 
-    console.log(platform_listings)
     return { listing, platform_listings };
 }

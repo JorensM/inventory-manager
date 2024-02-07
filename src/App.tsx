@@ -99,9 +99,13 @@ function App() {
   const [ user, setUser] = useState<User | null>(null);
 
   //-- Refs --//
-  const platformsRef = useRef<Platforms>({
-    reverb: new ReverbManager(storage.get('settings')?.reverb_key, storage.get('settings')?.reverb_mode == 'sandbox'),
-    ebay: new ReverbManager(storage.get('settings')?.reverb_key, true)
+  /**
+   * This ref is deprecated, should use AllListings class instead. This is
+   * because we need to use the platforms classes in places where hook usage is not allowed
+   */
+  const platformsRef = useRef<Platforms>({ 
+    reverb: new ReverbManager(null, true),
+    ebay: new ReverbManager(null, true)
   });
 
   //-- Functions --//
@@ -116,7 +120,7 @@ function App() {
 
   useEffect(() => {
 
-    initPlatforms();
+    //initPlatforms();
     
   }, [])
 

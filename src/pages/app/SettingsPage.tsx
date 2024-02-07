@@ -167,7 +167,6 @@ export default function SettingsPage() {
         } else {
             setPlatformStatus(platform_id, 'loading');
         }
-        console.log('debouncing')
         debouncedPing[platform_id](api_key);
     }
 

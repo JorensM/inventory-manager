@@ -12,7 +12,6 @@ import storage from '@/util/storage';
 
 // Set default settings if settings are not defined
 const settings = storage.get(storage_keys.settings);
-console.log(settings);
 if(!settings) {
   storage.set(storage_keys.settings, DEFAULT_SETTINGS)
 }

@@ -77,5 +77,15 @@ export default abstract class PlatformManager<ListingT> {
 
         this.api_key_valid = api_key ? await this.ping(api_key) : false;
     }
+
+    /**
+     * Enables/disables manager. If manager is disabled, most methods won't work and will throw an error
+     * Note that if the API key is invalid then the manager will be disabled regardless
+     * of what you set the enabled property to.
+     * @param is_enabled Whether manager should be enabled or not
+     */
+    setEnabled(is_enabled: boolean) {
+        this.is_enabled = is_enabled
+    } 
     
 }

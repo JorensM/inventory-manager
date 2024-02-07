@@ -13,7 +13,7 @@ import supabase from '@/util/supabase';
 export default class SettingsManager {
     static async getAPIKey(platform_id: PlatformID) {
         const settings = await this.getSettings();
-        return settings[platform_id + '_key']
+        return settings[platform_id + '_key' as keyof Settings]
     }
     static async setAPIKey(platform_id: PlatformID, api_key: string) {
         this.updateSettings({
@@ -25,7 +25,7 @@ export default class SettingsManager {
      * Retrieve settings from 
      * @returns 
      */
-    static async getSettings() {
+    static async getSettings(): Promise<Settings> {
         const { data: { user } , error } = await supabase.auth.getUser();
 
         if (error) throw error;

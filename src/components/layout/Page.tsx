@@ -38,7 +38,6 @@ export default function Page( { children }: PropsWithChildren<PageProps> ) {
     }
 
     useEffect(() => {
-        console.log('validating')
         validateSessionAndMaybeRedirect();
     }, [ location.pathname ])
 
