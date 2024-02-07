@@ -13,7 +13,7 @@ import StatusIndicator from '@/components/misc/StatusIndicator';
 import SelectInput from '@/components/input/SelectInput';
 
 // Constants
-import { listing_platform_status } from '@/constants/localization';
+import { listing_fields, listing_platform_status, platform_name } from '@/constants/localization';
 import routes from '@/constants/routes';
 
 // Hooks
@@ -24,6 +24,7 @@ import { Listing, ListingPlatformStatus, ListingStatus, PlatformListings } from 
 import { PlatformID } from '@/types/Platform';
 import { Status } from '@/types/Status';
 import { getListingStatus } from '@/util/listings';
+import { required_platform_fields } from '@/constants/required_fields';
 
 type FormValues = {
     reverb_status: 'published' | 'draft'
@@ -49,11 +50,13 @@ export default function ListingPage() {
         reverb: 'loading',
         ebay: 'loading'
     })
-    const [ platformSyncStatuses, setPlatformSyncStatuses ] = useState<Record<PlatformID, Status>>({
-        reverb: 'loading',
-        ebay: 'loading'
+    const [ platformSyncStatuses, setPlatformSyncStatuses ] = useState<Record<PlatformID, Status | null>>({
+        reverb: null,
+        ebay: null
     })
     
+    console.log(platformSyncStatuses)
+
     //-- Memo --//
 
     /**
@@ -64,6 +67,34 @@ export default function ListingPage() {
         reverb: !['fail', null].includes(platformSyncStatuses.reverb),
         ebay: !['fail', null].includes(platformSyncStatuses.ebay)
     }), [ platformSyncStatuses ])
+
+    /**
+     * List of missing fields that are required to publish a listing on the respective platform
+     * 
+     * @return Object for each platform with an array of keys of missing fields 
+     */
+    const missingFields: Record<PlatformID, (keyof Listing)[]> = useMemo(() => {
+
+        const missing_fields: Record<PlatformID, (keyof Listing)[]> = {
+            reverb: [],
+            ebay: []
+        }
+
+        /**
+         * Check if there are any missing fields and append them to `missing_fields`
+         */
+        for(const platform_id in required_platform_fields) {
+            for(const listing_property_key of required_platform_fields[platform_id as PlatformID]) {
+                const property = listing[listing_property_key as keyof Listing];
+                if(!property || property == '' || (Array.isArray(property) && property.length == 0)) {
+                    console.log(listing_property_key);
+                    missing_fields[platform_id as PlatformID].push(listing_property_key as keyof Listing)
+                }
+            }
+        }
+
+        return missing_fields;
+    }, [listing])
     
     // Functions
 
@@ -132,7 +163,9 @@ export default function ListingPage() {
             throw new Error("Can't get platform sync statuses because listing state is not set")
         }
 
-        if(settings.getAPIKey('reverb') != '' && settings.getAPIKey('reverb') != null) {
+        const reverb = platforms.get('reverb');
+
+        if(reverb.isEnabled() && listing.reverb_id) {
             updatePlatformSyncStatus('reverb');
         }
         
@@ -286,9 +319,20 @@ export default function ListingPage() {
                                                         onChange={(e) => handleStatusInputChange(e.currentTarget.value as ListingStatus, 'reverb')}
                                                     />
                                                 }
+                                                {formik.values.reverb_status == 'published' && missingFields.reverb.length ?
+                                                    <span className='warn list-with-description'>
+                                                        In order to publish the listing on {platform_name.reverb}, you must fill the following
+                                                        fields for the listing:
+                                                        <ul className='list'>
+                                                            {missingFields.reverb.map(field_key => (
+                                                                <li>{listing_fields[field_key]}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </span>
+                                                : null}
                                                 
                                             </li>
-                                            {['draft', 'published'].includes(platformsStatuses.reverb) ?
+                                            {['draft', 'published'].includes(platformsStatuses.reverb) && platformSyncStatuses.reverb != null ?
                                                 <li>
                                                     <div className='key-value-container'>
                                                         Sync status:                                    

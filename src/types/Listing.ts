@@ -1,6 +1,12 @@
 // Types
 import { PlatformID } from './Platform'
 
+type Category = {
+    id: number,
+    name: string,
+    platform: Record<PlatformID, string | number>
+}
+
 export type Listing = {
     id: number
     title: string
@@ -8,6 +14,7 @@ export type Listing = {
     team_id: number
     brand: string,
     model: string,
+    categories: Category[]
     reverb_id?: number,
     ebay_id?: string,
     reverb_status?: 'published' | 'draft'
