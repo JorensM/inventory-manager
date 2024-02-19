@@ -9,13 +9,11 @@ import TextInput from '@/components/input/TextInput';
 import SessionPage from '@/components/layout/SessionPage';
 import routes from '@/constants/routes';
 import useAuth from '@/hooks/useAuth';
-import useListings from '@/hooks/useListings';
 import { Category } from '@/types/Category';
 import { Listing } from '@/types/Listing';
-import supabase from '@/util/supabase';
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
-import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 //import { createClient } from '@/util/supabase/server';
 
 const text_create = {

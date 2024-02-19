@@ -9,27 +9,18 @@ import './style.css';
 
 // Types
 import { User } from './types/User';
-import { Platforms } from './types/Platform';
 
 // Classes
-import ReverbManager from './classes/PlatformManager/ReverbManager';
-import ListingManager from './classes/ListingManager';
-import platforms from './classes/PlatformManager/AllPlatforms';
-import SettingsManager from './classes/SettingsManager';
 import user from './classes/UserManager';
 
 // State
-import PlatformsContext from './state/PlatformsContext';
 import AuthContext from './state/AuthContext';
 
 // Util
-import storage from './util/storage';
 import supabase from './util/supabase';
 
 // Constants
 import { IS_DEV } from './constants/env';
-import storage_keys from './constants/storage_keys';
-import { DEFAULT_SETTINGS } from './constants/defaults';
 import routes from './constants/routes';
 
 // Pages
@@ -42,14 +33,13 @@ import SignupPage from './pages/SignupPage';
 import ListingEditPage from './pages/app/ListingEditPage';
 import ListingPage from './pages/app/ListingPage';
 import SettingsPage from './pages/app/SettingsPage';
-import listingPageLoader from './pages/app/listingPageLoader';
 import settingsPageLoader from './pages/app/settingsPageLoader';
 import CategoriesPage from './pages/app/CategoriesPage';
 import CategoryEditPage from './pages/app/CategoryEditPage';
+import CategoryPage from './pages/app/CategoryPage';
 
 // Loaders
 import resourceLoader from './misc/resourceLoader';
-import CategoryPage from './pages/app/CategoryPage';
 
 // Add custom page title to dev environment to easily differentiate between prod and dev
 // tabs in browser
@@ -151,12 +141,6 @@ function App() {
   // });
 
   //-- Functions --//
-
-  const initPlatforms = async () => {
-    const settings = await SettingsManager.getSettings();
-
-    platforms.get('reverb').setApiKey(settings.reverb_key);
-  }
 
   //-- Effects --//
 
