@@ -2,6 +2,7 @@
 //import { submitNew, submitEdit } from './actions';
 
 // Components
+import ListingManager from '@/classes/ListingManager';
 import BackButton from '@/components/buttons/BackButton';
 import SelectInput from '@/components/input/SelectInput';
 import TextInput from '@/components/input/TextInput';
@@ -9,10 +10,12 @@ import SessionPage from '@/components/layout/SessionPage';
 import routes from '@/constants/routes';
 import useAuth from '@/hooks/useAuth';
 import useListings from '@/hooks/useListings';
+import { Category } from '@/types/Category';
+import { Listing } from '@/types/Listing';
 import supabase from '@/util/supabase';
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 //import { createClient } from '@/util/supabase/server';
 
 const text_create = {
@@ -45,36 +48,44 @@ type FormValues = {
     string_configuration: string,
     fretboard_material: string,
     neck_material: string,
+    category_id?: number,
     condition: 'used' | 'non_functioning'
 }
 
 export default function ListingEditPage() {
 
-    // State
-    const [ initialValues, setInitialValues ] = useState<FormValues>({
-        title: "",
-        brand: "",
-        model: "",
-        fretboard_material: "",
-        neck_material: "",
-        finish_color: "",
-        country_of_manufacture: "",
-        handedness: 'right_handed',
-        body_type: "",
-        string_configuration: "",
-        condition: "used"
-
-    })
+    
 
     // Hooks
-    const { listing_id } = useParams();
+    const { listing, categories } = useLoaderData() as { listing: Listing | null, categories: Category[] }
+
+    // State
+    const [ initialValues ] = useState<FormValues>( 
+        listing ? {
+            ...listing
+        } : 
+        {
+            title: "",
+            brand: "",
+            model: "",
+            fretboard_material: "",
+            neck_material: "",
+            finish_color: "",
+            country_of_manufacture: "",
+            handedness: 'right_handed',
+            body_type: "",
+            string_configuration: "",
+            condition: "used",
+            category_id: undefined
+        })
+    // const { listing_id } = useParams();
     const navigate = useNavigate();
     const auth = useAuth();
-    const listings = useListings();
+    // const listings = useListings();
 
     //const supabase = createClient();
 
-    const text = listing_id ? text_edit : text_create;
+    const text = listing ? text_edit : text_create;
 
     // if (listing_id) {
     //     const { data: listings, error } = await supabase
@@ -146,22 +157,9 @@ export default function ListingEditPage() {
 
     // setInitialValues(text_fields_1, initial_values);
     // setInitialValues(text_fields_2, initial_values);
-    
-    
-
-    const fetchListingIfEditMode = async () => {
-        if(listing_id) {
-            const _listing = await listings.fetchListing(parseInt(listing_id));
-
-            setInitialValues({
-                ..._listing
-            });
-        }
-        
-    }
 
     useEffect(() => {
-        fetchListingIfEditMode();
+        // fetchListingIfEditMode();
     }, []);
 
     /* 
@@ -180,21 +178,18 @@ export default function ListingEditPage() {
             team_id: auth.user!.team
         }
 
-        // Update listing
-        if(listing_id) {
-            query = query.update(data_to_submit).eq('id', listing_id);
-        } // Create new listing 
-        else {
-            query = query.insert(data_to_submit);
+        let id = listing?.id;
+
+        if(id) {
+            await ListingManager.updateListing({
+                ...data_to_submit,
+                id
+            });
+        } else {
+            id = await ListingManager.createListing(data_to_submit);
         }
-
-        const { data, error } = await query.select();
-            
-        if(error) throw error
-
-        const listing = data[0];
-
-        navigate(routes.listing(listing.id));
+        
+        navigate(routes.listing(id!));
     }
 
     return (
@@ -202,7 +197,7 @@ export default function ListingEditPage() {
             <section>
                 <BackButton/>
                 <h1>{text.heading}</h1>
-                <Formik
+                <Formik<FormValues>
                     initialValues={initialValues}
                     enableReinitialize={true}
                     onSubmit={handleSubmit}
@@ -259,6 +254,14 @@ export default function ListingEditPage() {
                             ]}
                             label='Condition'
                             required
+                        />
+                        <SelectInput
+                            label='Category'
+                            name='category_id'
+                            options={[ { value: undefined, label: '-' }, ...categories.map(category => ({
+                                value: category.id.toString(),
+                                label: category.name
+                            }))]}
                         />
                         {/* <input type='hidden' name='id' value={listing_id}/> */}
                         <button>

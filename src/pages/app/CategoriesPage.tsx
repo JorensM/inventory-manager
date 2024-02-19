@@ -5,7 +5,7 @@ import { Link, useLoaderData } from 'react-router-dom';
 import SessionPage from '@/components/layout/SessionPage';
 
 // Types
-import { Category } from '@/types/Listing';
+import { Category } from '@/types/Category';
 
 // Util
 import CategoriesList from '@/components/lists/CategoriesList';

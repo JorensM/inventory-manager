@@ -19,6 +19,7 @@ export default async function loaderInit() {
 
     const settings = await SettingsManager.getSettings();
 
+
     // Initialize platforms, set their modes and API keys and enabled them
     (platforms.get('reverb') as ReverbManager).setIsSandbox(settings.reverb_mode == 'sandbox')
     await platforms.get('reverb').setApiKey(settings.reverb_key);

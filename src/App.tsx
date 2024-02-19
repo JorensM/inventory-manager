@@ -49,6 +49,7 @@ import CategoryEditPage from './pages/app/CategoryEditPage';
 
 // Loaders
 import resourceLoader from './misc/resourceLoader';
+import CategoryPage from './pages/app/CategoryPage';
 
 // Add custom page title to dev environment to easily differentiate between prod and dev
 // tabs in browser
@@ -86,7 +87,8 @@ const router = createBrowserRouter([
   },
   {
     path: '/app/listings/edit/:listing_id',
-    element: <ListingEditPage />
+    element: <ListingEditPage />,
+    loader: resourceLoader(['listing', 'categories'])
   },
   {
     path: routes.categories,
@@ -110,6 +112,16 @@ const router = createBrowserRouter([
   {
     path: routes.new_category,
     element: <CategoryEditPage />,
+    loader: resourceLoader([], ['category'])
+  },
+  {
+    path: routes.edit_category(':category_id'),
+    element: <CategoryEditPage />,
+    loader: resourceLoader(['category'])
+  },
+  {
+    path: routes.category(':category_id'),
+    element: <CategoryPage />,
     loader: resourceLoader(['category'])
   },
   {
@@ -133,10 +145,10 @@ function App() {
    * This ref is deprecated, should use AllListings class instead. This is
    * because we need to use the platforms classes in places where hook usage is not allowed
    */
-  const platformsRef = useRef<Platforms>({ 
-    reverb: new ReverbManager(null, true),
-    ebay: new ReverbManager(null, true)
-  });
+  // const platformsRef = useRef<Platforms>({ 
+  //   reverb: new ReverbManager(null, true),
+  //   ebay: new ReverbManager(null, true)
+  // });
 
   //-- Functions --//
 
@@ -156,9 +168,9 @@ function App() {
 
   return (
     <AuthContext.Provider value={{user, setUser}}>
-      <PlatformsContext.Provider value={{platforms: platformsRef.current}}>
+      {/* <PlatformsContext.Provider value={{platforms: platformsRef.current}}> */}
         <RouterProvider router={router} />
-      </PlatformsContext.Provider>
+      {/* </PlatformsContext.Provider> */}
     </AuthContext.Provider>
     
   )

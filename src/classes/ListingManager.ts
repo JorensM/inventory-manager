@@ -2,7 +2,8 @@
 import supabase from '@/util/supabase';
 
 // Types
-import { Listing, ListingUpdate } from '@/types/Listing';
+import { Listing, ListingCreate, ListingUpdate } from '@/types/Listing';
+import user from './UserManager';
 
 export default class ListingManager {
     static async fetchListing (listing_id: number) {
@@ -39,5 +40,32 @@ export default class ListingManager {
             .eq('id', listing.id)
 
         if (error) throw error;
+    }
+
+    /**
+     * Create a listing according to passed ListingCreate object
+     * @param listing ListingCreate object
+     * 
+     * @returns ID of newly created listing
+     */
+    static async createListing (listing: ListingCreate) {
+        const team = user.getTeam();
+
+        if(!team) {
+            throw new Error('User team not found')
+        }
+
+        const listing_data: any = {
+            ...listing,
+            team_id: team.id
+        }
+
+        const { data: listings, error } = await supabase.from('categories')
+            .insert(listing_data)
+            .select();
+
+        if (error) throw error;
+
+        return listings[0].id;
     }
 }

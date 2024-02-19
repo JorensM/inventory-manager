@@ -16,11 +16,14 @@ import routes from '@/constants/routes';
 import useAuth from '@/hooks/useAuth';
 
 // Types
-import { Category } from '@/types/Listing';
+import { Category } from '@/types/Category';
 import { PlatformID } from '@/types/Platform';
 
 // Util
 import supabase from '@/util/supabase';
+import PlatformManager from '@/classes/PlatformManager/PlatformManager';
+import platforms from '@/classes/PlatformManager/AllPlatforms';
+import CategoryManager from '@/classes/CategoryManager';
 
 const text_create = {
     heading: 'New Category',
@@ -77,6 +80,22 @@ export default function CategoryEditPage() {
     */
 
     const handleSubmit = async (values: FormValues) => {
+
+        if(category) {
+            await CategoryManager.updateCategory({
+                ...values,
+                id: category.id
+            })
+
+            navigate(routes.category(category.id));
+        } else {
+            const new_category_id = await CategoryManager.createCategory(values);
+
+            navigate(routes.category(new_category_id));
+        }
+
+        
+
         // await auth.fetchUser();
         
         // let query: any = supabase.from('listings');
@@ -115,7 +134,22 @@ export default function CategoryEditPage() {
                     onSubmit={handleSubmit}
                 >
                     <Form>
-                        
+                        <TextInput
+                            label="Category name"
+                            name="name"
+                        />
+                        {platforms.get('reverb').isEnabled() ?
+                            <TextInput
+                                label="Reverb category ID"
+                                name="reverb"
+                            />
+                        : null}
+                        {platforms.get('ebay').isEnabled() ?
+                            <TextInput
+                                label="eBay category ID"
+                                name="ebay"
+                            />
+                        : null}
                         <button>
                             {text.submit}
                         </button>

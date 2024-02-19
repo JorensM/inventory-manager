@@ -10,7 +10,7 @@ type SelectInputProps = InputBaseProps & ComponentProps<'select'> & {
     /**
      * Array of options with object with properties `label` and `value`
      */
-    options: { label: string, value: string }[],
+    options: { label: string, value: string | number | undefined }[],
     /**
      * Array of strings of options to omit or a single string. Must be passed
      * value of option 
@@ -31,7 +31,7 @@ export default function SelectInput( { label, options, omitOptions, onChange,  .
     /**
      * Convert omitOptions prop to an array if the prop is string or undefined
      */
-    const _omitOptions: string[] = useMemo(() => {
+    const _omitOptions: (string | undefined | number)[] = useMemo(() => {
         return typeof omitOptions == 'string' ? [ omitOptions ] : Array.isArray(omitOptions) ? omitOptions : []
     }, [omitOptions])
 

@@ -13,7 +13,7 @@ export default abstract class PlatformManager<ListingT> {
     is_enabled: boolean = false
 
     constructor(api_key: string | null) {
-        this.setApiKey(api_key);
+        // this.setApiKey(api_key);
     }
     
     /**
@@ -75,7 +75,9 @@ export default abstract class PlatformManager<ListingT> {
     async setApiKey(api_key: string | null) {
         this.api_key = api_key;
 
-        this.api_key_valid = api_key ? await this.ping(api_key) : false;
+        const pinged = await this.ping(api_key || "");
+
+        this.api_key_valid = api_key ? pinged : false;
     }
 
     /**
