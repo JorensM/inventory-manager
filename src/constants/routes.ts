@@ -7,6 +7,7 @@ const routes = {
     category: (category_id: number | string) => '/app/categories/' + category_id,
     new_category: '/app/categories/edit',
     edit_category: (category_id: number | string) => '/app/categories/edit/' + category_id,
+    reverb_categories: '/app/reverb_categories',
     login: '/login',
     dashboard: '/app/dashboard',
     new_team: '/app/teams/edit',

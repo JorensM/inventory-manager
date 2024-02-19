@@ -1,19 +1,27 @@
-// Actions
-//import { submitNew, submitEdit } from './actions';
+// Core
+import { useEffect, useState, useMemo } from 'react';
+import { useLoaderData, useNavigate } from 'react-router-dom';
+import { Form, Formik } from 'formik';
+
+// Hooks
+import useAuth from '@/hooks/useAuth';
+
+// Constants
+import routes from '@/constants/routes';
+
+// Types
+import { Category } from '@/types/Category';
+import { Listing } from '@/types/Listing';
+import { Image } from '@/types/File';
 
 // Components
 import ListingManager from '@/classes/ListingManager';
 import BackButton from '@/components/buttons/BackButton';
+import ImageUpload from '@/components/input/ImageUpload';
 import SelectInput from '@/components/input/SelectInput';
 import TextInput from '@/components/input/TextInput';
 import SessionPage from '@/components/layout/SessionPage';
-import routes from '@/constants/routes';
-import useAuth from '@/hooks/useAuth';
-import { Category } from '@/types/Category';
-import { Listing } from '@/types/Listing';
-import { Form, Formik } from 'formik';
-import { useEffect, useState } from 'react';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import FilesManager from '@/classes/FilesManager';
 //import { createClient } from '@/util/supabase/server';
 
 const text_create = {
@@ -47,7 +55,8 @@ type FormValues = {
     fretboard_material: string,
     neck_material: string,
     category_id?: string,
-    condition: 'used' | 'non_functioning'
+    condition: 'used' | 'non_functioning',
+    images: { add: Image[], remove: string[] }
 }
 
 export default function ListingEditPage() {
@@ -58,25 +67,52 @@ export default function ListingEditPage() {
     const { listing, categories } = useLoaderData() as { listing: Listing | null, categories: Category[] }
 
     // State
-    const [ initialValues ] = useState<FormValues>( 
-        listing ? {
-            ...listing,
-            category_id: listing.category_id?.toString()
-        } : 
-        {
-            title: "",
-            brand: "",
-            model: "",
-            fretboard_material: "",
-            neck_material: "",
-            finish_color: "",
-            country_of_manufacture: "",
-            handedness: 'right_handed',
-            body_type: "",
-            string_configuration: "",
-            condition: "used",
-            category_id: undefined
-        })
+    const initialValues = useMemo<FormValues>(() => {
+        if(!listing) {
+            return {
+                title: "",
+                brand: "",
+                model: "",
+                fretboard_material: "",
+                neck_material: "",
+                finish_color: "",
+                country_of_manufacture: "",
+                handedness: 'right_handed',
+                body_type: "",
+                string_configuration: "",
+                condition: "used",
+                category_id: undefined,
+                images: { add: [], remove: []}
+            }
+        }
+        const { category, ...filteredListing } = listing;
+        return {
+            ...filteredListing,
+            category_id: filteredListing.category_id?.toString(),
+            images: { add: [], remove: []}
+        }
+        // listing ? {
+        //     ...listing,
+        //     category_id: listing.category_id?.toString(),
+        //     images: { add: [], remove: []}
+        // } : 
+        // {
+        //     title: "",
+        //     brand: "",
+        //     model: "",
+        //     fretboard_material: "",
+        //     neck_material: "",
+        //     finish_color: "",
+        //     country_of_manufacture: "",
+        //     handedness: 'right_handed',
+        //     body_type: "",
+        //     string_configuration: "",
+        //     condition: "used",
+        //     category_id: undefined,
+        //     images: { add: [], remove: []}
+        // })
+    }, []);
+        
     // const { listing_id } = useParams();
     const navigate = useNavigate();
     const auth = useAuth();
@@ -169,16 +205,38 @@ export default function ListingEditPage() {
     const handleSubmit = async (values: FormValues) => {
         await auth.fetchUser();
 
+        console.log(values);
 
-        const category_id = values.category_id == "none" ? undefined : parseInt(values.category_id!);
+        const category_id = values.category_id == "none" ? null : parseInt(values.category_id!);
+
+        const { images, ...valuesWithoutImages } = values;
+
+        const files_to_upload = images.add.map(image => image.file!);
+
+        let image_paths = await FilesManager.uploadFiles(files_to_upload);
 
         delete values.category_id;
 
+        if(listing) {
+            image_paths = [...image_paths, ...(listing.images || [])]
+            image_paths = image_paths.filter((path) => {
+                return !images.remove.includes(path);
+            });
+
+            if(images.remove.length) {
+                await FilesManager.deleteFiles('listing_images', images.remove);
+            }
+            
+
+        }
+        
+
         const data_to_submit = {
-            ...values,
+            ...valuesWithoutImages,
             category_id,
             user_id: auth.user!.id,
-            team_id: auth.user!.team
+            team_id: auth.user!.team,
+            images: image_paths
         }
 
         let id = listing?.id;
@@ -265,6 +323,17 @@ export default function ListingEditPage() {
                                 value: category.id.toString(),
                                 label: category.name
                             }))]}
+                        />
+                        <ImageUpload
+                            images={listing?.images.map(image_path => {
+                                const url = FilesManager.getPublicURLS('listing_images', [image_path])[0];
+                                return {
+                                    path: image_path,
+                                    url
+                                }
+                            })}
+                            label="Images"
+                            name="images"
                         />
                         {/* <input type='hidden' name='id' value={listing_id}/> */}
                         <button>

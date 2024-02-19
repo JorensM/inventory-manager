@@ -13,7 +13,7 @@ export const listing_platform_status: Record<ListingPlatformStatus, string> = {
 }
 
 export const listing_fields: Partial<Record<keyof Listing, string>> = {
-    'categories': 'Categories',
+    'category': 'Category ID',
     'brand': 'Brand',
     'model': 'Model',
     'title': 'Title',

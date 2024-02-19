@@ -29,6 +29,9 @@ export default function PrivatePage() {
                     <li>
                         <Link to={routes.new_category}>New category</Link>
                     </li>
+                    <li>
+                        <Link to={routes.reverb_categories}>Reverb categories list</Link>
+                    </li>
                 </ul>
             </nav>
             

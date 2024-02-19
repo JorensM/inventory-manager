@@ -22,11 +22,9 @@ export default class ListingManager {
     }
 
     static async updateListing (listing: ListingUpdate) {
-        console.log(listing);
         const { error } = await supabase.from('listings')
             .update({
                 ...listing,
-                category_id: listing.category_id || null,
             })
             .eq('id', listing.id)
 
@@ -61,7 +59,6 @@ export default class ListingManager {
 
         const listing_data: any = {
             ...listing,
-            category_id: listing.category_id || null,
             team_id: team.id
         }
 

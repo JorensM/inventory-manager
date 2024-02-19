@@ -6,6 +6,7 @@ import { Formik } from 'formik';
 // Classes
 import ListingManager from '@/classes/ListingManager';
 import platforms from '@/classes/PlatformManager/AllPlatforms';
+import FilesManager from '@/classes/FilesManager';
 
 // Components
 import SessionPage from '@/components/layout/SessionPage';
@@ -26,6 +27,7 @@ import { Status } from '@/types/Status';
 import { getListingStatus } from '@/util/listings';
 import { required_platform_fields } from '@/constants/required_fields';
 import { Category } from '@/types/Category';
+import { toastError } from '@/util/toast';
 
 type FormValues = {
     reverb_status: 'published' | 'draft'
@@ -38,8 +40,7 @@ export default function ListingPage() {
 
     // Hooks
     // const { listing_id } = useParams();
-    const { listing, platform_listings, category } = useLoaderData() as { listing: Listing, platform_listings: PlatformListings, category: Category | null }
-    const settings = useSettings();
+    const { listing, platform_listings } = useLoaderData() as { listing: Listing, platform_listings: PlatformListings, category: Category | null }
     const navigate = useNavigate();
 
     //const listings = useListings();
@@ -92,6 +93,11 @@ export default function ListingPage() {
                     missing_fields[platform_id as PlatformID].push(listing_property_key as keyof Listing)
                 }
             }
+        }
+
+        if(!listing.category?.reverb) {
+            console.log(listing);
+            missing_fields.reverb.push('category');
         }
 
         return missing_fields;
@@ -199,17 +205,22 @@ export default function ListingPage() {
             throw new Error('Listing state not set')
         }
 
-        if(listing[platform_id + '_id' as keyof Listing]) {
-            //console.log('updating')
-            await platforms.platforms[platform_id].updateListing(listing);
-        } else {
-            const platform_listing_id = await platforms.platforms[platform_id].uploadListing(listing);
-
-            await ListingManager.updateListing({
-                id: listing.id,
-                [platform_id + '_id']: platform_listing_id
-            })
+        try {
+            if(listing[platform_id + '_id' as keyof Listing]) {
+                //console.log('updating')
+                await platforms.platforms[platform_id].updateListing(listing);
+            } else {
+                const platform_listing_id = await platforms.platforms[platform_id].uploadListing(listing);
+    
+                await ListingManager.updateListing({
+                    id: listing.id,
+                    [platform_id + '_id']: platform_listing_id
+                })
+            }   
+        } catch (e: any) {
+            toastError(e.message);
         }
+        
 
         revalidate();
 
@@ -288,8 +299,8 @@ export default function ListingPage() {
                                     >
                                         Delete listing
                                     </button>
-                                    {category ? 
-                                        <><b>Category:</b> { category!.name }</>
+                                    {listing.category ? 
+                                        <><b>Category:</b> { listing.category.name }</>
                                     : null}
                                     
                             </section>
@@ -354,13 +365,24 @@ export default function ListingPage() {
                                             <button
                                                 type='button'
                                                 onClick={() => handlePlatformUpdateClick('reverb')}
-                                                disabled={isPlatformUpdateDisabled.reverb || formik.values.reverb_status == 'published'}
+                                                disabled={isPlatformUpdateDisabled.reverb}
                                             >
                                                 {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Sync'}
                                             </button>
                                         : null}
                                     </>
                                 : null}
+                            </section>
+                            <section>
+                                <h2>Images</h2>
+                                <ul className='image-list'>
+                                    {FilesManager.getPublicURLS('listing_images', listing.images).map((image_url) => (
+                                        <li className='image-container'>
+                                            <img src={image_url} />
+                                        </li>
+                                    ))}
+                                </ul>
+                                
                             </section>
                         </>
                     )}

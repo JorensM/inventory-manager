@@ -40,6 +40,10 @@ import CategoryPage from './pages/app/CategoryPage';
 
 // Loaders
 import resourceLoader from './misc/resourceLoader';
+import ReverbCategories from './pages/app/ReverbCategories';
+import reverbCategoriesPageLoader from './pages/app/reverbCategoriesPageLoader';
+import { Toaster } from 'react-hot-toast';
+import { SnackbarProvider } from 'notistack';
 
 // Add custom page title to dev environment to easily differentiate between prod and dev
 // tabs in browser
@@ -115,6 +119,11 @@ const router = createBrowserRouter([
     loader: resourceLoader(['category'])
   },
   {
+    path: routes.reverb_categories,
+    element: <ReverbCategories />,
+    loader: reverbCategoriesPageLoader
+  },
+  {
     path: '/app/teams/edit',
     element: <TeamEditPage />
   },
@@ -154,6 +163,7 @@ function App() {
     <AuthContext.Provider value={{user, setUser}}>
       {/* <PlatformsContext.Provider value={{platforms: platformsRef.current}}> */}
         <RouterProvider router={router} />
+        <SnackbarProvider />
       {/* </PlatformsContext.Provider> */}
     </AuthContext.Provider>
     

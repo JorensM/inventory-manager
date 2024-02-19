@@ -5,7 +5,7 @@ import user from './UserManager';
 import supabase from '@/util/supabase';
 
 // Types
-import { Category, CategoryCreate, CategoryUpdate } from '@/types/Category';
+import { CategoryCreate, CategoryUpdate } from '@/types/Category';
 
 export default class CategoryManager {
     /**

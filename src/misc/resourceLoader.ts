@@ -65,7 +65,7 @@ export default function resourceLoader(resources: Resource[], noops: Resource[] 
                     let category = undefined;
                     output.listing = await ListingManager.fetchListing(parseInt(params.listing_id!));
                     if(output.listing.category_id) {
-                        category = CategoryManager.fetchCategory(output.listing.category_id);
+                        category = await CategoryManager.fetchCategory(output.listing.category_id);
                         output.listing.category = category;
                     }   
                     break;

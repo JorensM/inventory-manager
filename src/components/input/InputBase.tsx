@@ -2,10 +2,12 @@ import { PropsWithChildren } from 'react';
 
 export type InputBaseProps = {
     label: string
-    required?: boolean
+    required?: boolean,
+    contentsDirection?: 'row' | 'column'
+    contentsAlign?: 'center' | 'flex-start'
 };
 
-export default function InputBase( { label, required = false, children }: PropsWithChildren<InputBaseProps>) {
+export default function InputBase( { label, required = false, contentsDirection = 'row', contentsAlign = 'center', children }: PropsWithChildren<InputBaseProps>) {
 
     // #TODO: Make it so that pressing enter moves focus to the next field instead
     // of submitting the form. More info: https://stackoverflow.com/a/70113306/1673694
@@ -28,7 +30,13 @@ export default function InputBase( { label, required = false, children }: PropsW
             // ref={containerRef}
         >
             <label>{label}{required ? <span className='required'>(Required)</span> : null}</label>
-            <div className='contents'>
+            <div 
+                className='contents'
+                style={{
+                    flexDirection: contentsDirection,
+                    alignItems: contentsAlign
+                }}
+            >
                 {children}
             </div>
             

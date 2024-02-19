@@ -54,6 +54,25 @@ ul {
   gap: 8px;
 }
 
+.image-list {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 4px;
+}
+
+.image-list > .image-container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border: 1px solid gray;
+  border-radius: 4px;
+}
+
+.image-list .delete-button {
+  align-self: flex-end;
+}
+
 /*--- Layout ---*/
 
 
@@ -237,6 +256,18 @@ select {
   font-size: 1rem;
 }
 
+.icon-button {
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.button-warn {
+  color: #d13b3b;
+}
+
 .block {
   display: block;
 }
@@ -261,10 +292,40 @@ select {
   color: firebrick;
 }
 
+/* Tables */
+
+table {
+  border-spacing: 0px;
+  border: 1px solid gray;
+  border-radius: 4px;
+}
+
+table thead {
+  font-weight: bold;
+  
+}
+
+table td {
+  padding: 16px;
+  border-bottom: 1px solid gray;
+}
+
 /* Misc */
 
 .status {
   width: 16px;
   height: 16px;
   border-radius: 100px;;
+}
+
+img {
+  width: 100%;
+}
+
+.snackbar {
+  display: flex;
+}
+
+.snackbar > #notistack-snackbar {
+  flex: 1;
 }

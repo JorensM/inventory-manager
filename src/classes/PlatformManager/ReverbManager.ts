@@ -138,7 +138,8 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
             } else if(res.status == 404) {
                 return null;
             } else {
-                throw new Error('Network error')
+                const data = await res.json()
+                throw new Error(data.message);
             }
             
         }
@@ -226,7 +227,10 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
             title: listing.title,
             make: listing.brand,
             model: listing.model,
-            publish: listing.reverb_status == 'published' ? 'true' : 'false'
+            publish: listing.reverb_status == 'published' ? 'true' : 'false',
+            categories: [{
+                uuid: listing.category?.reverb
+            }]
         }
     }
 
@@ -243,7 +247,7 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
             make: data.make,
             model: data.model,
             link: data._links.web.href,
-            status: data.draft ? 'draft' : 'published'
+            status: data.draft ? 'draft' : 'published',
         }
     }
 

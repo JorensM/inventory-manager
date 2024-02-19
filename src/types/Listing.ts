@@ -17,11 +17,12 @@ export type Listing = {
     fretboard_material: string,
     neck_material: string,
     condition: 'used' | 'non_functioning',
-    category_id?: number,
+    category_id?: number | null,
     category?: Category,
     reverb_id?: number,
     ebay_id?: string,
-    reverb_status?: 'published' | 'draft'
+    reverb_status?: 'published' | 'draft',
+    images: string[]
 }
 
 export type ListingUpdate = Omit<Partial<Listing>, 'id'> & {
