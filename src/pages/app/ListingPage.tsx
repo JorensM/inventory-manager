@@ -25,6 +25,7 @@ import { PlatformID } from '@/types/Platform';
 import { Status } from '@/types/Status';
 import { getListingStatus } from '@/util/listings';
 import { required_platform_fields } from '@/constants/required_fields';
+import { Category } from '@/types/Category';
 
 type FormValues = {
     reverb_status: 'published' | 'draft'
@@ -37,7 +38,7 @@ export default function ListingPage() {
 
     // Hooks
     // const { listing_id } = useParams();
-    const { listing, platform_listings } = useLoaderData() as { listing: Listing, platform_listings: PlatformListings }
+    const { listing, platform_listings, category } = useLoaderData() as { listing: Listing, platform_listings: PlatformListings, category: Category | null }
     const settings = useSettings();
     const navigate = useNavigate();
 
@@ -287,6 +288,10 @@ export default function ListingPage() {
                                     >
                                         Delete listing
                                     </button>
+                                    {category ? 
+                                        <><b>Category:</b> { category!.name }</>
+                                    : null}
+                                    
                             </section>
                             <section>
                                 <h2>Platforms</h2>

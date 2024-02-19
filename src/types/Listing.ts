@@ -18,6 +18,7 @@ export type Listing = {
     neck_material: string,
     condition: 'used' | 'non_functioning',
     category_id?: number,
+    category?: Category,
     reverb_id?: number,
     ebay_id?: string,
     reverb_status?: 'published' | 'draft'

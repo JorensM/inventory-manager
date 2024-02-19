@@ -13,6 +13,10 @@ export default class CategoryManager {
      * @param id 
      */
     static async fetchCategory(category_id: number) {
+        if(!category_id) {
+            return null;
+        }
+
         const { data: categories, error } = await supabase.from('categories')
             .select()
             .eq('id', category_id)

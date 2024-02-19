@@ -1,7 +1,7 @@
 import '@/misc/initDefaults'
 
 // Core
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 // Styles
@@ -79,7 +79,7 @@ const router = createBrowserRouter([
   {
     path: '/app/listings/:listing_id',
     element: <ListingPage />,
-    loader: listingPageLoader
+    loader: resourceLoader(['listing', 'platform_listings'])
   },
   {
     path: '/app/listings/edit',

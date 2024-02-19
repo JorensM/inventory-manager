@@ -48,7 +48,7 @@ type FormValues = {
     string_configuration: string,
     fretboard_material: string,
     neck_material: string,
-    category_id?: number,
+    category_id?: string,
     condition: 'used' | 'non_functioning'
 }
 
@@ -62,7 +62,8 @@ export default function ListingEditPage() {
     // State
     const [ initialValues ] = useState<FormValues>( 
         listing ? {
-            ...listing
+            ...listing,
+            category_id: listing.category_id?.toString()
         } : 
         {
             title: "",
@@ -169,11 +170,15 @@ export default function ListingEditPage() {
 
     const handleSubmit = async (values: FormValues) => {
         await auth.fetchUser();
-        
-        let query: any = supabase.from('listings');
+
+
+        const category_id = values.category_id == "none" ? undefined : parseInt(values.category_id!);
+
+        delete values.category_id;
 
         const data_to_submit = {
             ...values,
+            category_id,
             user_id: auth.user!.id,
             team_id: auth.user!.team
         }
@@ -258,7 +263,7 @@ export default function ListingEditPage() {
                         <SelectInput
                             label='Category'
                             name='category_id'
-                            options={[ { value: undefined, label: '-' }, ...categories.map(category => ({
+                            options={[ { value: "none", label: '-' }, ...categories.map(category => ({
                                 value: category.id.toString(),
                                 label: category.name
                             }))]}
