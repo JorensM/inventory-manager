@@ -1,6 +1,7 @@
 // Types
 import { Category } from './Category'
 import { PlatformID } from './Platform'
+import { Image } from './File'
 
 export type Listing = {
     id: number
@@ -22,7 +23,7 @@ export type Listing = {
     reverb_id?: number,
     ebay_id?: string,
     reverb_status?: 'published' | 'draft',
-    images: string[]
+    images: Image[]
 }
 
 export type ListingUpdate = Omit<Partial<Listing>, 'id'> & {

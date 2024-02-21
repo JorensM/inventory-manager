@@ -1,5 +1,6 @@
 export type Image = {
     path?: string,
     url?: string,
-    file?:  File
+    file?:  File,
+    reverb_id?: string,
 }

@@ -375,14 +375,16 @@ export default function ListingPage() {
                             </section>
                             <section>
                                 <h2>Images</h2>
+                                <button className='link' type='button'>
+                                    Sync images
+                                </button>
                                 <ul className='image-list'>
-                                    {FilesManager.getPublicURLS('listing_images', listing.images).map((image_url) => (
+                                    {FilesManager.getPublicURLS('listing_images', listing.images.map(image => image.path || "")).map((image_url) => (
                                         <li className='image-container'>
                                             <img src={image_url} />
                                         </li>
                                     ))}
                                 </ul>
-                                
                             </section>
                         </>
                     )}

@@ -58,6 +58,8 @@ ul {
   display: flex;
   flex-direction: column;
   padding: 16px;
+  padding-left: 0px;
+  box-sizing: border-box;
   gap: 4px;
 }
 
@@ -239,9 +241,13 @@ select {
 }
 
 .link, a {
+  border: none;
+  background: none;
+  padding: 0px;
   cursor: pointer;
   text-decoration: none;
   color: #3072bd;
+  font-size: 1rem;
 }
 
 .heading-link {
