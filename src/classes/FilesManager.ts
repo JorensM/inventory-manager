@@ -1,6 +1,7 @@
 import supabase from '@/util/supabase';
 import { v4 as uuid } from 'uuid';
 import user from './UserManager';
+import { validateBucketName } from '@/constants/supabase';
 
 export default class FilesManager {
     static async uploadFiles(files: File[]) {
