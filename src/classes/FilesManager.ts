@@ -19,7 +19,7 @@ export default class FilesManager {
             const file_ext = file.name.split('.').pop()
             const file_name_to_upload = team_id + "/" + file_id + "." + file_ext
             console.log(file_name_to_upload)
-            const { data, error } = await supabase.storage.from('listing_images')
+            const { error } = await supabase.storage.from('listing_images')
                 .upload(file_name_to_upload, file)
 
             if (error) throw error;
