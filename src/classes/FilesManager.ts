@@ -36,12 +36,23 @@ export default class FilesManager {
         if (error) throw error;
     }
 
-    static getPublicURLS(bucket_name: string, paths: string[]) {
+    static getPublicURLS(bucket_name: string, paths: string[] | undefined) {
+        if(!paths) {
+            return [];
+        }
+        // Validation
+        if(!Array.isArray(paths)) {
+            throw new Error('Paths must be an array')
+        }
+        validateBucketName(bucket_name);
+
+        // Map paths to public URLs
         const urls: string[] = paths.map((path) => {
             const { data } = supabase.storage.from(bucket_name).getPublicUrl(path);
             return data.publicUrl;
         });
 
+        // Return mapped URLs
         return urls;
     }
 }
