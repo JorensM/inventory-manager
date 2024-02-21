@@ -325,13 +325,13 @@ export default function ListingEditPage() {
                             }))]}
                         />
                         <ImageUpload
-                            images={listing?.images.map(image_path => {
+                            images={listing?.images ? listing?.images.map(image_path => {
                                 const url = FilesManager.getPublicURLS('listing_images', [image_path])[0];
                                 return {
                                     path: image_path,
                                     url
                                 }
-                            })}
+                            }) : undefined}
                             label="Images"
                             name="images"
                         />
