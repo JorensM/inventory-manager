@@ -1,5 +1,8 @@
 import { Listing, ListingUpdate, ReverbListing } from '@/types/Listing';
 import PlatformManager from './PlatformManager';
+import FilesManager from '../FilesManager';
+import { buckets } from '@/constants/supabase';
+import arraysEqual from '@/util/arraysEqual';
 
 export default class ReverbManager extends PlatformManager<ReverbListing> {
 
@@ -63,7 +66,7 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
     }
 
     async deleteListing(listing: Listing): Promise<void> {
-        const data = await this.DELETE('listings/' + listing.reverb_id);
+        await this.DELETE('listings/' + listing.reverb_id);
 
         // console.log(data);
         
@@ -74,7 +77,7 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
 
     async isSynced(listing: Listing, reverb_listing: ReverbListing): Promise<boolean> {
         
-        // const reverb_listing = await this.getListing(listing);
+        // const reverb_listing = await this.getListing(listing)
 
         return (
             listing.brand == reverb_listing.make &&
@@ -223,11 +226,15 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      */
     private listingToRequestData(listing: Listing | ListingUpdate) {
         // console.log(listing.reverb_status == 'published' ? 'true' : 'false')
+
+        const image_urls = FilesManager.getPublicURLS(buckets.listing_images, listing.images)
+
         return {
             title: listing.title,
             make: listing.brand,
             model: listing.model,
-            publish: listing.reverb_status == 'published' ? 'true' : 'false',
+            publish: listing.reverb_status == 'published' ? true : false,
+            photos: image_urls,
             categories: [{
                 uuid: listing.category?.reverb
             }]
@@ -239,7 +246,9 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      * @param data Full data from response
      * @returns ReverbListing object
      */
+    /* eslint-disable */
     private responseDataToListing(data: any): ReverbListing {
+    /* eslint-enable */
         // console.log(data);
         return {
             id: data.id,
