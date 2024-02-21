@@ -30,7 +30,6 @@ export default class FilesManager {
     }
 
     static async deleteFiles(bucket_name: string, file_paths: string[]) {
-        console.log('deleting files');
         const { error } = await supabase.storage.from(bucket_name).remove(file_paths);
 
         if (error) throw error;
