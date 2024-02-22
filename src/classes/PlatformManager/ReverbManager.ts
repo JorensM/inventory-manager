@@ -3,6 +3,7 @@ import PlatformManager from './PlatformManager';
 import FilesManager from '../FilesManager';
 import { buckets } from '@/constants/supabase';
 import arraysEqual from '@/util/arraysEqual';
+import { Image } from '@/types/File';
 
 export default class ReverbManager extends PlatformManager<ReverbListing> {
 
@@ -45,8 +46,10 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         return data.listing.id;
     }
     
-    async updateListing(listing: ListingUpdate): Promise<void> {
-        const data_to_send = this.listingToRequestData(listing);
+    async updateListing(listing: ListingUpdate, send_images: boolean = false): Promise<void> {
+        const data_to_send = this.listingToRequestData(listing, send_images);
+
+        console.log(data_to_send);
 
         const data = await this.PUT('listings/' + listing.reverb_id, data_to_send);
 
@@ -224,17 +227,19 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      * 
      * @returns listing object matching Reverb API's listing schema
      */
-    private listingToRequestData(listing: Listing | ListingUpdate) {
+    private listingToRequestData(listing: Listing | ListingUpdate, images: boolean = false) {
         // console.log(listing.reverb_status == 'published' ? 'true' : 'false')
 
-        const image_urls = FilesManager.getPublicURLS(buckets.listing_images, listing.images)
+        const non_uploaded_images = listing.images?.filter(image => !image.reverb_id)
+
+        const image_urls = FilesManager.getPublicURLS(buckets.listing_images, non_uploaded_images?.map(image => image.path || ""))
 
         return {
             title: listing.title,
             make: listing.brand,
             model: listing.model,
             publish: listing.reverb_status == 'published' ? true : false,
-            photos: image_urls,
+            photos: images ? image_urls : undefined,
             categories: [{
                 uuid: listing.category?.reverb
             }]

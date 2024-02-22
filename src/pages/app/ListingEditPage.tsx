@@ -217,8 +217,11 @@ export default function ListingEditPage() {
 
         delete values.category_id;
 
+        let images_data: Image[] = [];
+
         if(listing) {
-            image_paths = [...image_paths, ...(listing.images || [])]
+            // Images
+            images_data = [...image_paths.map(path => ({path})), ...(listing.images || [])]
             image_paths = image_paths.filter((path) => {
                 return !images.remove.includes(path);
             });
@@ -236,7 +239,7 @@ export default function ListingEditPage() {
             category_id,
             user_id: auth.user!.id,
             team_id: auth.user!.team,
-            images: image_paths
+            images: images_data
         }
 
         let id = listing?.id;
@@ -325,10 +328,10 @@ export default function ListingEditPage() {
                             }))]}
                         />
                         <ImageUpload
-                            images={listing?.images ? listing?.images.map(image_path => {
-                                const url = FilesManager.getPublicURLS('listing_images', [image_path])[0];
+                            images={listing?.images ? listing?.images.map(image => {
+                                const url = FilesManager.getPublicURLS('listing_images', [image.path])[0];
                                 return {
-                                    path: image_path,
+                                    path: image.path,
                                     url
                                 }
                             }) : undefined}

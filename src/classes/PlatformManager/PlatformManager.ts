@@ -47,7 +47,7 @@ export default abstract class PlatformManager<ListingT> {
      * @param listing Listing data to update. Unspecified properties will be left
      * unchanged
      */
-    abstract updateListing(listing: ListingUpdate): Promise<void>;
+    abstract updateListing(listing: ListingUpdate, send_images?: boolean): Promise<void>;
 
     /**
      * Get listing from platform

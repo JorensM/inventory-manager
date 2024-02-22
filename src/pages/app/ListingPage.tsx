@@ -258,6 +258,19 @@ export default function ListingPage() {
         revalidate();
     }
 
+    /**
+     * On 'sync images' button click. Uploads images to platforms if they haven't been already uploaded
+     * and updates Supabase entries with the new image IDs for respective platforms
+     */
+    const handleImagesSyncClick = () => {
+        console.log(listing.id);
+        platforms.get('reverb').updateListing({
+            id: listing.id,
+            reverb_id: listing.reverb_id,
+            images: listing.images,
+        }, true)
+    }
+
     // Effects
 
     /**
@@ -375,11 +388,11 @@ export default function ListingPage() {
                             </section>
                             <section>
                                 <h2>Images</h2>
-                                <button className='link' type='button'>
+                                <button className='link' type='button' onClick={handleImagesSyncClick}>
                                     Sync images
                                 </button>
                                 <ul className='image-list'>
-                                    {FilesManager.getPublicURLS('listing_images', listing.images.map(image => image.path || "")).map((image_url) => (
+                                    {FilesManager.getPublicURLS('listing_images', listing.images ? listing.images.map(image => image.path || "") : undefined).map((image_url) => (
                                         <li className='image-container'>
                                             <img src={image_url} />
                                         </li>

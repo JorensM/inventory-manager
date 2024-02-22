@@ -36,7 +36,7 @@ export default class FilesManager {
         if (error) throw error;
     }
 
-    static getPublicURLS(bucket_name: string, paths: string[] | undefined) {
+    static getPublicURLS(bucket_name: string, paths: (string | undefined)[] | undefined) {
         if(!paths) {
             return [];
         }
@@ -47,8 +47,8 @@ export default class FilesManager {
         validateBucketName(bucket_name);
 
         // Map paths to public URLs
-        const urls: string[] = paths.map((path) => {
-            const { data } = supabase.storage.from(bucket_name).getPublicUrl(path);
+        const urls: string[] = paths.filter(path => path != undefined).map((path) => {
+            const { data } = supabase.storage.from(bucket_name).getPublicUrl(path!);
             return data.publicUrl;
         });
 
