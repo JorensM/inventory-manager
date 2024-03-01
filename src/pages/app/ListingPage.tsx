@@ -28,6 +28,7 @@ import { getListingStatus } from '@/util/listings';
 import { required_platform_fields } from '@/constants/required_fields';
 import { Category } from '@/types/Category';
 import { toastError } from '@/util/toast';
+import ReverbListingSection from '@/components/listings/ReverbListingSection';
 
 type FormValues = {
     reverb_status: 'published' | 'draft'
@@ -320,70 +321,16 @@ export default function ListingPage() {
                             <section>
                                 <h2>Platforms</h2>
                                 {platforms.get('reverb').isEnabled() ? 
-                                    <> 
-                                        <h3>Reverb</h3>
-                                        <ul>
-                                            {['draft', 'published'].includes(platformsStatuses.reverb) ?
-                                                <li>
-                                                    <Link to={platform_listings.reverb!.link}>Link</Link>
-                                                </li>
-                                            : null}
-                                            <li>
-                                                {platformsStatuses.reverb == 'loading' ? 
-                                                    'loading...' 
-                                                : 
-                                                    <SelectInput
-                                                        label='Status'
-                                                        name='reverb_status'
-                                                        options={[
-                                                            {
-                                                                label: listing_platform_status.draft,
-                                                                value: 'draft'
-                                                            },
-                                                            {
-                                                                label: listing_platform_status.published,
-                                                                value: 'published'
-                                                            }
-                                                        ]}
-                                                        onChange={(e) => handleStatusInputChange(e.currentTarget.value as ListingStatus, 'reverb')}
-                                                    />
-                                                }
-                                                {formik.values.reverb_status == 'published' && missingFields.reverb.length ?
-                                                    <span className='warn list-with-description'>
-                                                        In order to publish the listing on {platform_name.reverb}, you must fill the following
-                                                        fields for the listing:
-                                                        <ul className='list'>
-                                                            {missingFields.reverb.map(field_key => (
-                                                                <li>{listing_fields[field_key]}</li>
-                                                            ))}
-                                                        </ul>
-                                                    </span>
-                                                : null}
-                                                
-                                            </li>
-                                            {['draft', 'published'].includes(platformsStatuses.reverb) && platformSyncStatuses.reverb != null ?
-                                                <li>
-                                                    <div className='key-value-container'>
-                                                        Sync status:                                    
-                                                        <StatusIndicator
-                                                            status={platformSyncStatuses.reverb}
-                                                        />
-                                                    </div>
-                                                </li>
-                                            : null}
-                                        </ul>
-                                        
-                                        
-                                        {platformsStatuses.reverb != 'loading' ?
-                                            <button
-                                                type='button'
-                                                onClick={() => handlePlatformUpdateClick('reverb')}
-                                                disabled={isPlatformUpdateDisabled.reverb}
-                                            >
-                                                {platformsStatuses.reverb == 'not-uploaded' ? 'Upload' : 'Sync'}
-                                            </button>
-                                        : null}
-                                    </>
+                                    <ReverbListingSection
+                                        status={platformsStatuses.reverb}
+                                        reverb_listing={platform_listings.reverb}
+                                        onStatusChange={(new_status) => handleStatusInputChange(new_status, 'reverb')}
+                                        local_publish_status={formik.values.reverb_status}
+                                        is_update_disabled={isPlatformUpdateDisabled.reverb}
+                                        sync_status={platformSyncStatuses.reverb}
+                                        missingFields={missingFields.reverb}
+                                        onUpdateClick={() => handlePlatformUpdateClick('reverb')}
+                                    />
                                 : null}
                             </section>
                             <section>
