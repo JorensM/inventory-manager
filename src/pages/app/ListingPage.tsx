@@ -10,18 +10,12 @@ import FilesManager from '@/classes/FilesManager';
 
 // Components
 import SessionPage from '@/components/layout/SessionPage';
-import StatusIndicator from '@/components/misc/StatusIndicator';
-import SelectInput from '@/components/input/SelectInput';
 
 // Constants
-import { listing_fields, listing_platform_status, platform_name } from '@/constants/localization';
 import routes from '@/constants/routes';
 
-// Hooks
-import useSettings from '@/hooks/useSettings';
-
 // Types
-import { Listing, ListingPlatformStatus, ListingStatus, PlatformListings } from '@/types/Listing';
+import { Listing, ListingPlatformStatus, PlatformListings } from '@/types/Listing';
 import { PlatformID } from '@/types/Platform';
 import { Status } from '@/types/Status';
 import { getListingStatus } from '@/util/listings';
@@ -218,8 +212,13 @@ export default function ListingPage() {
                     [platform_id + '_id']: platform_listing_id
                 })
             }   
-        } catch (e: any) {
-            toastError(e.message);
+        } catch (e) {
+            if(typeof e == 'string') {
+                toastError(e)
+            } else if (e instanceof Error) {
+                toastError(e.message);
+            }
+            
         }
         
 
