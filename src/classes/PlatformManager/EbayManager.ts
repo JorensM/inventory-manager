@@ -2,6 +2,7 @@ import { EbayListing, Listing } from '@/types/Listing';
 import PlatformManager from './PlatformManager';
 import { apiGET } from '@/util/api';
 import SettingsManager from '../SettingsManager';
+import { Params } from '@/types/Misc';
 
 const CLIENT_ID = "AllanHar-Inventor-PRD-bcd6d2723-74d77282"
 const SCOPES = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly";
@@ -13,7 +14,16 @@ export default class EbayManager extends PlatformManager<EbayListing> {
     }
     
     async uploadListing(listing: Listing): Promise<string | number> {
-        
+
+        if(!listing.sku || listing.sku == "") {
+            throw new Error('SKU missing');
+        }
+
+        const ebayListing = this.listingToEbayListing(listing);
+
+        const data = this.PUT('sell/inventory/v1/inventory_item/' + listing.sku, ebayListing.inventory_item);
+
+        return listing.sku
     }
 
     async authorize(): Promise<void> {
@@ -94,10 +104,20 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return url;
     }
 
-    private async request(url: URL, method: 'GET', api_key?: string) {
+    private async request(url: URL, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: Params, api_key?: string) {
+
+        if(!api_key) {
+            throw new Error('API key not provided');
+        }
+
         const res = await fetch(url, {
             method,
-            redirect: 'follow'
+            redirect: 'follow',
+            headers: {
+                'Content-Language': 'en-US',
+                'Authorization': 'Bearer ' + api_key
+            },
+            body: JSON.stringify(body)
         })
 
         const data = await res.json();
@@ -110,7 +130,28 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         const url = this.createAPIURL(endpoint, params, type);
         
 
-        const data = await this.request(url, 'GET', api_key);
+        const data = await this.request(url, 'GET', undefined, api_key);
         return data;
+    }
+
+    private async PUT(endpoint: string, params: Params) {
+        const url = this.createAPIURL(endpoint);
+
+        const data = await this.request(url, 'PUT', params, this.api_key || undefined);
+
+        return data;
+    }
+
+    private listingToEbayListing(listing:Listing) {
+        return ({
+            inventory_item: {
+                product: {
+                    title: listing.title
+                }
+            },
+            offer: {
+
+            }
+        })
     }
 }

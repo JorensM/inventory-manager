@@ -45,6 +45,7 @@ type TextFieldsObj = {
 
 type FormValues = {
     title: string,
+    sku: string,
     brand: string,
     model: string,
     finish_color: string,
@@ -71,6 +72,7 @@ export default function ListingEditPage() {
         if(!listing) {
             return {
                 title: "",
+                sku: "",
                 brand: "",
                 model: "",
                 fretboard_material: "",
@@ -157,6 +159,9 @@ export default function ListingEditPage() {
         title: {
             label: "Title",
             required: true
+        },
+        sku: {
+            label: "SKU"
         },
         brand: {
             label: "Brand",
