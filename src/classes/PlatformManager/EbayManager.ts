@@ -67,7 +67,15 @@ export default class EbayManager extends PlatformManager<EbayListing> {
 
         // const data = await this.GET("sell/account/v1/custom_policy", undefined, undefined, api_key);
 
-        const data = await apiGET('api/ebay/ping', { token: api_key });
+        const data = await apiGET('api/ebay/ping', { token: this.api_key || api_key });
+
+        if(!data.success) {
+            await this.refreshAPIKey();
+
+            const _data = await apiGET('api/ebay/ping', { token: this.api_key || api_key})
+
+            return _data.success;
+        }
 
         return data.success;
     }

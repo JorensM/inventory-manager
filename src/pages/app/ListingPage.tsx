@@ -59,6 +59,12 @@ export default function ListingPage() {
 
     //-- Memo --//
 
+
+    const isSinglePlatformUpdateDisaled = (platform_id: PlatformID) => {
+        return (
+            !['fail', null].includes(platformSyncStatuses[platform_id])
+        )
+    }
     /**
      * Wheter update button for corresponding platform should be disabled. It will
      * be only be enabled if sync status is null or fail.
@@ -68,12 +74,7 @@ export default function ListingPage() {
         ebay: isSinglePlatformUpdateDisaled('ebay')
     }), [ platformSyncStatuses ])
 
-    const isSinglePlatformUpdateDisaled = (platform_id: PlatformID) => {
-        return (
-            !['fail', null].includes(platformSyncStatuses[platform_id]) &&
-            missingFields[platform_id].length
-        )
-    }
+    
 
     /**
      * List of missing fields that are required to publish a listing on the respective platform
