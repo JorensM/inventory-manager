@@ -1,7 +1,7 @@
 // Core
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Ref, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLoaderData, useNavigate, useRevalidator } from 'react-router-dom';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 
 // Classes
 import ListingManager from '@/classes/ListingManager';
@@ -24,6 +24,7 @@ import { Category } from '@/types/Category';
 import { toastError } from '@/util/toast';
 import ReverbListingSection from '@/components/listings/ReverbListingSection';
 import PlatformListingSection from '@/components/listings/PlatformListingSection';
+import { RequiredFields } from '@/types/Misc';
 
 type FormValues = {
     reverb_status: 'published' | 'draft'
@@ -53,16 +54,79 @@ export default function ListingPage() {
         reverb: null,
         ebay: null
     })
+
+    const [ formValues, setFormValues ] = useState<FormValues>();
     
     //-- Refs --//
-    const formRef = useRef(null);
+    const onFormRefChange = useCallback((form: FormikProps<FormValues> | null) => {
+        if(form) {
+            setFormValues(form.values);
+        }
+    }, [])
+
+    /**
+     * List of missing fields that are required to publish a listing on the respective platform
+     * 
+     * @return Object for each platform with an array of keys of missing fields 
+     */
+    const missingFields: RequiredFields = useMemo(() => {
+
+        const missing_fields: RequiredFields = {
+            reverb: {
+                publish: [],
+                draft: []
+            },
+            ebay: {
+                publish: [],
+                draft: []
+            }
+        }
+
+        /**
+         * Check if there are any missing fields and append them to `missing_fields`
+         */
+        for(const platform_id in required_platform_fields) {
+            for(const listing_property_key of required_platform_fields[platform_id as PlatformID].publish) {
+                const property = listing[listing_property_key as keyof Listing];
+                if(!property || property == '' || (Array.isArray(property) && property.length == 0)) {
+                    console.log(listing_property_key);
+                    missing_fields[platform_id as PlatformID].publish.push(listing_property_key as keyof Listing)
+                }
+            }
+            for(const listing_property_key of required_platform_fields[platform_id as PlatformID].draft) {
+                const property = listing[listing_property_key as keyof Listing];
+                if(!property || property == '' || (Array.isArray(property) && property.length == 0)) {
+                    console.log(listing_property_key);
+                    missing_fields[platform_id as PlatformID].draft.push(listing_property_key as keyof Listing)
+                }
+            }
+        }
+
+        if(!listing.category?.reverb) {
+            console.log(listing);
+            missing_fields.reverb.publish.push('category');
+        }
+
+        console.log(missing_fields)
+
+        return missing_fields;
+    }, [listing])
 
     //-- Memo --//
 
 
     const isSinglePlatformUpdateDisaled = (platform_id: PlatformID) => {
+        if(!formValues || !missingFields) {
+            return true;
+        }
+        /**
+         * Status that is selected in the status input
+         */
+        const local_status = formValues[platform_id + '_status' as keyof FormValues]
         return (
-            !['fail', null].includes(platformSyncStatuses[platform_id])
+            !['fail', null].includes(platformSyncStatuses[platform_id])// &&
+            // (local_status == 'published' && missingFields[platform_id].publish.length > 0) ||
+            // !(local_status == 'draft' && missingFields[platform_id].draft.length > 0)
         )
     }
     /**
@@ -72,42 +136,7 @@ export default function ListingPage() {
     const isPlatformUpdateDisabled: Record<PlatformID, boolean> = useMemo(() => ({
         reverb: isSinglePlatformUpdateDisaled('reverb'),
         ebay: isSinglePlatformUpdateDisaled('ebay')
-    }), [ platformSyncStatuses ])
-
-    
-
-    /**
-     * List of missing fields that are required to publish a listing on the respective platform
-     * 
-     * @return Object for each platform with an array of keys of missing fields 
-     */
-    const missingFields: Record<PlatformID, (keyof Listing)[]> = useMemo(() => {
-
-        const missing_fields: Record<PlatformID, (keyof Listing)[]> = {
-            reverb: [],
-            ebay: []
-        }
-
-        /**
-         * Check if there are any missing fields and append them to `missing_fields`
-         */
-        for(const platform_id in required_platform_fields) {
-            for(const listing_property_key of required_platform_fields[platform_id as PlatformID]) {
-                const property = listing[listing_property_key as keyof Listing];
-                if(!property || property == '' || (Array.isArray(property) && property.length == 0)) {
-                    console.log(listing_property_key);
-                    missing_fields[platform_id as PlatformID].push(listing_property_key as keyof Listing)
-                }
-            }
-        }
-
-        if(!listing.category?.reverb) {
-            console.log(listing);
-            missing_fields.reverb.push('category');
-        }
-
-        return missing_fields;
-    }, [listing])
+    }), [ platformSyncStatuses, formValues ])
     
     // Functions
 
@@ -312,7 +341,7 @@ export default function ListingPage() {
                         ebay_status: listing.ebay_status || 'draft'
                     }}
                     onSubmit={() => {}}
-                    innerRef={formRef}
+                    innerRef={onFormRefChange}
                 >
                     {formik => (
                         <>
@@ -341,7 +370,7 @@ export default function ListingPage() {
                                         local_publish_status={formik.values.reverb_status}
                                         is_update_disabled={isPlatformUpdateDisabled.reverb}
                                         sync_status={platformSyncStatuses.reverb}
-                                        missingFields={missingFields.reverb}
+                                        missingFields={missingFields.reverb.publish}
                                         onUpdateClick={() => handlePlatformUpdateClick('reverb')}
                                     />
                                 : null}
@@ -356,7 +385,8 @@ export default function ListingPage() {
                                         publish_status_field_name='ebay_status'
                                         is_update_disabled={isPlatformUpdateDisabled.ebay}
                                         sync_status={platformSyncStatuses.ebay}
-                                        missingFields={missingFields.ebay}
+                                        missingFields={missingFields.ebay.publish}
+                                        missingFieldsDraft={missingFields.ebay.draft}
                                         onUpdateClick={() => handlePlatformUpdateClick('ebay')}
                                     />
                                 : null}

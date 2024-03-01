@@ -1,4 +1,4 @@
-import { EbayListing } from '@/types/Listing';
+import { EbayListing, Listing } from '@/types/Listing';
 import PlatformManager from './PlatformManager';
 import { apiGET } from '@/util/api';
 import SettingsManager from '../SettingsManager';
@@ -8,10 +8,12 @@ const SCOPES = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/
 
 export default class EbayManager extends PlatformManager<EbayListing> {
 
-
-
     constructor(api_key: string) {
         super(api_key);
+    }
+    
+    async uploadListing(listing: Listing): Promise<string | number> {
+        
     }
 
     async authorize(): Promise<void> {

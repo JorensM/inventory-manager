@@ -8,6 +8,7 @@ export type Listing = {
     title: string
     user_id: string
     team_id: number
+    sku: string
     brand: string,
     model: string,
     finish_color: string,

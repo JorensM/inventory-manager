@@ -17,4 +17,5 @@ export const listing_fields: Partial<Record<keyof Listing, string>> = {
     'brand': 'Brand',
     'model': 'Model',
     'title': 'Title',
+    'sku': 'SKU'
 }

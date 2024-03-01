@@ -152,7 +152,11 @@ export default function PlatformListingSection( {
                 <button
                     type='button'
                     onClick={onUpdateClick}
-                    disabled={is_update_disabled}
+                    disabled={(
+                        is_update_disabled ||
+                        (local_publish_status == 'published' && missingFields.length > 0) ||
+                        (local_publish_status == 'draft' && missingFieldsDraft && missingFieldsDraft.length > 0)
+                    )}
                 >
                     {status == 'not-uploaded' ? 'Upload' : 'Sync'}
                 </button>
