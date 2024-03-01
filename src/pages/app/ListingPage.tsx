@@ -1,5 +1,5 @@
 // Core
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLoaderData, useNavigate, useRevalidator } from 'react-router-dom';
 import { Formik } from 'formik';
 
@@ -23,9 +23,11 @@ import { required_platform_fields } from '@/constants/required_fields';
 import { Category } from '@/types/Category';
 import { toastError } from '@/util/toast';
 import ReverbListingSection from '@/components/listings/ReverbListingSection';
+import PlatformListingSection from '@/components/listings/PlatformListingSection';
 
 type FormValues = {
     reverb_status: 'published' | 'draft'
+    ebay_status: 'published' | 'draft'
 }
 
 /**
@@ -52,7 +54,8 @@ export default function ListingPage() {
         ebay: null
     })
     
-    console.log(platformSyncStatuses)
+    //-- Refs --//
+    const formRef = useRef(null);
 
     //-- Memo --//
 
@@ -61,9 +64,16 @@ export default function ListingPage() {
      * be only be enabled if sync status is null or fail.
      */
     const isPlatformUpdateDisabled: Record<PlatformID, boolean> = useMemo(() => ({
-        reverb: !['fail', null].includes(platformSyncStatuses.reverb),
-        ebay: !['fail', null].includes(platformSyncStatuses.ebay)
+        reverb: isSinglePlatformUpdateDisaled('reverb'),
+        ebay: isSinglePlatformUpdateDisaled('ebay')
     }), [ platformSyncStatuses ])
+
+    const isSinglePlatformUpdateDisaled = (platform_id: PlatformID) => {
+        return (
+            !['fail', null].includes(platformSyncStatuses[platform_id]) &&
+            missingFields[platform_id].length
+        )
+    }
 
     /**
      * List of missing fields that are required to publish a listing on the respective platform
@@ -132,6 +142,7 @@ export default function ListingPage() {
             throw new Error("Can't get platform status because listing state is not set")
         }
         updatePlatformStatus('reverb');
+        updatePlatformStatus('ebay');
     }
 
     /**
@@ -296,9 +307,11 @@ export default function ListingPage() {
             {listing ?
                 <Formik<FormValues>
                     initialValues={{
-                        reverb_status: listing.reverb_status || 'draft'
+                        reverb_status: listing.reverb_status || 'draft',
+                        ebay_status: listing.ebay_status || 'draft'
                     }}
                     onSubmit={() => {}}
+                    innerRef={formRef}
                 >
                     {formik => (
                         <>
@@ -329,6 +342,21 @@ export default function ListingPage() {
                                         sync_status={platformSyncStatuses.reverb}
                                         missingFields={missingFields.reverb}
                                         onUpdateClick={() => handlePlatformUpdateClick('reverb')}
+                                    />
+                                : null}
+                                {platforms.get('ebay').isEnabled() ? 
+                                    <PlatformListingSection
+                                        title='eBay'
+                                        platform_id='ebay'
+                                        status={platformsStatuses.ebay}
+                                        platform_listing={platform_listings.ebay}
+                                        onStatusChange={(new_status) => handleStatusInputChange(new_status, 'ebay')}
+                                        local_publish_status={formik.values.ebay_status}
+                                        publish_status_field_name='ebay_status'
+                                        is_update_disabled={isPlatformUpdateDisabled.ebay}
+                                        sync_status={platformSyncStatuses.ebay}
+                                        missingFields={missingFields.ebay}
+                                        onUpdateClick={() => handlePlatformUpdateClick('ebay')}
                                     />
                                 : null}
                             </section>

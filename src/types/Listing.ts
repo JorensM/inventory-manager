@@ -23,6 +23,7 @@ export type Listing = {
     reverb_id?: number,
     ebay_id?: string,
     reverb_status?: 'published' | 'draft',
+    ebay_status?: 'published' | 'draft'
     images: Image[]
 }
 

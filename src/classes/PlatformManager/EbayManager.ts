@@ -72,6 +72,10 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return data.success;
     }
 
+    // private createInventoryItem(): Promise<boolean> {
+
+    // }
+
     private createAPIURL(endpoint: string, params?: { [key: string]: string }, type?: 'auth') {
         const url = new URL("https://" + (type == 'auth' ? "auth" : "api") + ".ebay.com/" + endpoint);
 
