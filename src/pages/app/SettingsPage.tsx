@@ -1,6 +1,6 @@
 // Core
 import { useEffect, useMemo, useState } from 'react';
-import { useLoaderData, useRevalidator } from 'react-router-dom';
+import { Link, useLoaderData, useRevalidator } from 'react-router-dom';
 import { Form, Formik, FormikHelpers } from 'formik';
 
 // Components
@@ -22,6 +22,7 @@ import storage from '@/util/storage';
 // Constants
 import { platform_name } from '@/constants/localization';
 import storage_keys from '@/constants/storage_keys';
+import routes from '@/constants/routes';
 
 // Hooks
 import usePlatforms from '@/hooks/usePlatforms';
@@ -235,7 +236,7 @@ export default function SettingsPage() {
     return (
         <SessionPage>
             <section>
-                <BackButton />
+                <Link to={routes.dashboard} >Back to dashboard</Link>
                 <h1>Settings</h1>
             </section>
             <section>
