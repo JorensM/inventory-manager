@@ -12,6 +12,7 @@ import storage_keys from '@/constants/storage_keys';
 import storage from '@/util/storage';
 import { Settings } from '@/types/Settings';
 import { PlatformListing } from '@/types/Listing';
+import EbayManager from './EbayManager';
 
 //const settings = storage.get(storage_keys.settings) as Settings
 
@@ -19,7 +20,7 @@ class Platforms {
 
     platforms: Record<PlatformID, PlatformManager<PlatformListing>> = {
         reverb: new ReverbManager(null, true),
-        ebay: new ReverbManager(null, true)
+        ebay: new EbayManager('123')
     }
 
     get(platform_id: PlatformID) {

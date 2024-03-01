@@ -72,6 +72,25 @@ export default abstract class PlatformManager<ListingT> {
      */
     abstract isSynced(listing: Listing, platform_listing: ListingT): Promise<boolean>;
 
+    /**
+     * Authorize the platform, for example by redirecting to the platform's auth
+     * page. This is optional and if such a flow is not supported by the platform,
+     * should be no-op
+     */
+    abstract authorize(): Promise<void>;
+
+    /**
+     * De authorize the platform
+     */
+    abstract deauthorize(): Promise<void>;
+
+    /**
+     * Refresh the API key if the platforms requires periodic refresh of the key.
+     * This gets a new API key/token, updates it in the settings and sets the platform's
+     * currently used API key to the newly retrieved key.
+     */
+    abstract refreshAPIKey(): Promise<void>;
+
     async setApiKey(api_key: string | null) {
         this.api_key = api_key;
 

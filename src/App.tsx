@@ -42,8 +42,8 @@ import CategoryPage from './pages/app/CategoryPage';
 import resourceLoader from './misc/resourceLoader';
 import ReverbCategories from './pages/app/ReverbCategories';
 import reverbCategoriesPageLoader from './pages/app/reverbCategoriesPageLoader';
-import { Toaster } from 'react-hot-toast';
 import { SnackbarProvider } from 'notistack';
+import ebayAuthConfirmLoader from './pages/loaders/ebayAuthConfirmLoader';
 
 // Add custom page title to dev environment to easily differentiate between prod and dev
 // tabs in browser
@@ -131,6 +131,10 @@ const router = createBrowserRouter([
     path: '/app/settings',
     element: <SettingsPage />,
     loader: settingsPageLoader
+  },
+  {
+    path: routes.auth.ebay.confirm,
+    loader: ebayAuthConfirmLoader
   }
 ]);
 

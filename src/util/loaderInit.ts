@@ -25,6 +25,9 @@ export default async function loaderInit() {
     await platforms.get('reverb').setApiKey(settings.reverb_key);
     platforms.get('reverb').setEnabled(true);
 
+    await platforms.get('ebay').setApiKey(settings.ebay_key || null);
+    platforms.get('ebay').setEnabled(true);
+
     // Set initialized to true so this function can run only once
     initialized = true;
 };

@@ -1,7 +1,9 @@
 
 const ENV_VAR_NAMES = [
     "VITE_SUPABASE_ANON_KEY",
-    "VITE_SUPABASE_URL"
+    "VITE_SUPABASE_URL",
+    "VITE_API_URL",
+    "VITE_APP_URL"
 ]
 
 const validateEnvVars = () => {
@@ -21,3 +23,5 @@ validateEnvVars();
 export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY!;
 export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 export const IS_DEV = import.meta.env.DEV;
+export const API_URL = import.meta.env.VITE_API_URL;
+export const APP_URL = import.meta.env.VITE_APP_URL;

@@ -147,6 +147,14 @@ main.app > section.card {
   background-color: lightgray;
 }
 
+/* Button layouts */
+
+.button-with-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 /* Header */
 
 header {

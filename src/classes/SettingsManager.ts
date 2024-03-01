@@ -57,7 +57,7 @@ export default class SettingsManager {
 
         //storage.set(storage_keys.settings, new_settings);
 
-        supabase.auth.updateUser({ 
+        await supabase.auth.updateUser({ 
             data: {
                 settings: new_settings
             }

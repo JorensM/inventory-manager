@@ -31,6 +31,8 @@ import useSettings from '@/hooks/useSettings';
 import ReverbManager from '@/classes/PlatformManager/ReverbManager';
 import SettingsManager from '@/classes/SettingsManager';
 import platforms from '@/classes/PlatformManager/AllPlatforms';
+import EbayManager from '@/classes/PlatformManager/EbayManager';
+import StatusIndicator from '@/components/misc/StatusIndicator';
 
 
 type PlatformStatuses = Record<PlatformID, Status | null>
@@ -38,7 +40,7 @@ type PlatformStatuses = Record<PlatformID, Status | null>
 /**
  * These platform won't display on the settings page
  */
-const disabled_platforms = [ 'ebay' ];
+const no_api_key_platforms: PlatformID[] = [ 'ebay' ];
 
 
 
@@ -88,9 +90,9 @@ export default function SettingsPage() {
      * Field data for API key fields
      */
     const api_key_fields: APIKeyField[] = useMemo(() => {
-        return Object.keys(platforms.platforms).filter(platform_id => !disabled_platforms.includes(platform_id)).map((platform_id) => ({
+        return Object.keys(platforms.platforms).filter(platform_id => !no_api_key_platforms.includes(platform_id as PlatformID)).map((platform_id) => ({
             platform_id: platform_id as PlatformID,
-            initial_value: settings[platform_id + '_key' as keyof Settings],//.getAPIKey(platform_id as PlatformID) || "",
+            initial_value: settings[platform_id + '_key' as keyof Settings] || "",//.getAPIKey(platform_id as PlatformID) || "",
             label: platform_name[platform_id as PlatformID]
         }))
     }, [])
@@ -138,7 +140,7 @@ export default function SettingsPage() {
      */
     const debouncedPing: Record<PlatformID, any> = useMemo(() => ({
         reverb: debounce((api_key: string) => {pingPlatform('reverb', api_key)}, 1000),
-        ebay: () => {}
+        ebay: debounce(() => {pingPlatform('ebay', platforms.get('ebay').api_key || "")}, 1000)
     }), [])
 
     /**
@@ -208,6 +210,15 @@ export default function SettingsPage() {
         revalidate();
     }
 
+    const handleConnectEbay = async () => {
+        await platforms.get('ebay').authorize();
+    }
+
+    const handleDisconnectEbay = async () => {
+        await platforms.get('ebay').deauthorize();
+        setPlatformStatus('ebay', null)
+    }
+
     //-- Effects --//
     
     /**
@@ -216,7 +227,7 @@ export default function SettingsPage() {
     useEffect(() => {
         Object.entries(platformStatuses).map(([platform_id, status]) => {
             if(status) {
-                pingPlatform(platform_id as PlatformID, settings[platform_id + '_key' as keyof Settings]);
+                pingPlatform(platform_id as PlatformID, settings[platform_id + '_key' as keyof Settings] || "");
             }
         })
     }, [])
@@ -243,17 +254,36 @@ export default function SettingsPage() {
                         return (
                             <Form>
                                 {api_key_fields.map(field => (
-                                    <>
-                                        <APIKeyField
-                                            key={field.platform_id}
-                                            status={platformStatuses[field.platform_id]}
-                                            label={field.label}
-                                            name={field.platform_id + '_key'}
-                                            onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
-                                        />
-                                    </>
-                                    
+                                    <APIKeyField
+                                        key={field.platform_id}
+                                        status={platformStatuses[field.platform_id]}
+                                        label={field.label}
+                                        name={field.platform_id + '_key'}
+                                        onChange={(e) => handleAPIKeyChange(field.platform_id, e.currentTarget.value)}
+                                    />
                                 ))}
+                                <div className='button-with-status'>
+                                    <b>Ebay: </b>
+                                    { ['loading', 'fail', null].includes(platformStatuses.ebay) ? <button
+                                        onClick={handleConnectEbay}
+                                    >Connect eBay</button>
+                                    : null}
+                                    { platformStatuses['ebay'] ? 
+                                        <StatusIndicator
+                                            status={platformStatuses['ebay']}
+                                        />
+                                    : null}
+                                    { platformStatuses.ebay == 'success' ?
+                                        <button
+                                            onClick={handleDisconnectEbay}
+                                        >
+                                            Disconnect eBay
+                                        </button>
+                                    : null}
+                                    
+                                    
+                                </div>
+                                
                                 <button type='submit' disabled={APIKeysSubmitDisabled}>Save API Keys</button>
                             </Form>
                         )

@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../inventory-manager-server"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "inventory-manager\\node_modules\\typescript\\lib",
+		"deno.internalInspect": false,
+		"deno.enablePaths": [
+			"C:\\Jorens\\Work\\Dev\\web\\inventory-manager-server"
+		],
+		"deno.enable": true
+	}
+}

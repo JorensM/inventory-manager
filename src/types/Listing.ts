@@ -41,6 +41,10 @@ export type ReverbListing = {
     status: 'published' | 'draft'
 }
 
+export type EbayListing = {
+    id: number
+}
+
 export type ListingStatus = 'published' | 'draft'
 
 export type PlatformListing = ReverbListing;

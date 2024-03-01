@@ -11,7 +11,12 @@ const routes = {
     login: '/login',
     dashboard: '/app/dashboard',
     new_team: '/app/teams/edit',
-    settings: '/app/settings'
+    settings: '/app/settings',
+    auth: {
+        ebay: {
+            confirm: '/app/auth/ebay/confirm'
+        }
+    }
 }
 
 export default routes;
