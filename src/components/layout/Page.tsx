@@ -8,13 +8,9 @@ import useAuth from '@/hooks/useAuth';
 // Constants
 import routes from '@/constants/routes';
 
-type PageProps = {
+export default function Page( { children }: PropsWithChildren ) {
 
-}
-
-export default function Page( { children }: PropsWithChildren<PageProps> ) {
-
-    // Hooks
+    //-- Hooks --//
     const location = useLocation();
     const auth = useAuth();
     const navigate = useNavigate();
@@ -37,6 +33,7 @@ export default function Page( { children }: PropsWithChildren<PageProps> ) {
         }
     }
 
+    // Validate session on route change
     useEffect(() => {
         validateSessionAndMaybeRedirect();
     }, [ location.pathname ])
