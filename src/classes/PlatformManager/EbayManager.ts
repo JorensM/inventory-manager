@@ -1,14 +1,31 @@
+// Types
 import { EbayListing, Listing } from '@/types/Listing';
-import PlatformManager from './PlatformManager';
-import { apiGET, apiPUT } from '@/util/api';
-import SettingsManager from '../SettingsManager';
 import { Params } from '@/types/Misc';
+
+// Classes
+import PlatformManager from './PlatformManager';
+import SettingsManager from '../SettingsManager';
+
+// Util
+import { apiGET, apiPUT } from '@/util/api';
+
+// Constants
 import { API_URL } from '@/constants/env';
 
+//These should probably be set as env variables or put into the constants folder
 const CLIENT_ID = "AllanHar-Inventor-PRD-bcd6d2723-74d77282"
 const SCOPES = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly";
 
 export default class EbayManager extends PlatformManager<EbayListing> {
+
+    /**
+     * @class EbayManager
+     * 
+     * Notes:
+     * 
+     * Request methods like GET, POST etc. have a type arg. This determines whether
+     * to prefix the eBay endpoint URL with `auth.ebay...` or `api.ebay...`
+     */
 
     constructor(api_key: string) {
         super(api_key);
@@ -125,6 +142,13 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return url;
     }
 
+    /**
+     * Create API url for accessing eBay endpoints
+     * @param endpoint endpoint without leading slash
+     * @param params GET parameters to add to URL
+     * @param type Which type of request it is. Depending on value, URL will be `api.ebay...` or `auth.ebay...`
+     * @returns URL object
+     */
     private createAPIURL(endpoint: string, params?: { [key: string]: string }, type?: 'auth') {
 
         const url = new URL("https://" + (type == 'auth' ? "auth" : "api") + ".ebay.com/" + endpoint);
@@ -134,6 +158,14 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return url;
     }
 
+    /**
+     * Abstract HTTP request method
+     * @param url Target URL
+     * @param method request method
+     * @param body request body
+     * @param api_key user's eBay access token
+     * @returns request's response in form of JSON object
+     */
     private async request(url: URL, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: Params, api_key?: string) {
 
         if(!api_key) {
@@ -155,6 +187,14 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return data;
     }   
 
+    /**
+     * eBay API's GET method
+     * @param endpoint endpoint name without leading slash
+     * @param params GET params
+     * @param type Request type. See notes at the top
+     * @param api_key user's eBay access token
+     * @returns 
+     */
     private async GET(endpoint: string, params?: { [key: string]: string }, type?: "auth", api_key?: string) {
 
         const url = this.createAPIURL(endpoint, params, type);
@@ -164,6 +204,12 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return data;
     }
 
+    /**
+     * eBay API's GET method
+     * @param endpoint endpoint name without leading slash
+     * @param params GET params
+     * @returns 
+     */
     private async PUT(endpoint: string, params: Params) {
         const url = this.createAPIURL(endpoint);
 
@@ -172,6 +218,9 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return data;
     }
 
+    /**
+     * Convert Listing object to an eBay listing format that is accepted by eBay's API
+     */
     private listingToEbayListing(listing:Listing) {
         return ({
             sku: listing.sku,
