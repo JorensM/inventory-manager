@@ -50,6 +50,7 @@ type ReverbListingSectionProps = {
 
 /**
  * Reverb listing component. This component should be in a Formik form
+ * @deprecated Use of this component should be changed to PlatformListingSection
  */
 export default function ReverbListingSection( { 
     status, 
