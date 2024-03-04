@@ -2,18 +2,32 @@
 import { Team } from '@/types/User';
 import supabase from '@/util/supabase';
 
+/**
+ * Class for managing the user
+ */
 class UserManager {
 
+    /**
+     * The user's team or null if team not set/not logged in
+     */
     team: Team | null = null;
 
     constructor() {
         this.revalidate();
     }
 
+    /**
+     * Get user's team
+     * @returns User's team or null if team not set/not logged in
+     */
     getTeam() {
         return this.team;
     }
 
+    /**
+     * Revalidate user and fetch user data
+     * @returns 
+     */
     async revalidate() {
         const { data: { user }, error } = await supabase.auth.getUser();
 
@@ -39,6 +53,6 @@ class UserManager {
     }
 }
 
+// Create instance and export it as singleton
 const user = new UserManager();
-
 export default user;
