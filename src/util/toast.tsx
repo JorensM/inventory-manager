@@ -2,6 +2,10 @@ import { closeSnackbar, enqueueSnackbar } from 'notistack';
 import toast from 'react-hot-toast';
 
 export function toastError(message: string) {
+
+    console.error(message);
+    console.trace();
+
     enqueueSnackbar({
         message: <div dangerouslySetInnerHTML={{__html:message}} />,
         variant: 'error',

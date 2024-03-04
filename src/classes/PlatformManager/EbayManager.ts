@@ -22,13 +22,16 @@ export default class EbayManager extends PlatformManager<EbayListing> {
 
         const ebayListing = this.listingToEbayListing(listing);
 
-        const url = this.createOwnAPIURL('upload/' + listing.sku);
+        const url = this.createOwnAPIURL('upload');
 
         const data = await apiPUT(url, ebayListing);//this.PUT('sell/inventory/v1/inventory_item/' + listing.sku, ebayListing.inventory_item);
+
+        console.log(data);
 
         if(!data.success) {
             throw new Error('Could not upload eBay listing')
         }
+        console.log('success')
         return listing.sku
     }
 
@@ -113,6 +116,8 @@ export default class EbayManager extends PlatformManager<EbayListing> {
 
         if(params) Object.entries(params).map(([key, value]) => url.searchParams.set(key, value));
 
+        url.searchParams.set('token', this.api_key);
+
         return url;
     }
 
@@ -124,11 +129,7 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         const url = new URL("https://" + (type == 'auth' ? "auth" : "api") + ".ebay.com/" + endpoint);
 
         if(params) Object.entries(params).map(([key, value]) => url.searchParams.set(key, value));
-
         
-
-        url.searchParams.set('token', this.api_key);
-
         return url;
     }
 
