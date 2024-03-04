@@ -1,9 +1,21 @@
-import supabase from '@/util/supabase';
+// Core
 import { v4 as uuid } from 'uuid';
+
+// Classes
 import user from './UserManager';
+
+// Util
+import supabase from '@/util/supabase';
+
+// Constants
 import { validateBucketName } from '@/constants/supabase';
 
 export default class FilesManager {
+    /**
+     * Upload files. This currently only uploads to 'listing_images' bucket
+     * @param files Array of File objects to upload
+     * @returns paths to files
+     */
     static async uploadFiles(files: File[]) {
 
         const team_id = user.getTeam()?.id;
@@ -30,12 +42,23 @@ export default class FilesManager {
         return paths;
     }
 
+    /**
+     * Delete files
+     * @param bucket_name Name of bucket to delete from
+     * @param file_paths Array of strings of paths of files to delete
+     */
     static async deleteFiles(bucket_name: string, file_paths: string[]) {
         const { error } = await supabase.storage.from(bucket_name).remove(file_paths);
 
         if (error) throw error;
     }
 
+    /**
+     * Get public URLs of files
+     * @param bucket_name Name of bucket of files
+     * @param paths Array of strings of the file paths
+     * @returns Array of strings of URLs
+     */
     static getPublicURLS(bucket_name: string, paths: (string | undefined)[] | undefined) {
         if(!paths) {
             return [];
