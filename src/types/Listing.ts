@@ -50,7 +50,7 @@ export type EbayListing = {
 
 export type ListingStatus = 'published' | 'draft'
 
-export type PlatformListing = ReverbListing;
+export type PlatformListing = ReverbListing | EbayListing;
 
 export type PlatformListings = Partial<Record<PlatformID, PlatformListing | null>>
 
