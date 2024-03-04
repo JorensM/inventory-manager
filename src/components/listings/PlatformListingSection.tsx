@@ -66,7 +66,8 @@ type PlatformListingSectionProps = {
 }
 
 /**
- * Reverb listing component. This component should be in a Formik form
+ * Listing component that displays info about a listing and allows you to update its status. 
+ * This component should be in a Formik form
  */
 export default function PlatformListingSection( { 
     title,
