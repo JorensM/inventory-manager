@@ -12,18 +12,12 @@ import useAuth from '@/hooks/useAuth';
 import SignOutButton from '@/components/buttons/SignOutButton';
 import Page from './Page';
 
-
-
-type SessionPageProps = {
-
-}
-
 /**
  * Page wrapper for user pages
  */
-export default function SessionPage( { children }: PropsWithChildren<SessionPageProps>) {
+export default function SessionPage( { children }: PropsWithChildren) {
 
-    // Hooks
+    //-- Hooks --//
     const auth = useAuth();
     const navigate = useNavigate();
 
@@ -38,6 +32,7 @@ export default function SessionPage( { children }: PropsWithChildren<SessionPage
         }
     }
 
+    // Validate team whenever user object changes
     useEffect(() => {
         if(auth.user) {
             validateTeam();
