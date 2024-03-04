@@ -1,6 +1,9 @@
+// Core
 import { ComponentProps, useMemo, ChangeEvent } from 'react';
-import InputBase, { InputBaseProps } from './InputBase';
 import { useField } from 'formik';
+
+// Components
+import InputBase, { InputBaseProps } from './InputBase';
 
 type SelectInputProps = InputBaseProps & ComponentProps<'select'> & {
     /**

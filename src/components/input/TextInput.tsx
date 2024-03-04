@@ -1,6 +1,9 @@
+// Core
 import { ComponentProps, ReactNode } from 'react';
-import InputBase from './InputBase';
 import { useField } from 'formik';
+
+// Components
+import InputBase from './InputBase';
 
 export type TextInputProps = {
     /**

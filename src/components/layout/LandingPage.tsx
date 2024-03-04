@@ -2,11 +2,10 @@ import { PropsWithChildren } from 'react'
 import { Link } from 'react-router-dom'
 import Page from './Page'
 
-type LandingPageProps = {
-
-}
-
-export default function LandingPage( { children }: PropsWithChildren<LandingPageProps>) {
+/**
+ * Component for landing pages
+ */
+export default function LandingPage( { children }: PropsWithChildren<>) {
 
     return (
         <Page>
