@@ -1,5 +1,5 @@
 // Types
-import { EbayListing, Listing } from '@/types/Listing';
+import { EbayListing, Listing, ListingUpdate } from '@/types/Listing';
 import { Params } from '@/types/Misc';
 
 // Classes
@@ -30,6 +30,8 @@ export default class EbayManager extends PlatformManager<EbayListing> {
     constructor(api_key: string) {
         super(api_key);
     }
+
+    //-- Extended methods --//
     
     async uploadListing(listing: Listing): Promise<string | number> {
 
@@ -50,6 +52,22 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         }
         console.log('success')
         return listing.sku
+    }
+    
+    async updateListing(listing: ListingUpdate, send_images?: boolean | undefined): Promise<void> {
+        throw new Error('Method not implemented');  
+    }
+
+    async getListing(listing: Listing): Promise<EbayListing | null> {
+        throw new Error('Method not implemented');  
+    }
+
+    async deleteListing(listing: Listing): Promise<void> {
+        throw new Error('Method not implemented');
+    }
+
+    isSynced(listing: Listing, platform_listing: EbayListing): Promise<boolean> {
+        throw new Error('Method not implemented');
     }
 
     async authorize(): Promise<void> {
@@ -118,10 +136,8 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         return data.success;
     }
 
-    // private createInventoryItem(): Promise<boolean> {
-
-    // }
-
+    //-- Added methods --//
+    
     /**
      * Create API url for accessing ebay endpoint on our own API
      * @param endpoint endpoint name without leading slash
