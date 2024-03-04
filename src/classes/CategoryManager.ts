@@ -67,7 +67,7 @@ export default class CategoryManager {
             throw new Error('User team not found')
         }
 
-        const category_data: any = {
+        const category_data: CategoryCreate = {
             ...category,
             team_id: team.id
         }
