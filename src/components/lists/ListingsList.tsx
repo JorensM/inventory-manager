@@ -8,7 +8,7 @@ import { Listing } from '@/types/Listing';
 import routes from '@/constants/routes';
 
 // Components
-import ListingSmall from './ListingSmall';
+import GenericListItem from './GenericListItem';
 
 type ListingsListProps = {
     listings: Listing[]
@@ -37,10 +37,10 @@ export default function ListingsList( { listings }: ListingsListProps) {
     return (
         <ul>
             {listings.map(listing => (
-                <ListingSmall
+                <GenericListItem
                     key={listing.id}
                     onClick={() => handleListingClick(listing.id)}
-                    data={listing}
+                    label={listing.title}
                 />
             ))}
         </ul>
