@@ -66,11 +66,11 @@ export default function ReverbListingSection( {
             <h3>Reverb</h3>
             <ul>
                 {['draft', 'published'].includes(status || "") ?
-                    <li>
+                    <li key='link'>
                         <Link to={reverb_listing!.link}>Link</Link>
                     </li>
                 : null}
-                <li>
+                <li key='status'>
                     {status == 'loading' ? 
                         'loading...' 
                     : 
@@ -96,7 +96,7 @@ export default function ReverbListingSection( {
                             fields for the listing:
                             <ul className='list'>
                                 {missingFields.map(field_key => (
-                                    <li>{listing_fields[field_key as keyof Listing]}</li>
+                                    <li key={field_key}>{listing_fields[field_key as keyof Listing]}</li>
                                 ))}
                             </ul>
                         </span>
@@ -104,7 +104,7 @@ export default function ReverbListingSection( {
                     
                 </li>
                 {['draft', 'published'].includes(status || "") && sync_status != null ?
-                    <li>
+                    <li key='sync-status'>
                         <div className='key-value-container'>
                             Sync status:                                    
                             <StatusIndicator
