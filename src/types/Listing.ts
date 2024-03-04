@@ -46,6 +46,7 @@ export type ReverbListing = {
 
 export type EbayListing = {
     id: number
+    link: string
 }
 
 export type ListingStatus = 'published' | 'draft'
