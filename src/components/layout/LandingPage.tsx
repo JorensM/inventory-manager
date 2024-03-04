@@ -1,11 +1,14 @@
+// Core
 import { PropsWithChildren } from 'react'
 import { Link } from 'react-router-dom'
+
+// Components
 import Page from './Page'
 
 /**
  * Component for landing pages
  */
-export default function LandingPage( { children }: PropsWithChildren<>) {
+export default function LandingPage( { children }: PropsWithChildren) {
 
     return (
         <Page>
