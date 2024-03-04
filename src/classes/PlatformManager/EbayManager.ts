@@ -28,8 +28,8 @@ export default class EbayManager extends PlatformManager<EbayListing> {
 
         console.log(data);
 
-        if(!data.success) {
-            throw new Error('Could not upload eBay listing')
+        if(data.error) {
+            throw new Error(data.error)
         }
         console.log('success')
         return listing.sku
@@ -112,6 +112,10 @@ export default class EbayManager extends PlatformManager<EbayListing> {
      * @returns URL object
      */
     private createOwnAPIURL(endpoint: string, params?: Params) {
+        if(!this.api_key) {
+            throw new Error('Cannot create URL because API key is not set')
+        }
+        
         const url = new URL(API_URL + 'api/ebay/' + endpoint);
 
         if(params) Object.entries(params).map(([key, value]) => url.searchParams.set(key, value));
@@ -122,9 +126,6 @@ export default class EbayManager extends PlatformManager<EbayListing> {
     }
 
     private createAPIURL(endpoint: string, params?: { [key: string]: string }, type?: 'auth') {
-        if(!this.api_key) {
-            throw new Error('Cannot create URL because API key is not set')
-        }
 
         const url = new URL("https://" + (type == 'auth' ? "auth" : "api") + ".ebay.com/" + endpoint);
 
