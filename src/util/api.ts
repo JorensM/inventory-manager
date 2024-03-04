@@ -22,7 +22,10 @@ export const apiGET = async (endpoint: string, params?: Params, response_type: '
 export const apiPUT = async (url: URL, params?: Params) => {
     const res = await fetch(url, {
         method: 'PUT',
-        body: JSON.stringify(params)
+        body: JSON.stringify(params),
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
 
     const data = res.json();
