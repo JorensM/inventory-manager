@@ -103,6 +103,7 @@ export default function ImageUpload( { name, label, images }: ImageUploadProps) 
 
     //-- Effects --//
 
+    // Called when new images are added, and updates the Formik value with the new images
     useEffect(() => {
         field.value.add = newImages;
     }, [ newImages ])
