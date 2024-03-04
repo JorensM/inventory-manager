@@ -174,13 +174,16 @@ export default class EbayManager extends PlatformManager<EbayListing> {
 
     private listingToEbayListing(listing:Listing) {
         return ({
+            sku: listing.sku,
             inventory_item: {
                 product: {
                     title: listing.title
                 }
             },
             offer: {
-
+                format: 'FIXED_PRICE',
+                marketplaceId: 'EBAY_US',
+                sku: listing.sku
             }
         })
     }
