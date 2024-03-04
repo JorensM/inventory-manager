@@ -1,9 +1,12 @@
+// Types
 import { Listing, ListingUpdate, ReverbListing } from '@/types/Listing';
+
+// Classes
 import PlatformManager from './PlatformManager';
 import FilesManager from '../FilesManager';
+
+// Constants
 import { buckets } from '@/constants/supabase';
-import arraysEqual from '@/util/arraysEqual';
-import { Image } from '@/types/File';
 
 export default class ReverbManager extends PlatformManager<ReverbListing> {
 
@@ -90,6 +93,18 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
         )
 
     }
+
+    async authorize(): Promise<void> {
+        return;
+    }
+
+    async deauthorize(): Promise<void> {
+        return;
+    }
+
+    async refreshAPIKey(): Promise<void> {
+        return;
+    }
     
     //-- Added Methods --//
 
@@ -99,10 +114,6 @@ export default class ReverbManager extends PlatformManager<ReverbListing> {
      */
     setIsSandbox(is_sandbox: boolean) {
         this.is_sandbox = is_sandbox;
-    }
-
-    getRequiredFields() {
-        return ['s']
     }
 
     /**
