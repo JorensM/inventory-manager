@@ -1,10 +1,5 @@
-'use client';
-
 // Core
 import { ComponentProps } from 'react';
-
-// Types
-import { Listing } from '@/types/Listing';
 
 type GenericListItemProps = ComponentProps<'div'> & {
     /**
