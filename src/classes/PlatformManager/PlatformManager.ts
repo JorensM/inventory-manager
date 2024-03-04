@@ -1,3 +1,4 @@
+// Types
 import { Listing, ListingUpdate } from '@/types/Listing';
 
 export default abstract class PlatformManager<ListingT> {
@@ -6,10 +7,21 @@ export default abstract class PlatformManager<ListingT> {
      * Platform manager base class. 
      */
 
+    /**
+     * The API key to use when making API calls
+     */
     api_key: string | null = null
 
+    /**
+     * Whether the API key is valid
+     */
     api_key_valid: boolean = false;
 
+    /**
+     * Whether the instance should be enabled. If it is not enabled, methods that
+     * make API calls will throw an error. If an API key is not valid, then isEnabled() will return
+     * false even if this variable is set to true
+     */
     is_enabled: boolean = false
 
     constructor(api_key: string | null) {
@@ -91,6 +103,11 @@ export default abstract class PlatformManager<ListingT> {
      */
     abstract refreshAPIKey(): Promise<void>;
 
+    /**
+     * Set the API key to use. This also pings the platform with the provided key
+     * to check if it is valid
+     * @param api_key value to set the API key to
+     */
     async setApiKey(api_key: string | null) {
         this.api_key = api_key;
 
