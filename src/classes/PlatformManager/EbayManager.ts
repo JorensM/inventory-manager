@@ -1,8 +1,9 @@
 import { EbayListing, Listing } from '@/types/Listing';
 import PlatformManager from './PlatformManager';
-import { apiGET } from '@/util/api';
+import { apiGET, apiPUT } from '@/util/api';
 import SettingsManager from '../SettingsManager';
 import { Params } from '@/types/Misc';
+import { API_URL } from '@/constants/env';
 
 const CLIENT_ID = "AllanHar-Inventor-PRD-bcd6d2723-74d77282"
 const SCOPES = "https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/sell.reputation https://api.ebay.com/oauth/api_scope/sell.reputation.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly https://api.ebay.com/oauth/api_scope/sell.stores https://api.ebay.com/oauth/api_scope/sell.stores.readonly";
@@ -21,8 +22,13 @@ export default class EbayManager extends PlatformManager<EbayListing> {
 
         const ebayListing = this.listingToEbayListing(listing);
 
-        const data = this.PUT('sell/inventory/v1/inventory_item/' + listing.sku, ebayListing.inventory_item);
+        const url = this.createOwnAPIURL('upload/' + listing.sku);
 
+        const data = await apiPUT(url, ebayListing);//this.PUT('sell/inventory/v1/inventory_item/' + listing.sku, ebayListing.inventory_item);
+
+        if(!data.success) {
+            throw new Error('Could not upload eBay listing')
+        }
         return listing.sku
     }
 
@@ -96,10 +102,32 @@ export default class EbayManager extends PlatformManager<EbayListing> {
 
     // }
 
+    /**
+     * Create API url for accessing ebay endpoint on our own API
+     * @param endpoint endpoint name without leading slash
+     * @param [params] GET params
+     * @returns URL object
+     */
+    private createOwnAPIURL(endpoint: string, params?: Params) {
+        const url = new URL(API_URL + 'api/ebay/' + endpoint);
+
+        if(params) Object.entries(params).map(([key, value]) => url.searchParams.set(key, value));
+
+        return url;
+    }
+
     private createAPIURL(endpoint: string, params?: { [key: string]: string }, type?: 'auth') {
+        if(!this.api_key) {
+            throw new Error('Cannot create URL because API key is not set')
+        }
+
         const url = new URL("https://" + (type == 'auth' ? "auth" : "api") + ".ebay.com/" + endpoint);
 
         if(params) Object.entries(params).map(([key, value]) => url.searchParams.set(key, value));
+
+        
+
+        url.searchParams.set('token', this.api_key);
 
         return url;
     }
