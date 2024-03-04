@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 
 // Types
-import { Category } from '@/types/Listing'
+import { Category } from '@/types/Category'
 
 // Components
 import GenericListItem from './GenericListItem';
@@ -12,13 +12,26 @@ import routes from '@/constants/routes';
 
 
 type CategoriesListProps = {
+    /**
+     * Categories to display
+     */
     categories: Category[]
 }
 
-export default function ListingsList( { categories }: CategoriesListProps) {
+/**
+ * Component for displaying a list of categories
+ */
+export default function CategoriesList( { categories }: CategoriesListProps) {
 
+    //-- Hooks --//
     const navigate = useNavigate()
 
+    //-- Handlers --//
+
+    /**
+     * On list item click. Navigates to appropriate category
+     * @param category_id ID of category to navigate to
+     */
     const handleCategoryClick = (category_id: number) => {
         navigate(routes.category(category_id))
     };
