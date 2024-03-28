@@ -78,14 +78,18 @@ export default class EbayManager extends PlatformManager<EbayListing> {
         //     response_type: 'code'
         // }, "auth")
 
-        const url = this.createAPIURL('oauth2/authorize', {
-            client_id: CLIENT_ID,
-            redirect_uri: "Allan_Harrell-AllanHar-Invent-jxrrf",
-            scope: SCOPES,
-            response_type: 'code'
-        }, "auth")
+        // const url = this.createAPIURL('oauth2/authorize', {
+        //     client_id: CLIENT_ID,
+        //     redirect_uri: "Allan_Harrell-AllanHar-Invent-jxrrf",
+        //     scope: SCOPES,
+        //     response_type: 'code'
+        // }, "auth")
 
-        window.location.href = url.href;
+        const { url, sessionId } = await apiGET('auth/ebay/auth-link')
+
+        localStorage.setItem('inv-mgr:ebay-session-id', sessionId);
+
+        window.location.href = url;
 
         return;
     }
