@@ -265,7 +265,7 @@ export default function SettingsPage() {
                                 ))}
                                 <div className='button-with-status'>
                                     <b>Ebay: </b>
-                                    { ['loading', 'fail', null].includes(platformStatuses.ebay) ? <button
+                                    { ['fail', null].includes(platformStatuses.ebay) ? <button
                                         onClick={handleConnectEbay}
                                     >Connect eBay</button>
                                     : null}
