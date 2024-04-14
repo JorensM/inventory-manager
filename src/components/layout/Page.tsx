@@ -1,9 +1,12 @@
 // Core
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Hooks
 import useAuth from '@/hooks/useAuth';
+
+// Util
+import isOnline from '@/util/isOnline';
 
 // Constants
 import routes from '@/constants/routes';
@@ -14,6 +17,9 @@ export default function Page( { children }: PropsWithChildren ) {
     const location = useLocation();
     const auth = useAuth();
     const navigate = useNavigate();
+
+    //-- State --//
+    const [ isOffline, setIsOffline ] = useState(false);
 
     /**
      * If necessary, redirect the user to appropriate pages depending on whether
@@ -33,15 +39,25 @@ export default function Page( { children }: PropsWithChildren ) {
         }
     }
 
+    const checkIfOffline = async () => {
+        setIsOffline(!(await isOnline()))
+    }
+
     // Validate session on route change
     useEffect(() => {
+        checkIfOffline();
+
         validateSessionAndMaybeRedirect();
     }, [ location.pathname ])
 
     return (
-        <>
-            {children}
-        </>
-        
+        isOffline ?
+            <div className='error-container'>
+                You seem to be offline, please check your internet connection and refresh the page
+            </div>
+        : 
+            <>
+                {children}
+            </>
     )
 }

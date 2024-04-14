@@ -147,6 +147,14 @@ main.app > section.card {
   background-color: lightgray;
 }
 
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
 /* Button layouts */
 
 .button-with-status {
